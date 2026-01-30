@@ -18,8 +18,7 @@ const Logo: React.FC<LogoProps> = ({ className = '', size = 'md', variant = 'dar
   // Seleção automática do arquivo de imagem com base na variante
   // logo.png = versão escura (letras azuis/pretas)
   // logo-light.png = versão clara (letras brancas/rainbow)
-  // FIXED: Usando logo-light.png fixo conforme solicitado (origem: dist/assets)
-  const logoSrc = '/logo-light.png';
+  const logoSrc = variant === 'light' ? './logo-light.png' : './logo.png';
 
   return (
     <div className={`flex items-center group transition-all duration-300 ${className}`}>
