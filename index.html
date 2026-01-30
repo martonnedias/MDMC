@@ -1,81 +1,95 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MDigital Marketing & Consultoria</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
-    <!-- html2pdf library for direct PDF downloads -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-              heading: ['Poppins', 'sans-serif'],
-            },
-            colors: {
-              brand: {
-                blue: '#0F52BA',
-                darkBlue: '#0A3B8C',
-                green: '#10B981',
-                orange: '#F97316',
-                orangeHover: '#EA580C',
-              }
-            },
-            keyframes: {
-              fadeIn: {
-                '0%': { opacity: '0', transform: 'translateY(10px)' },
-                '100%': { opacity: '1', transform: 'translateY(0)' },
-              }
-            },
-            animation: {
-              'fade-in': 'fadeIn 0.5s ease-out forwards',
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MDigital Marketing & Consultoria</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap"
+    rel="stylesheet">
+  <!-- html2pdf library for direct PDF downloads -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            heading: ['Poppins', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              blue: '#0F52BA',
+              darkBlue: '#0A3B8C',
+              green: '#10B981',
+              orange: '#F97316',
+              orangeHover: '#EA580C',
             }
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0', transform: 'translateY(10px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.5s ease-out forwards',
           }
         }
       }
-    </script>
-    <style>
-      @media print {
-        .no-print {
-          display: none !important;
-        }
-        body {
-          background-color: white !important;
-        }
-        article {
-          box-shadow: none !important;
-          border: none !important;
-          margin: 0 !important;
-          padding: 0 !important;
-          width: 100% !important;
-        }
-        header, footer, #whatsapp-widget, .action-buttons {
-          display: none !important;
-        }
-        @page {
-          margin: 1.5cm;
-        }
+    }
+  </script>
+  <style>
+    @media print {
+      .no-print {
+        display: none !important;
       }
-      /* Custom scrollbar for better UX */
-      ::-webkit-scrollbar {
-        width: 8px;
+
+      body {
+        background-color: white !important;
       }
-      ::-webkit-scrollbar-track {
-        background: #f1f1f1;
+
+      article {
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
       }
-      ::-webkit-scrollbar-thumb {
-        background: #0F52BA;
-        border-radius: 10px;
+
+      header,
+      footer,
+      #whatsapp-widget,
+      .action-buttons {
+        display: none !important;
       }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #0A3B8C;
+
+      @page {
+        margin: 1.5cm;
       }
-    </style>
-    <script type="importmap">
+    }
+
+    /* Custom scrollbar for better UX */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #0F52BA;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #0A3B8C;
+    }
+  </style>
+  <script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@18.3.1",
@@ -89,11 +103,11 @@
   }
 }
 </script>
-  <link rel="stylesheet" href="/index.css">
 </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="./index.tsx"></script>
-  <script type="module" src="/index.tsx"></script>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="./index.tsx"></script>
 </body>
+
 </html>
