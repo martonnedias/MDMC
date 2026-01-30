@@ -11,9 +11,9 @@ const AdsServicePage: React.FC = () => {
   };
 
   return (
-    <div className="pt-24 pb-0 bg-white font-sans">
+    <div className="pt-0 pb-0 font-sans">
       {/* Hero */}
-      <section className="relative py-20 lg:py-32 overflow-hidden bg-gradient-to-br from-blue-900 to-brand-darkBlue text-white">
+      <section className="relative pt-24 pb-12 lg:pt-32 lg:pb-32 overflow-hidden bg-gradient-to-br from-blue-900 to-brand-darkBlue text-white">
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full mb-6 font-bold text-xs uppercase tracking-widest border border-white/10">
@@ -31,15 +31,15 @@ const AdsServicePage: React.FC = () => {
           </div>
         </div>
         <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none hidden lg:block">
-           <BarChart3 size={600} className="text-white transform translate-x-1/4 translate-y-1/4" />
+          <BarChart3 size={600} className="text-white transform translate-x-1/4 translate-y-1/4" />
         </div>
       </section>
 
       {/* Benefits */}
       <section className="py-24 bg-gray-50">
         <div className="container mx-auto px-4 md:px-6">
-          <SectionTitle 
-            title="Como nossa gestão acelera seu caixa" 
+          <SectionTitle
+            title="Como nossa gestão acelera seu caixa"
             subtitle="Não focamos em curtidas. Focamos em cliques que viram orçamentos no seu WhatsApp."
           />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
@@ -63,17 +63,17 @@ const AdsServicePage: React.FC = () => {
       {/* Pricing / Plans */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4 md:px-6">
-          <SectionTitle 
-            title="Planos de Gestão de Anúncios" 
+          <SectionTitle
+            title="Planos de Gestão de Anúncios"
             subtitle="Escolha o fôlego que seu negócio precisa hoje."
           />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start max-w-7xl mx-auto pt-8">
             {PLANS.map((plan, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className={`relative rounded-[2.5rem] transition-all duration-300 flex flex-col h-full overflow-hidden
-                  ${plan.highlight 
-                    ? 'bg-white border-2 border-brand-blue shadow-2xl lg:scale-105 z-10' 
+                  ${plan.highlight
+                    ? 'bg-white border-2 border-brand-blue shadow-2xl lg:scale-105 z-10'
                     : 'bg-gray-50 border border-gray-200 shadow-lg'
                   }
                 `}
@@ -86,10 +86,10 @@ const AdsServicePage: React.FC = () => {
                 <div className="p-8 flex-grow">
                   <h3 className="text-2xl font-heading font-bold text-gray-900 mb-1">{plan.name}</h3>
                   <p className="text-brand-blue font-bold text-sm mb-6">{plan.subtitle}</p>
-                  
+
                   <div className="mb-8">
-                      <span className="text-4xl font-black text-gray-900">{plan.price}</span>
-                      <span className="text-gray-400 text-sm">/mês</span>
+                    <span className="text-4xl font-black text-gray-900">{plan.price}</span>
+                    <span className="text-gray-400 text-sm">/mês</span>
                   </div>
 
                   <ul className="space-y-4 mb-10">

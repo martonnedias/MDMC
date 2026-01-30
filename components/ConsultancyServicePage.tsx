@@ -10,9 +10,9 @@ const ConsultancyServicePage: React.FC = () => {
   };
 
   return (
-    <div className="pt-24 pb-24 bg-white font-sans">
+    <div className="pt-0 pb-12 lg:pb-24 font-sans">
       {/* Hero */}
-      <section className="py-20 lg:py-32 bg-brand-darkBlue text-white overflow-hidden relative">
+      <section className="pt-24 pb-12 lg:pt-32 lg:pb-32 bg-brand-darkBlue text-white overflow-hidden relative">
         <div className="absolute top-0 left-0 w-full h-full bg-[url(&quot;data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E&quot;)] opacity-40"></div>
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -28,9 +28,9 @@ const ConsultancyServicePage: React.FC = () => {
                 Não adianta encher seu WhatsApp de curiosos se você não sabe como fechar a venda. Ajustamos seu processo comercial do "Oi" ao faturamento.
               </p>
               <div className="bg-white/10 p-8 rounded-[2.5rem] border border-white/20 backdrop-blur-md mb-10">
-                 <p className="text-brand-orange font-black text-xs uppercase tracking-widest mb-2">Investimento em Performance</p>
-                 <div className="text-4xl font-black mb-4">R$ 1.800 <span className="text-sm font-normal text-blue-200">/ mês</span></div>
-                 <p className="text-sm text-blue-200">Ciclo recomendado: 3 meses para implementação completa e colheita de resultados.</p>
+                <p className="text-brand-orange font-black text-xs uppercase tracking-widest mb-2">Investimento em Performance</p>
+                <div className="text-4xl font-black mb-4">R$ 1.800 <span className="text-sm font-normal text-blue-200">/ mês</span></div>
+                <p className="text-sm text-blue-200">Ciclo recomendado: 3 meses para implementação completa e colheita de resultados.</p>
               </div>
               <Button onClick={scrollToContact} variant="primary" className="px-10 py-5 text-lg" withIcon>
                 Agendar Reunião Diagnóstica
@@ -56,8 +56,8 @@ const ConsultancyServicePage: React.FC = () => {
       {/* Scope */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4 md:px-6">
-          <SectionTitle 
-            title="O que vamos construir juntos" 
+          <SectionTitle
+            title="O que vamos construir juntos"
             subtitle="Uma imersão completa na sua operação comercial para tirar os gargalos que impedem você de escalar."
           />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
@@ -79,35 +79,35 @@ const ConsultancyServicePage: React.FC = () => {
               <h3 className="text-3xl font-heading font-bold text-gray-900 mb-6">Por que contratar a Consultoria?</h3>
               <div className="space-y-6">
                 <div className="flex gap-4">
-                   <div className="w-12 h-12 bg-white rounded-xl shadow-md flex items-center justify-center text-brand-blue shrink-0"><MessageSquare /></div>
-                   <div>
-                      <h4 className="font-bold mb-1">Pare de perder leads</h4>
-                      <p className="text-sm text-gray-500 leading-relaxed">Leads demoram a esfriar. Ensinamos seu time a responder rápido e com a abordagem certa.</p>
-                   </div>
+                  <div className="w-12 h-12 bg-white rounded-xl shadow-md flex items-center justify-center text-brand-blue shrink-0"><MessageSquare /></div>
+                  <div>
+                    <h4 className="font-bold mb-1">Pare de perder leads</h4>
+                    <p className="text-sm text-gray-500 leading-relaxed">Leads demoram a esfriar. Ensinamos seu time a responder rápido e com a abordagem certa.</p>
+                  </div>
                 </div>
                 <div className="flex gap-4">
-                   <div className="w-12 h-12 bg-white rounded-xl shadow-md flex items-center justify-center text-brand-orange shrink-0"><Star /></div>
-                   <div>
-                      <h4 className="font-bold mb-1">Aumente o Ticket Médio</h4>
-                      <p className="text-sm text-gray-500 leading-relaxed">Estratégias de up-sell para fazer o mesmo cliente gastar mais na sua empresa de forma natural.</p>
-                   </div>
+                  <div className="w-12 h-12 bg-white rounded-xl shadow-md flex items-center justify-center text-brand-orange shrink-0"><Star /></div>
+                  <div>
+                    <h4 className="font-bold mb-1">Aumente o Ticket Médio</h4>
+                    <p className="text-sm text-gray-500 leading-relaxed">Estratégias de up-sell para fazer o mesmo cliente gastar mais na sua empresa de forma natural.</p>
+                  </div>
                 </div>
                 <div className="flex gap-4">
-                   <div className="w-12 h-12 bg-white rounded-xl shadow-md flex items-center justify-center text-brand-green shrink-0"><ShieldCheck /></div>
-                   <div>
-                      <h4 className="font-bold mb-1">Processo Previsível</h4>
-                      <p className="text-sm text-gray-500 leading-relaxed">Saia da dependência da "vontade" do vendedor e tenha um script validado que funciona para todos.</p>
-                   </div>
+                  <div className="w-12 h-12 bg-white rounded-xl shadow-md flex items-center justify-center text-brand-green shrink-0"><ShieldCheck /></div>
+                  <div>
+                    <h4 className="font-bold mb-1">Processo Previsível</h4>
+                    <p className="text-sm text-gray-500 leading-relaxed">Saia da dependência da "vontade" do vendedor e tenha um script validado que funciona para todos.</p>
+                  </div>
                 </div>
               </div>
             </div>
             <div className="lg:w-1/2 bg-white p-10 rounded-[3rem] shadow-2xl border border-gray-100 relative">
-               <div className="bg-brand-orange text-white px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest absolute -top-4 left-10">Diferencial MDigital</div>
-               <p className="text-2xl font-serif italic text-gray-800 leading-relaxed mb-6">"Não entregamos um relatório e vamos embora. Nós sentamos com você, ouvimos seus áudios de venda, analisamos sua conversa e corrigimos na hora."</p>
-               <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-full"></div>
-                  <span className="font-bold text-brand-darkBlue">Equipe de Estratégia MDigital</span>
-               </div>
+              <div className="bg-brand-orange text-white px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest absolute -top-4 left-10">Diferencial MDigital</div>
+              <p className="text-2xl font-serif italic text-gray-800 leading-relaxed mb-6">"Não entregamos um relatório e vamos embora. Nós sentamos com você, ouvimos seus áudios de venda, analisamos sua conversa e corrigimos na hora."</p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-100 rounded-full"></div>
+                <span className="font-bold text-brand-darkBlue">Equipe de Estratégia MDigital</span>
+              </div>
             </div>
           </div>
         </div>

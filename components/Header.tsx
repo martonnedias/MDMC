@@ -296,16 +296,16 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-x-0 top-[70px] bg-white border-t p-8 shadow-2xl flex flex-col gap-6 overflow-y-auto max-h-[calc(100vh-100px)] rounded-b-[3rem] animate-fade-in">
-          <button onClick={() => goHome()} className="text-left font-black text-xl text-brand-darkBlue flex justify-between items-center py-4 border-b border-gray-50 active:scale-98 transition-transform">
-            Início <ArrowRight size={20} className="text-brand-orange" />
+        <div className="lg:hidden fixed inset-x-0 top-[70px] bg-white border-t p-5 shadow-2xl flex flex-col gap-3 overflow-y-auto max-h-[calc(100vh-80px)] rounded-b-[2.5rem] animate-fade-in">
+          <button onClick={() => goHome()} className="text-left font-black text-lg text-brand-darkBlue flex justify-between items-center py-3 border-b border-gray-50 active:scale-98 transition-transform">
+            Início <ArrowRight size={18} className="text-brand-orange" />
           </button>
 
-          <div className="space-y-4">
+          <div className="space-y-2">
             <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest px-2">Nossas Soluções</p>
-            <div className="grid grid-cols-1 gap-3">
+            <div className="grid grid-cols-1 gap-2">
               {services.map((s, i) => (
-                <button key={i} onClick={() => { onNavigate && onNavigate(s.view); setMobileMenuOpen(false); }} className="w-full text-left py-4 px-6 bg-gray-50 rounded-2xl text-gray-800 font-bold text-sm flex items-center gap-3 active:scale-98 transition-transform">
+                <button key={i} onClick={() => { onNavigate && onNavigate(s.view); setMobileMenuOpen(false); }} className="w-full text-left py-3 px-5 bg-gray-50 rounded-xl text-gray-800 font-bold text-sm flex items-center gap-3 active:scale-98 transition-transform">
                   <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-brand-blue">
                     <s.icon size={20} />
                   </div>
@@ -318,11 +318,11 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-2">
             <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest px-2">Inteligência</p>
-            <div className="grid grid-cols-1 gap-3">
+            <div className="grid grid-cols-1 gap-2">
               {tools.map((t, i) => (
-                <button key={i} onClick={() => { onNavigate && onNavigate(t.view); setMobileMenuOpen(false); }} className="w-full text-left py-4 px-6 bg-gray-50 rounded-2xl text-gray-800 font-bold text-sm flex items-center gap-3 active:scale-98 transition-transform">
+                <button key={i} onClick={() => { onNavigate && onNavigate(t.view); setMobileMenuOpen(false); }} className="w-full text-left py-3 px-5 bg-gray-50 rounded-xl text-gray-800 font-bold text-sm flex items-center gap-3 active:scale-98 transition-transform">
                   <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-brand-orange">
                     <t.icon size={20} />
                   </div>
@@ -335,10 +335,10 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
             </div>
           </div>
 
-          <button onClick={() => { onNavigate && onNavigate('about'); setMobileMenuOpen(false); }} className="text-left font-black text-xl text-gray-800 py-4 border-t border-gray-50 active:scale-98 transition-transform">Sobre Nós</button>
+          <button onClick={() => { onNavigate && onNavigate('about'); setMobileMenuOpen(false); }} className="text-left font-black text-lg text-gray-800 py-3 border-t border-gray-50 active:scale-98 transition-transform">Sobre Nós</button>
 
-          <div className="pt-4">
-            <Button onClick={() => { onNavigate && onNavigate('marketing-diagnosis'); setMobileMenuOpen(false); }} fullWidth className="py-5 text-lg shadow-2xl">Diagnóstico Grátis</Button>
+          <div className="pt-2">
+            <Button onClick={() => { onNavigate && onNavigate('marketing-diagnosis'); setMobileMenuOpen(false); }} fullWidth className="py-4 text-base shadow-xl">Diagnóstico Grátis</Button>
           </div>
         </div>
       )}

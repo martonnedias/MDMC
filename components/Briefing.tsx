@@ -2,9 +2,9 @@
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import Button from './Button';
 import MarketingReport from './MarketingReport';
-import { 
-  UserCheck, Briefcase, BarChart3, Target, Heart, Users, Globe, 
-  Headphones, TrendingUp, Wallet, History, Rocket, 
+import {
+  UserCheck, Briefcase, BarChart3, Target, Heart, Users, Globe,
+  Headphones, TrendingUp, Wallet, History, Rocket,
   CheckCircle2, PackageSearch, Lock, Wand2, ChevronLeft, ChevronRight, AlertCircle
 } from 'lucide-react';
 import { leadService } from '../services/leadService';
@@ -40,7 +40,7 @@ const ProgressIndicator: React.FC<{ currentStep: number }> = ({ currentStep }) =
 
   return (
     <div className="mb-10 relative">
-      <div 
+      <div
         ref={scrollRef}
         className="flex items-center gap-0 overflow-x-auto pb-6 hide-scrollbar px-4"
       >
@@ -52,11 +52,11 @@ const ProgressIndicator: React.FC<{ currentStep: number }> = ({ currentStep }) =
           return (
             <React.Fragment key={index}>
               <div className="flex flex-col items-center min-w-[100px] group">
-                <div 
+                <div
                   className={`relative z-10 w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all duration-500 
-                    ${isCompleted ? 'bg-brand-blue border-brand-blue text-white' : 
-                      isActive ? 'bg-white border-brand-orange text-brand-orange scale-110 shadow-lg shadow-orange-200' : 
-                      'bg-white border-gray-100 text-gray-300'}`}
+                    ${isCompleted ? 'bg-brand-blue border-brand-blue text-white' :
+                      isActive ? 'bg-white border-brand-orange text-brand-orange scale-110 shadow-lg shadow-orange-200' :
+                        'bg-white border-gray-100 text-gray-300'}`}
                 >
                   {isCompleted ? <CheckCircle2 size={20} /> : <Icon size={20} />}
                   {isActive && (
@@ -69,12 +69,12 @@ const ProgressIndicator: React.FC<{ currentStep: number }> = ({ currentStep }) =
                   {section.title}
                 </p>
               </div>
-              
+
               {index < sections.length - 1 && (
                 <div className="flex-1 min-w-[40px] h-[4px] -mt-8 mx-0 relative">
                   <div className="absolute inset-0 bg-gray-100 rounded-full"></div>
-                  <div 
-                    className="absolute inset-0 bg-brand-blue rounded-full transition-all duration-700 ease-in-out" 
+                  <div
+                    className="absolute inset-0 bg-brand-blue rounded-full transition-all duration-700 ease-in-out"
                     style={{ width: isCompleted ? '100%' : '0%' }}
                   ></div>
                 </div>
@@ -229,7 +229,7 @@ const Briefing: React.FC = () => {
 
   const stepContentClass = "p-6 md:p-10 w-full flex-shrink-0 flex flex-col h-fit";
   const labelClass = "block text-sm font-bold text-gray-700 mb-2";
-  
+
   const getInputClass = (field: string) => {
     const base = "w-full p-4 bg-gray-50 rounded-xl border outline-none transition-all text-sm";
     const errorState = errors[field] ? "border-red-500 bg-red-50 focus:border-red-500" : "border-gray-200 focus:border-brand-blue";
@@ -243,7 +243,7 @@ const Briefing: React.FC = () => {
   };
 
   return (
-    <div className="pt-24 pb-24 bg-gray-50 min-h-screen font-sans">
+    <div className="pt-16 lg:pt-24 pb-12 lg:pb-24 bg-gray-50 min-h-screen font-sans">
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center mb-12 gap-4">
           <div className="text-center md:text-left">
@@ -257,11 +257,11 @@ const Briefing: React.FC = () => {
 
         <div className="max-w-4xl mx-auto">
           <ProgressIndicator currentStep={currentStep} />
-          
+
           <form onSubmit={handleSubmit} noValidate className="bg-white rounded-[2.5rem] shadow-xl border border-gray-100 overflow-hidden">
             <div ref={sliderContainerRef} className="relative transition-[height] duration-500 overflow-hidden ease-in-out">
               <div ref={sliderRef} className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentStep * 100}%)` }}>
-                
+
                 {/* 1. Empresa */}
                 <div className={stepContentClass}>
                   <h3 className="text-2xl font-heading font-bold mb-6 flex items-center gap-3 text-brand-blue"><UserCheck /> Dados da Empresa</h3>
@@ -284,10 +284,10 @@ const Briefing: React.FC = () => {
                     <div><label className={labelClass}>Segmento de Atuação *</label><input required value={formData.segment} onChange={e => updateField('segment', e.target.value)} className={getInputClass('segment')} placeholder="Ex: Estética Automotiva, Advocacia, E-commerce" /></div>
                     <div><label className={labelClass}>O que você faz e para quem? *</label><textarea required value={formData.businessDescription} onChange={e => updateField('businessDescription', e.target.value)} className={getInputClass('businessDescription')} rows={2} placeholder="Descreva brevemente sua proposta de valor"></textarea></div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                       <div><label className={labelClass}>Tempo de Mercado</label><input value={formData.businessAge} onChange={e => updateField('businessAge', e.target.value)} className={getInputClass('businessAge')} placeholder="Ex: 3 anos" /></div>
-                       <div><label className={labelClass}>Nº de pessoas na equipe</label><input value={formData.teamSize} onChange={e => updateField('teamSize', e.target.value)} className={getInputClass('teamSize')} placeholder="Ex: 5 colaboradores" /></div>
-                       <div><label className={labelClass}>Tipo de Atendimento *</label><select required value={formData.serviceType} onChange={e => updateField('serviceType', e.target.value)} className={getSelectClass('serviceType')}><option value="">Selecione...</option><option value="Presencial">Presencial</option><option value="Online">Online</option><option value="Ambos">Ambos</option></select></div>
-                       <div><label className={labelClass}>Momento atual? *</label><select required value={formData.businessMoment} onChange={e => updateField('businessMoment', e.target.value)} className={getSelectClass('businessMoment')}><option value="">Selecione...</option><option value="Lancamento">Lançamento / Início</option><option value="Crescimento">Crescimento Acelerado</option><option value="Estavel">Estável / Manutenção</option><option value="Queda">Em queda de faturamento</option></select></div>
+                      <div><label className={labelClass}>Tempo de Mercado</label><input value={formData.businessAge} onChange={e => updateField('businessAge', e.target.value)} className={getInputClass('businessAge')} placeholder="Ex: 3 anos" /></div>
+                      <div><label className={labelClass}>Nº de pessoas na equipe</label><input value={formData.teamSize} onChange={e => updateField('teamSize', e.target.value)} className={getInputClass('teamSize')} placeholder="Ex: 5 colaboradores" /></div>
+                      <div><label className={labelClass}>Tipo de Atendimento *</label><select required value={formData.serviceType} onChange={e => updateField('serviceType', e.target.value)} className={getSelectClass('serviceType')}><option value="">Selecione...</option><option value="Presencial">Presencial</option><option value="Online">Online</option><option value="Ambos">Ambos</option></select></div>
+                      <div><label className={labelClass}>Momento atual? *</label><select required value={formData.businessMoment} onChange={e => updateField('businessMoment', e.target.value)} className={getSelectClass('businessMoment')}><option value="">Selecione...</option><option value="Lancamento">Lançamento / Início</option><option value="Crescimento">Crescimento Acelerado</option><option value="Estavel">Estável / Manutenção</option><option value="Queda">Em queda de faturamento</option></select></div>
                     </div>
                   </div>
                 </div>
@@ -296,7 +296,7 @@ const Briefing: React.FC = () => {
                 <div className={stepContentClass}>
                   <h3 className="text-2xl font-heading font-bold mb-2 flex items-center gap-3 text-brand-blue"><PackageSearch /> Sobre o Produto/Serviço</h3>
                   <p className="text-gray-500 text-sm mb-8 italic">Dados técnicos essenciais para o posicionamento estratégico.</p>
-                  
+
                   <div className="space-y-6">
                     <div><label className={labelClass}>Principal produto ou serviço: *</label><textarea required value={formData.productName} onChange={e => updateField('productName', e.target.value)} className={getInputClass('productName')} rows={2} placeholder="Ex: Manutenção de Baterias Híbridas"></textarea></div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -320,7 +320,7 @@ const Briefing: React.FC = () => {
                       <div><label className={labelClass}>Oferece Garantia? *</label><select required value={formData.hasWarranty} onChange={e => updateField('hasWarranty', e.target.value)} className={getSelectClass('hasWarranty')}><option value="sim">Sim</option><option value="não">Não</option></select></div>
                     </div>
                     {formData.hasWarranty === 'sim' && (
-                       <div><label className={labelClass}>Detalhes da Garantia:</label><input value={formData.warrantyDetails} onChange={e => updateField('warrantyDetails', e.target.value)} className={getInputClass('warrantyDetails')} placeholder="Ex: 12 meses para motor e câmbio" /></div>
+                      <div><label className={labelClass}>Detalhes da Garantia:</label><input value={formData.warrantyDetails} onChange={e => updateField('warrantyDetails', e.target.value)} className={getInputClass('warrantyDetails')} placeholder="Ex: 12 meses para motor e câmbio" /></div>
                     )}
                     <div><label className={labelClass}>Diferencial Único (Sua força real) *</label><textarea required value={formData.uniqueDifferential} onChange={e => updateField('uniqueDifferential', e.target.value)} className={getInputClass('uniqueDifferential')} rows={2} placeholder="Por que eu deveria comprar de você e não do concorrente?"></textarea></div>
                   </div>
@@ -368,8 +368,8 @@ const Briefing: React.FC = () => {
                   <div className="space-y-6">
                     <div><label className={labelClass}>Descrição do Cliente Ideal (Persona) *</label><textarea required value={formData.idealCustomer} onChange={e => updateField('idealCustomer', e.target.value)} className={getInputClass('idealCustomer')} rows={3} placeholder="Dores, desejos e perfil socioeconômico"></textarea></div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                       <div><label className={labelClass}>Regiões de Atendimento *</label><input required value={formData.targetRegions} onChange={e => updateField('targetRegions', e.target.value)} className={getInputClass('targetRegions')} placeholder="Ex: São Paulo e Grande ABC" /></div>
-                       <div><label className={labelClass}>Poder aquisitivo médio? *</label><select required value={formData.incomeLevel} onChange={e => updateField('incomeLevel', e.target.value)} className={getSelectClass('incomeLevel')}><option value="">Selecione...</option><option value="Popular">Popular / Acessível</option><option value="Classe Média">Classe Média</option><option value="Alta Renda">Alta Renda / Luxo</option></select></div>
+                      <div><label className={labelClass}>Regiões de Atendimento *</label><input required value={formData.targetRegions} onChange={e => updateField('targetRegions', e.target.value)} className={getInputClass('targetRegions')} placeholder="Ex: São Paulo e Grande ABC" /></div>
+                      <div><label className={labelClass}>Poder aquisitivo médio? *</label><select required value={formData.incomeLevel} onChange={e => updateField('incomeLevel', e.target.value)} className={getSelectClass('incomeLevel')}><option value="">Selecione...</option><option value="Popular">Popular / Acessível</option><option value="Classe Média">Classe Média</option><option value="Alta Renda">Alta Renda / Luxo</option></select></div>
                     </div>
                     <div><label className={labelClass}>Como as pessoas mais chegam hoje? (Indicação, Insta, Google...)</label><input value={formData.leadSources} onChange={e => updateField('leadSources', e.target.value)} className={getInputClass('leadSources')} /></div>
                     <div><label className={labelClass}>Qual canal traz os MELHORES clientes hoje e por que? *</label><textarea required value={formData.bestLeadChannel} onChange={e => updateField('bestLeadChannel', e.target.value)} className={getInputClass('bestLeadChannel')} rows={2} placeholder="Ex: Indicação, pois já chegam confiando no serviço." /></div>
@@ -381,12 +381,12 @@ const Briefing: React.FC = () => {
                   <h3 className="text-2xl font-heading font-bold mb-6 flex items-center gap-3 text-brand-blue"><Globe /> Presença Digital</h3>
                   <div className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                       <div><label className={labelClass}>Frequência de postagem?</label><input value={formData.postFrequency} onChange={e => updateField('postFrequency', e.target.value)} className={getInputClass('postFrequency')} placeholder="Ex: 3x por semana" /></div>
-                       <div><label className={labelClass}>Quem cuida das redes?</label><input value={formData.socialCaretaker} onChange={e => updateField('socialCaretaker', e.target.value)} className={getInputClass('socialCaretaker')} placeholder="Agência, Eu mesmo?" /></div>
+                      <div><label className={labelClass}>Frequência de postagem?</label><input value={formData.postFrequency} onChange={e => updateField('postFrequency', e.target.value)} className={getInputClass('postFrequency')} placeholder="Ex: 3x por semana" /></div>
+                      <div><label className={labelClass}>Quem cuida das redes?</label><input value={formData.socialCaretaker} onChange={e => updateField('socialCaretaker', e.target.value)} className={getInputClass('socialCaretaker')} placeholder="Agência, Eu mesmo?" /></div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                       <div><label className={labelClass}>Já investe em anúncios? *</label><select required value={formData.hasAds} onChange={e => updateField('hasAds', e.target.value)} className={getSelectClass('hasAds')}><option value="">Selecione...</option><option value="Sim">Sim</option><option value="Sim, mas parou">Parei de investir</option><option value="Não">Nunca investi</option></select></div>
-                       <div><label className={labelClass}>Tem Google Meu Negócio? *</label><select required value={formData.hasGMB} onChange={e => updateField('hasGMB', e.target.value)} className={getSelectClass('hasGMB')}><option value="">Selecione...</option><option value="Sim">Sim</option><option value="Não">Não</option></select></div>
+                      <div><label className={labelClass}>Já investe em anúncios? *</label><select required value={formData.hasAds} onChange={e => updateField('hasAds', e.target.value)} className={getSelectClass('hasAds')}><option value="">Selecione...</option><option value="Sim">Sim</option><option value="Sim, mas parou">Parei de investir</option><option value="Não">Nunca investi</option></select></div>
+                      <div><label className={labelClass}>Tem Google Meu Negócio? *</label><select required value={formData.hasGMB} onChange={e => updateField('hasGMB', e.target.value)} className={getSelectClass('hasGMB')}><option value="">Selecione...</option><option value="Sim">Sim</option><option value="Não">Não</option></select></div>
                     </div>
                     <div><label className={labelClass}>Experiência anterior com anúncios</label><textarea value={formData.adsExperience} onChange={e => updateField('adsExperience', e.target.value)} className={getInputClass('adsExperience')} rows={2} placeholder="Foi bom? Ruim? O que deu certo?"></textarea></div>
                   </div>
@@ -396,7 +396,7 @@ const Briefing: React.FC = () => {
                 <div className={stepContentClass}>
                   <h3 className="text-2xl font-heading font-bold mb-2 flex items-center gap-3 text-brand-blue"><Headphones /> Atendimento e Vendas</h3>
                   <p className="text-gray-500 text-xs mb-8 italic">Seja 100% sincero. A IA usará isso para detectar onde você perde dinheiro.</p>
-                  
+
                   <div className="space-y-6">
                     <div>
                       <label className={labelClass}>Canais de Atendimento Principais: *</label>
@@ -412,13 +412,13 @@ const Briefing: React.FC = () => {
                     </div>
                     <div><label className={labelClass}>Onde o atendimento mais precisa melhorar? *</label><textarea required value={formData.improvementArea} onChange={e => updateField('improvementArea', e.target.value)} className={getInputClass('improvementArea')} rows={2} placeholder="Ex: Velocidade, Script de vendas, Follow-up"></textarea></div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                       <div><label className={labelClass}>Em qual canal você mais perde vendas hoje? *</label><input required value={formData.lostSalesChannel} onChange={e => updateField('lostSalesChannel', e.target.value)} className={getInputClass('lostSalesChannel')} placeholder="Ex: WhatsApp ou Instagram DM" /></div>
-                       <div><label className={labelClass}>Qual o seu maior ponto fraco no atendimento? *</label><input required value={formData.biggestWeakness} onChange={e => updateField('biggestWeakness', e.target.value)} className={getInputClass('biggestWeakness')} placeholder="Ex: Demora na resposta" /></div>
+                      <div><label className={labelClass}>Em qual canal você mais perde vendas hoje? *</label><input required value={formData.lostSalesChannel} onChange={e => updateField('lostSalesChannel', e.target.value)} className={getInputClass('lostSalesChannel')} placeholder="Ex: WhatsApp ou Instagram DM" /></div>
+                      <div><label className={labelClass}>Qual o seu maior ponto fraco no atendimento? *</label><input required value={formData.biggestWeakness} onChange={e => updateField('biggestWeakness', e.target.value)} className={getInputClass('biggestWeakness')} placeholder="Ex: Demora na resposta" /></div>
                     </div>
                     <div><label className={labelClass}>Descreva uma situação em que perdeu uma venda recentemente: *</label><textarea required value={formData.lossScenario} onChange={e => updateField('lossScenario', e.target.value)} className={getInputClass('lossScenario')} rows={2} placeholder="O que aconteceu? O cliente não fechou por causa de preço? Sumiu?"></textarea></div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                       <div><label className={labelClass}>Seu time já fez treinamento de vendas? *</label><select required value={formData.hasSalesTraining} onChange={e => updateField('hasSalesTraining', e.target.value)} className={getSelectClass('hasSalesTraining')}><option value="Sim">Sim</option><option value="Não">Não</option></select></div>
-                       <div><label className={labelClass}>Sente que um treinamento ajudaria? *</label><select required value={formData.wouldTrainingHelp} onChange={e => updateField('wouldTrainingHelp', e.target.value)} className={getSelectClass('wouldTrainingHelp')}><option value="Sim">Sim, com certeza</option><option value="Não">Não, meu time já é ótimo</option></select></div>
+                      <div><label className={labelClass}>Seu time já fez treinamento de vendas? *</label><select required value={formData.hasSalesTraining} onChange={e => updateField('hasSalesTraining', e.target.value)} className={getSelectClass('hasSalesTraining')}><option value="Sim">Sim</option><option value="Não">Não</option></select></div>
+                      <div><label className={labelClass}>Sente que um treinamento ajudaria? *</label><select required value={formData.wouldTrainingHelp} onChange={e => updateField('wouldTrainingHelp', e.target.value)} className={getSelectClass('wouldTrainingHelp')}><option value="Sim">Sim, com certeza</option><option value="Não">Não, meu time já é ótimo</option></select></div>
                     </div>
                   </div>
                 </div>
@@ -457,12 +457,12 @@ const Briefing: React.FC = () => {
                 <div className={stepContentClass}>
                   <div className="text-center py-16">
                     <div className="relative inline-block mb-10">
-                       <div className="absolute inset-0 bg-brand-orange/20 blur-2xl rounded-full scale-150 animate-pulse"></div>
-                       <Rocket size={80} className="text-brand-orange relative z-10 animate-bounce" />
+                      <div className="absolute inset-0 bg-brand-orange/20 blur-2xl rounded-full scale-150 animate-pulse"></div>
+                      <Rocket size={80} className="text-brand-orange relative z-10 animate-bounce" />
                     </div>
                     <h3 className="text-3xl font-heading font-bold text-gray-900 mb-6">Diagnóstico Completo!</h3>
                     <p className="text-lg text-gray-600 mb-12 max-w-lg mx-auto">Nossa IA está pronta para processar seus dados e gerar seu relatório estratégico.</p>
-                    
+
                     {formError && (
                       <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3 text-red-600 text-sm font-bold animate-fade-in">
                         <AlertCircle size={20} /> {formError}
@@ -470,12 +470,12 @@ const Briefing: React.FC = () => {
                     )}
 
                     <div className="max-w-md mx-auto space-y-6">
-                       <Button type="submit" variant="primary" loading={loading} className="w-full py-6 text-xl shadow-2xl" withIcon>
-                         Enviar diagnóstico e receber relatório
-                       </Button>
-                       <p className="flex items-center justify-center gap-2 text-xs text-gray-400 font-bold uppercase pt-4 tracking-widest">
-                         <Lock size={14} /> Dados criptografados e em sigilo
-                       </p>
+                      <Button type="submit" variant="primary" loading={loading} className="w-full py-6 text-xl shadow-2xl" withIcon>
+                        Enviar diagnóstico e receber relatório
+                      </Button>
+                      <p className="flex items-center justify-center gap-2 text-xs text-gray-400 font-bold uppercase pt-4 tracking-widest">
+                        <Lock size={14} /> Dados criptografados e em sigilo
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -485,35 +485,35 @@ const Briefing: React.FC = () => {
 
             {/* Navegação */}
             <div className="px-6 md:px-10 pb-10 flex items-center justify-between border-t border-gray-100 pt-10 bg-gray-50/20">
-              <Button 
-                type="button" 
-                variant="secondary" 
+              <Button
+                type="button"
+                variant="secondary"
                 onClick={() => {
                   setCurrentStep(prev => Math.max(0, prev - 1));
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                   setFormError(null);
-                }} 
-                disabled={currentStep === 0} 
+                }}
+                disabled={currentStep === 0}
                 className={`py-3 px-8 text-sm font-bold ${currentStep === 0 ? 'opacity-0 pointer-events-none' : ''}`}
               >
                 <ChevronLeft size={18} className="mr-2" /> Voltar
               </Button>
-              
+
               <div className="flex flex-col items-center">
-                 <div className="text-[10px] font-black text-gray-300 uppercase mb-1 tracking-widest">Passo atual</div>
-                 <div className="text-sm font-bold text-brand-blue">{currentStep + 1} de {sections.length}</div>
+                <div className="text-[10px] font-black text-gray-300 uppercase mb-1 tracking-widest">Passo atual</div>
+                <div className="text-sm font-bold text-brand-blue">{currentStep + 1} de {sections.length}</div>
               </div>
 
               {currentStep < sections.length - 1 ? (
-                <Button 
-                  type="button" 
-                  variant="primary" 
+                <Button
+                  type="button"
+                  variant="primary"
                   onClick={() => {
                     if (validateStep(currentStep)) {
                       setCurrentStep(prev => prev + 1);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }
-                  }} 
+                  }}
                   className="py-3 px-8 text-sm font-bold"
                 >
                   Próximo <ChevronRight size={18} className="ml-2" />

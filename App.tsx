@@ -56,7 +56,7 @@ const AppContent: React.FC = () => {
     <div className="font-sans antialiased text-gray-900 bg-white min-h-screen flex flex-col w-full overflow-x-hidden">
       <Header currentView={currentView} onNavigate={navigateTo} />
 
-      <main className={`flex-grow ${currentView !== 'landing' ? 'pt-12 lg:pt-16' : ''}`}>
+      <main className={`flex-grow ${currentView !== 'landing' ? 'pt-0' : ''}`}>
         {currentView === 'landing' && (
           <>
             <Hero

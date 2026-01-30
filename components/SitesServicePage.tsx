@@ -10,9 +10,9 @@ const SitesServicePage: React.FC = () => {
   };
 
   return (
-    <div className="pt-24 pb-24 bg-white font-sans">
+    <div className="pt-0 pb-12 lg:pb-24 font-sans">
       {/* Hero */}
-      <section className="py-20 lg:py-32 bg-gray-50 overflow-hidden">
+      <section className="pt-24 pb-12 lg:pt-32 lg:pb-32 bg-gray-50 overflow-hidden">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
@@ -26,24 +26,24 @@ const SitesServicePage: React.FC = () => {
                 Sites rápidos, modernos e focados em converter visitantes em clientes. Não tenha apenas um cartão de visitas, tenha uma ferramenta de lucro.
               </p>
               <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-xl mb-10 max-w-sm">
-                 <p className="text-sm font-black text-gray-400 uppercase tracking-widest mb-1">Investimento Inicial</p>
-                 <div className="flex items-baseline gap-2">
-                    <span className="text-gray-500 text-sm font-bold">A partir de</span>
-                    <span className="text-4xl font-black text-brand-darkBlue">R$ 800</span>
-                 </div>
-                 <p className="text-xs text-brand-green font-bold mt-2">Pagamento facilitado em até 10x</p>
+                <p className="text-sm font-black text-gray-400 uppercase tracking-widest mb-1">Investimento Inicial</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-gray-500 text-sm font-bold">A partir de</span>
+                  <span className="text-4xl font-black text-brand-darkBlue">R$ 800</span>
+                </div>
+                <p className="text-xs text-brand-green font-bold mt-2">Pagamento facilitado em até 10x</p>
               </div>
               <Button onClick={scrollToContact} variant="primary" className="px-10 py-5 text-lg" withIcon>
                 Solicitar Orçamento de Site
               </Button>
             </div>
             <div className="relative">
-               <div className="absolute -inset-4 bg-brand-blue/10 rounded-[4rem] rotate-3 blur-2xl"></div>
-               <img 
-                 src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800" 
-                 alt="Layout de Landing Page" 
-                 className="relative rounded-[3rem] shadow-2xl border-8 border-white"
-               />
+              <div className="absolute -inset-4 bg-brand-blue/10 rounded-[4rem] rotate-3 blur-2xl"></div>
+              <img
+                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800"
+                alt="Layout de Landing Page"
+                className="relative rounded-[3rem] shadow-2xl border-8 border-white"
+              />
             </div>
           </div>
         </div>
@@ -52,8 +52,8 @@ const SitesServicePage: React.FC = () => {
       {/* Differentials */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4 md:px-6">
-          <SectionTitle 
-            title="O que um site da MDigital tem de diferente?" 
+          <SectionTitle
+            title="O que um site da MDigital tem de diferente?"
             subtitle="Construímos pensando no algoritmo do Google e na experiência do seu cliente."
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
