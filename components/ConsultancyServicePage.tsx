@@ -12,7 +12,7 @@ const ConsultancyServicePage: React.FC = () => {
   return (
     <div className="pt-0 pb-12 lg:pb-24 font-sans">
       {/* Hero */}
-      <section className="pt-24 pb-12 lg:pt-32 lg:pb-32 bg-brand-darkBlue text-white overflow-hidden relative">
+      <section className="pt-40 pb-12 lg:pt-32 lg:pb-32 bg-brand-darkBlue text-white overflow-hidden relative">
         <div className="absolute top-0 left-0 w-full h-full bg-[url(&quot;data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E&quot;)] opacity-40"></div>
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
