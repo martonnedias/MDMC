@@ -57,11 +57,11 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
   return (
     <footer id="contact" className="bg-[#040B1A] text-white overflow-hidden font-sans">
       {/* Contact Form Section */}
-      <div className="pt-24 pb-24">
+      <div className="pt-16 pb-16 lg:pt-24 lg:pb-24">
         <div className="container mx-auto px-4 md:px-6">
           <div className="bg-gradient-to-br from-brand-blue to-brand-darkBlue rounded-[3.5rem] p-1 md:p-1 shadow-[0_20px_50px_rgba(15,82,186,0.3)] border border-white/10 relative">
 
-            <div className="bg-[#0A1931]/80 backdrop-blur-xl rounded-[3.4rem] p-8 md:p-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+            <div className="bg-[#0A1931]/80 backdrop-blur-xl rounded-[3.4rem] p-6 md:p-16 grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center relative z-10">
 
               {/* Lado Esquerdo: Persuasão */}
               <div className="text-left space-y-8">
@@ -119,7 +119,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
               </div>
 
               {/* Lado Direito: Formulário Elegante */}
-              <div className="bg-white/95 rounded-[2.5rem] p-8 md:p-12 text-gray-900 shadow-2xl relative overflow-hidden group">
+              <div className="bg-white/95 rounded-[2.5rem] p-6 md:p-12 text-gray-900 shadow-2xl relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-brand-blue/5 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-brand-blue/10 transition-all duration-1000"></div>
 
                 {formState === 'success' ? (
@@ -138,7 +138,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
                   </div>
                 ) : (
                   <form className="space-y-5 relative z-10" onSubmit={handleSubmit}>
-                    <div className="mb-8">
+                    <div className="mb-6">
                       <h3 className="text-2xl font-heading font-bold text-gray-900">Agendar Reunião</h3>
                       <p className="text-gray-400 text-sm mt-1">Preencha e receba um contato prioritário.</p>
                     </div>

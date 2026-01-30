@@ -296,7 +296,7 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-x-0 top-[70px] bg-white border-t p-5 shadow-2xl flex flex-col gap-3 overflow-y-auto max-h-[calc(100vh-80px)] rounded-b-[2.5rem] animate-fade-in">
+        <div className="lg:hidden fixed inset-x-0 top-[65px] bg-white border-t p-4 shadow-2xl flex flex-col gap-2.5 overflow-y-auto max-h-[calc(100vh-75px)] rounded-b-[2rem] animate-fade-in">
           <button onClick={() => goHome()} className="text-left font-black text-lg text-brand-darkBlue flex justify-between items-center py-3 border-b border-gray-50 active:scale-98 transition-transform">
             Início <ArrowRight size={18} className="text-brand-orange" />
           </button>

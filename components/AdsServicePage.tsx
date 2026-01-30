@@ -13,7 +13,7 @@ const AdsServicePage: React.FC = () => {
   return (
     <div className="pt-0 pb-0 font-sans">
       {/* Hero */}
-      <section className="relative pt-24 pb-12 lg:pt-32 lg:pb-32 overflow-hidden bg-gradient-to-br from-blue-900 to-brand-darkBlue text-white">
+      <section className="relative pt-32 pb-12 lg:pt-32 lg:pb-32 overflow-hidden bg-gradient-to-br from-blue-900 to-brand-darkBlue text-white">
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full mb-6 font-bold text-xs uppercase tracking-widest border border-white/10">

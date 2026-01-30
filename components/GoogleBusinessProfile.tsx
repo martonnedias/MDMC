@@ -9,14 +9,16 @@ import {
 } from 'lucide-react';
 
 const GoogleBusinessProfile: React.FC = () => {
+  if (!GMB_CONTENT) return <div className="min-h-screen bg-white"></div>;
+
   const scrollToContact = () => {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <div className="pt-0 pb-12 lg:pb-24 font-sans">
+    <div className="pt-0 pb-12 lg:pb-24 font-sans bg-white">
       {/* Hero Section */}
-      <section className="relative pt-24 pb-12 lg:pt-32 lg:pb-32 overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-50/30">
+      <section className="relative pt-32 pb-12 lg:pt-32 lg:pb-32 overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-50/30">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="z-10 animate-fade-in">
