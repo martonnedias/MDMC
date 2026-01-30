@@ -18,7 +18,7 @@ const GoogleBusinessProfile: React.FC = () => {
   return (
     <div className="pt-0 pb-12 lg:pb-24 font-sans bg-white">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-12 lg:pt-32 lg:pb-32 overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-50/30">
+      <section className="relative pt-40 pb-12 lg:pt-32 lg:pb-32 overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-50/30">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="z-10 animate-fade-in">

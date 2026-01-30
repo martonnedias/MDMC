@@ -12,7 +12,7 @@ const SitesServicePage: React.FC = () => {
   return (
     <div className="pt-0 pb-12 lg:pb-24 font-sans">
       {/* Hero */}
-      <section className="pt-24 pb-12 lg:pt-32 lg:pb-32 bg-gray-50 overflow-hidden">
+      <section className="pt-40 pb-12 lg:pt-32 lg:pb-32 bg-gray-50 overflow-hidden">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
