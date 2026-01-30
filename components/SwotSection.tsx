@@ -12,10 +12,10 @@ interface SwotSectionProps {
 
 const SwotSection: React.FC<SwotSectionProps> = ({ onNavigate }) => {
   return (
-    <section id="swot" className="py-24 bg-white relative overflow-hidden">
+    <section id="swot" className="py-12 lg:py-24 bg-white relative overflow-hidden">
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-4xl mx-auto mb-16 text-center">
-          <SectionTitle 
+          <SectionTitle
             title={SWOT_SECTION_CONTENT.title}
             subtitle={SWOT_SECTION_CONTENT.subtitle}
             alignment="center"

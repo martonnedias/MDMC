@@ -4,7 +4,7 @@ import { TESTIMONIAL_CONTENT } from '../constants';
 
 const Testimonials: React.FC = () => {
   return (
-    <section className="py-20 bg-brand-darkBlue relative overflow-hidden">
+    <section className="py-12 lg:py-20 bg-brand-darkBlue relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
         <Quote size={300} fill="white" />
@@ -30,10 +30,10 @@ const Testimonials: React.FC = () => {
 
             <div className="flex flex-col items-center justify-center border-t border-gray-100 pt-6">
               <div className="w-16 h-16 bg-gray-200 rounded-full mb-4 overflow-hidden border-2 border-brand-blue">
-                <img 
-                    src="https://picsum.photos/seed/businessman/200/200" 
-                    alt="Foto do cliente" 
-                    className="w-full h-full object-cover"
+                <img
+                  src="https://picsum.photos/seed/businessman/200/200"
+                  alt="Foto do cliente"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <h4 className="font-heading font-bold text-gray-900 text-lg">

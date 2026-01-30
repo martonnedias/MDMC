@@ -19,7 +19,7 @@ const Checklist: React.FC = () => {
   };
 
   return (
-    <section className="py-16 bg-blue-50">
+    <section className="py-12 lg:py-16 bg-blue-50">
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-blue-100">
           <div className="bg-brand-blue p-6 text-white text-center">
@@ -36,14 +36,13 @@ const Checklist: React.FC = () => {
               {CHECKLIST_ITEMS.map((item, index) => {
                 const isChecked = checkedItems.includes(index);
                 return (
-                  <div 
-                    key={index} 
+                  <div
+                    key={index}
                     onClick={() => toggleItem(index)}
-                    className={`flex items-start gap-4 p-4 rounded-lg cursor-pointer transition-all duration-200 border ${
-                      isChecked 
-                        ? 'bg-red-50 border-red-200 shadow-sm' 
+                    className={`flex items-start gap-4 p-4 rounded-lg cursor-pointer transition-all duration-200 border ${isChecked
+                        ? 'bg-red-50 border-red-200 shadow-sm'
                         : 'bg-white border-gray-100 hover:border-blue-200 hover:bg-gray-50'
-                    }`}
+                      }`}
                   >
                     <div className={`mt-0.5 shrink-0 ${isChecked ? 'text-red-500' : 'text-gray-300'}`}>
                       {isChecked ? <CheckSquare size={24} /> : <Square size={24} />}

@@ -7,10 +7,10 @@ const icons = [TrendingDown, Clock, SearchX, AlertCircle];
 
 const PainPoints: React.FC = () => {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-12 lg:py-20 bg-white">
       <div className="container mx-auto px-4 md:px-6">
         <SectionTitle title={PAIN_CONTENT.title} alignment="center" />
-        
+
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             {PAIN_CONTENT.items.map((point, index) => {
@@ -32,7 +32,7 @@ const PainPoints: React.FC = () => {
               );
             })}
           </div>
-          
+
           <div className="text-center bg-blue-50 p-8 rounded-2xl border border-blue-100">
             <p className="text-2xl font-heading font-semibold text-brand-blue">
               {PAIN_CONTENT.transition}

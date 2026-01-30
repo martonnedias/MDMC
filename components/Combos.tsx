@@ -5,10 +5,10 @@ import { Plus } from 'lucide-react';
 
 const Combos: React.FC = () => {
   return (
-    <section className="py-20 bg-blue-50">
+    <section className="py-12 lg:py-20 bg-blue-50">
       <div className="container mx-auto px-4 md:px-6">
-        <SectionTitle 
-          title="Potencialize seus resultados com Marketing + Vendas" 
+        <SectionTitle
+          title="Potencialize seus resultados com Marketing + Vendas"
           subtitle="O segredo das empresas que mais crescem é unir a atração de novos clientes com um atendimento impecável."
         />
 
@@ -17,18 +17,18 @@ const Combos: React.FC = () => {
             {COMBOS_CONTENT.map((combo, index) => (
               <div key={index} className="bg-white rounded-xl shadow-md overflow-hidden border border-blue-100 hover:shadow-lg transition-shadow">
                 <div className="bg-brand-blue p-4 text-center">
-                    <h3 className="text-white font-heading font-bold text-lg">{combo.name}</h3>
+                  <h3 className="text-white font-heading font-bold text-lg">{combo.name}</h3>
                 </div>
                 <div className="p-6 text-center">
-                    <div className="flex items-center justify-center gap-2 text-gray-800 font-medium mb-4">
-                        <span>{combo.includes.split('+')[0]}</span>
-                        <Plus size={16} className="text-brand-orange" />
-                        <span>Consultoria</span>
-                    </div>
-                    <div className="h-px w-16 bg-gray-200 mx-auto mb-4"></div>
-                    <p className="text-green-600 font-bold bg-green-50 py-2 px-4 rounded-full inline-block text-sm">
-                        {combo.advantage}
-                    </p>
+                  <div className="flex items-center justify-center gap-2 text-gray-800 font-medium mb-4">
+                    <span>{combo.includes.split('+')[0]}</span>
+                    <Plus size={16} className="text-brand-orange" />
+                    <span>Consultoria</span>
+                  </div>
+                  <div className="h-px w-16 bg-gray-200 mx-auto mb-4"></div>
+                  <p className="text-green-600 font-bold bg-green-50 py-2 px-4 rounded-full inline-block text-sm">
+                    {combo.advantage}
+                  </p>
                 </div>
               </div>
             ))}

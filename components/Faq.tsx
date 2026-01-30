@@ -12,17 +12,17 @@ const Faq: React.FC = () => {
   };
 
   return (
-    <section className="pt-20 pb-24 bg-gray-50">
+    <section className="py-12 lg:pt-20 lg:pb-24 bg-gray-50">
       <div className="container mx-auto px-4 md:px-6">
-        <SectionTitle 
-          title="Dúvidas comuns sobre nossos serviços" 
-          subtitle="Fique à vontade para conferir as respostas para as perguntas mais frequentes sobre nossos planos de marketing e consultoria." 
+        <SectionTitle
+          title="Dúvidas comuns sobre nossos serviços"
+          subtitle="Fique à vontade para conferir as respostas para as perguntas mais frequentes sobre nossos planos de marketing e consultoria."
         />
-        
+
         <div className="max-w-3xl mx-auto space-y-4">
           {FAQ_ITEMS.map((item, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="bg-white border border-gray-200 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-md"
             >
               <button
@@ -38,11 +38,10 @@ const Faq: React.FC = () => {
                   <ChevronDown className="text-gray-400 shrink-0" />
                 )}
               </button>
-              
-              <div 
-                className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                  openIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                }`}
+
+              <div
+                className={`transition-all duration-300 ease-in-out overflow-hidden ${openIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                  }`}
               >
                 <div className="p-6 pt-0 text-gray-600 leading-relaxed border-t border-gray-100 mt-2">
                   {item.answer}
