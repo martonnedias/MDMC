@@ -32,7 +32,7 @@ const Hero: React.FC<HeroProps> = ({ onStartBriefing, onStartSwot }) => {
   };
 
   return (
-    <section id="hero" className="relative pt-40 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-brand-darkBlue">
+    <section id="hero" className="relative pt-40 md:pt-48 lg:pt-56 pb-20 lg:pb-32 overflow-hidden bg-brand-darkBlue">
       {/* Decorative patterns */}
       <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Ccircle cx=\'1\' cy=\'1\' r=\'0.5\' fill=\'rgba(255,255,255,0.05)\'/%3E%3C/svg%3E')] opacity-40 pointer-events-none"></div>
       <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-blue/20 rounded-full blur-3xl pointer-events-none"></div>
