@@ -1,10 +1,10 @@
 import React from 'react';
 import SectionTitle from './SectionTitle';
 import Button from './Button';
-import { GMB_CONTENT } from '../constants';
-import { 
-  MapPin, Star, MessageCircle, TrendingUp, Search, 
-  CheckCircle2, ChevronRight, Smartphone, Clock, 
+import { GMB_CONTENT, CONTACT_INFO } from '../constants';
+import {
+  MapPin, Star, MessageCircle, TrendingUp, Search,
+  CheckCircle2, ChevronRight, Smartphone, Clock,
   ArrowRight, ShieldCheck, Sparkles, AlertCircle
 } from 'lucide-react';
 
@@ -54,14 +54,14 @@ const GoogleBusinessProfile: React.FC = () => {
                       <span className="text-xs text-gray-400 ml-1 font-bold">5.0 (48 avaliações)</span>
                     </div>
                     <div className="p-4 bg-blue-50 rounded-2xl border border-blue-100">
-                       <p className="text-xs font-bold text-brand-blue mb-2">Aberto agora</p>
-                       <div className="grid grid-cols-4 gap-2">
-                          {[...Array(4)].map((_, i) => <div key={i} className="h-10 bg-white rounded-lg border border-blue-100"></div>)}
-                       </div>
+                      <p className="text-xs font-bold text-brand-blue mb-2">Aberto agora</p>
+                      <div className="grid grid-cols-4 gap-2">
+                        {[...Array(4)].map((_, i) => <div key={i} className="h-10 bg-white rounded-lg border border-blue-100"></div>)}
+                      </div>
                     </div>
                     <div className="flex justify-between gap-2">
-                       <div className="flex-1 h-10 bg-gray-50 rounded-xl border border-gray-100"></div>
-                       <div className="flex-1 h-10 bg-brand-blue rounded-xl"></div>
+                      <div className="flex-1 h-10 bg-gray-50 rounded-xl border border-gray-100"></div>
+                      <div className="flex-1 h-10 bg-brand-blue rounded-xl"></div>
                     </div>
                   </div>
                   <div className="absolute top-4 right-4 bg-green-100 text-green-700 p-2 rounded-full border border-green-200 shadow-sm">
@@ -77,8 +77,8 @@ const GoogleBusinessProfile: React.FC = () => {
       {/* Importance Section */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4 md:px-6">
-          <SectionTitle 
-            title={GMB_CONTENT.importance.title} 
+          <SectionTitle
+            title={GMB_CONTENT.importance.title}
             subtitle={GMB_CONTENT.importance.description}
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mt-16">
@@ -126,8 +126,8 @@ const GoogleBusinessProfile: React.FC = () => {
       {/* Process Step-by-Step */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4 md:px-6">
-          <SectionTitle 
-            title={GMB_CONTENT.process.title} 
+          <SectionTitle
+            title={GMB_CONTENT.process.title}
             subtitle="Simplificamos tudo para você não se preocupar com nada técnico."
           />
           <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mt-16 max-w-6xl mx-auto relative">
@@ -167,11 +167,11 @@ const GoogleBusinessProfile: React.FC = () => {
                 "{GMB_CONTENT.results.case}"
               </p>
               <div className="flex items-center gap-4 border-t border-gray-100 pt-6">
-                 <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-brand-blue"><Smartphone size={24} /></div>
-                 <div>
-                    <p className="font-bold">Aumento em Ligações</p>
-                    <p className="text-sm text-gray-500">Métrica real auditada pelo Google</p>
-                 </div>
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-brand-blue"><Smartphone size={24} /></div>
+                <div>
+                  <p className="font-bold">Aumento em Ligações</p>
+                  <p className="text-sm text-gray-500">Métrica real auditada pelo Google</p>
+                </div>
               </div>
             </div>
           </div>
@@ -181,8 +181,8 @@ const GoogleBusinessProfile: React.FC = () => {
       {/* Packages Section */}
       <section className="py-24 bg-gray-50">
         <div className="container mx-auto px-4 md:px-6">
-          <SectionTitle 
-            title="Escolha sua estratégia de visibilidade" 
+          <SectionTitle
+            title="Escolha sua estratégia de visibilidade"
             subtitle="Temos a solução ideal para o seu momento."
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-16">
@@ -232,21 +232,21 @@ const GoogleBusinessProfile: React.FC = () => {
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-5xl mx-auto bg-gradient-to-br from-brand-blue to-brand-darkBlue p-12 md:p-20 rounded-[4rem] text-white text-center relative overflow-hidden shadow-2xl">
-             <div className="absolute top-0 left-0 w-full h-full bg-[url(&quot;data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E&quot;)] opacity-40"></div>
-             <div className="relative z-10">
-                <h2 className="text-3xl md:text-5xl font-heading font-bold mb-6">Pronto para aparecer de verdade no Google?</h2>
-                <p className="text-blue-100 text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed">
-                   Enquanto você decide, alguém na sua região está procurando pelo seu serviço. Não deixe o seu próximo cliente encontrar o seu concorrente.
-                </p>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <Button onClick={scrollToContact} variant="primary" className="bg-brand-orange hover:bg-brand-orangeHover px-12 py-5 border-none text-lg">
-                    Quero aparecer agora
-                  </Button>
-                  <Button onClick={() => window.open('https://wa.me/5511999999999?text=Olá! Gostaria de falar sobre o serviço de Google Meu Negócio.')} variant="outline" className="px-12 py-5 text-lg">
-                    Falar no WhatsApp
-                  </Button>
-                </div>
-             </div>
+            <div className="absolute top-0 left-0 w-full h-full bg-[url(&quot;data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E&quot;)] opacity-40"></div>
+            <div className="relative z-10">
+              <h2 className="text-3xl md:text-5xl font-heading font-bold mb-6">Pronto para aparecer de verdade no Google?</h2>
+              <p className="text-blue-100 text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed">
+                Enquanto você decide, alguém na sua região está procurando pelo seu serviço. Não deixe o seu próximo cliente encontrar o seu concorrente.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Button onClick={scrollToContact} variant="primary" className="bg-brand-orange hover:bg-brand-orangeHover px-12 py-5 border-none text-lg">
+                  Quero aparecer agora
+                </Button>
+                <Button onClick={() => window.open(`${CONTACT_INFO.whatsappLink}?text=Olá! Gostaria de falar sobre o serviço de Google Meu Negócio.`, '_blank')} variant="outline" className="px-12 py-5 text-lg">
+                  Falar no WhatsApp
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </section>

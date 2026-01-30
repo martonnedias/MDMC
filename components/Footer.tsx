@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { MessageCircle, Mail, MapPin, CheckCircle, ArrowRight, ShieldCheck, Sparkles, Globe } from 'lucide-react';
 import Button from './Button';
 import Logo from './Logo';
-import { FOOTER_CTA } from '../constants';
+import { FOOTER_CTA, CONTACT_INFO } from '../constants';
 import { ViewState } from '../App';
 import { leadService } from '../services/leadService';
 
@@ -60,9 +60,9 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
       <div className="pt-24 pb-24">
         <div className="container mx-auto px-4 md:px-6">
           <div className="bg-gradient-to-br from-brand-blue to-brand-darkBlue rounded-[3.5rem] p-1 md:p-1 shadow-[0_20px_50px_rgba(15,82,186,0.3)] border border-white/10 relative">
-            
+
             <div className="bg-[#0A1931]/80 backdrop-blur-xl rounded-[3.4rem] p-8 md:p-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
-              
+
               {/* Lado Esquerdo: Persuasão */}
               <div className="text-left space-y-8">
                 <div>
@@ -84,7 +84,12 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
                     </div>
                     <div>
                       <p className="text-[10px] opacity-40 font-black uppercase tracking-[0.2em]">WhatsApp Executivo</p>
-                      <p className="font-bold text-white text-2xl tracking-tight">(11) 99999-9999</p>
+                      <button
+                        onClick={() => window.open(CONTACT_INFO.whatsappLink, '_blank')}
+                        className="font-bold text-white text-2xl tracking-tight hover:text-brand-orange transition-colors"
+                      >
+                        {CONTACT_INFO.whatsappFormatted}
+                      </button>
                     </div>
                   </div>
 
@@ -100,16 +105,16 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
                 </div>
 
                 <div className="pt-8 flex items-center gap-4 border-t border-white/5">
-                   <div className="flex -space-x-3">
-                      {[1, 2, 3].map(i => (
-                        <div key={i} className="w-10 h-10 rounded-full border-2 border-[#0A1931] bg-gray-300 overflow-hidden shadow-lg">
-                           <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="Expert" />
-                        </div>
-                      ))}
-                   </div>
-                   <p className="text-sm text-blue-100/50 font-medium">
-                     Nossos estrategistas estão online para te atender.
-                   </p>
+                  <div className="flex -space-x-3">
+                    {[1, 2, 3].map(i => (
+                      <div key={i} className="w-10 h-10 rounded-full border-2 border-[#0A1931] bg-gray-300 overflow-hidden shadow-lg">
+                        <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="Expert" />
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-sm text-blue-100/50 font-medium">
+                    Nossos estrategistas estão online para te atender.
+                  </p>
                 </div>
               </div>
 
@@ -124,8 +129,8 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
                     </div>
                     <h3 className="text-3xl font-heading font-bold text-gray-900 mb-4">Solicitação Recebida!</h3>
                     <p className="text-gray-500 mb-10 leading-relaxed max-w-xs mx-auto">Um de nossos especialistas analisará seu perfil e entrará em contato em até 24h.</p>
-                    <button 
-                      onClick={() => setFormState('idle')} 
+                    <button
+                      onClick={() => setFormState('idle')}
                       className="text-brand-blue font-bold text-sm uppercase tracking-widest hover:text-brand-darkBlue transition-colors flex items-center gap-2"
                     >
                       Nova Solicitação <ArrowRight size={16} />
@@ -134,8 +139,8 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
                 ) : (
                   <form className="space-y-5 relative z-10" onSubmit={handleSubmit}>
                     <div className="mb-8">
-                       <h3 className="text-2xl font-heading font-bold text-gray-900">Agendar Reunião</h3>
-                       <p className="text-gray-400 text-sm mt-1">Preencha e receba um contato prioritário.</p>
+                      <h3 className="text-2xl font-heading font-bold text-gray-900">Agendar Reunião</h3>
+                      <p className="text-gray-400 text-sm mt-1">Preencha e receba um contato prioritário.</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -179,10 +184,10 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
                     </div>
 
                     <div className="pt-4">
-                      <Button 
-                        fullWidth 
-                        variant="primary" 
-                        loading={formState === 'loading'} 
+                      <Button
+                        fullWidth
+                        variant="primary"
+                        loading={formState === 'loading'}
                         className="py-5 text-lg rounded-[1.2rem] shadow-xl shadow-brand-orange/20"
                         withIcon
                       >
@@ -209,9 +214,9 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-white/5 pb-16">
           <div className="md:col-span-1 space-y-6">
             {/* Logo Linkável para Home em Versão Clara Conforme Solicitado */}
-            <a 
-              href="/" 
-              className="inline-block transition-transform hover:scale-105 active:scale-95" 
+            <a
+              href="/"
+              className="inline-block transition-transform hover:scale-105 active:scale-95"
               onClick={(e) => { e.preventDefault(); onNavigate && onNavigate('landing'); }}
               aria-label="Voltar para Início"
             >

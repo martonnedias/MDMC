@@ -28,6 +28,8 @@ import AboutPage from './components/AboutPage';
 import { AuthProvider, useAuth } from './components/Auth/AuthProvider';
 import { AuthPage } from './components/AuthPage';
 
+import CookieConsent from './components/CookieConsent';
+
 export type ViewState = 'landing' | 'briefing' | 'terms' | 'privacy' | 'swot' | 'swot-pricing' | 'gmb' | 'ads' | 'sites' | 'consultancy' | 'swot-service' | 'marketing-diagnosis' | 'about' | 'auth';
 
 const AppContent: React.FC = () => {
@@ -177,6 +179,7 @@ const AppContent: React.FC = () => {
 
       <Footer onNavigate={navigateTo} currentView={currentView} />
       <WhatsAppWidget />
+      <CookieConsent />
     </div>
   );
 };

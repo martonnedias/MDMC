@@ -2,6 +2,13 @@
 import { PricingPlan, FaqItem, ServiceItem, ComboItem, PainPointItem } from './types';
 import { Megaphone, MapPin, Share2, LineChart, Layout, Target, TrendingUp, Zap, AlertTriangle, Lightbulb, Users, ShieldCheck, Clock, MessageCircle, BarChart3, Star, Search, Smartphone, CheckCircle2 } from 'lucide-react';
 
+export const CONTACT_INFO = {
+  whatsapp: "86994144709",
+  whatsappFormatted: "(86) 99414-4709",
+  whatsappLink: "https://wa.me/5586994144709",
+  email: "contato@mdigital.com.br"
+};
+
 export const HERO_CONTENT = {
   headline: "Sua empresa merece ser vista por quem realmente importa.",
   subheadline: "Unimos estratégia de gestão e performance digital para colocar sua empresa no topo.",
