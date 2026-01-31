@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { MessageCircle, Mail, MapPin, CheckCircle, ArrowRight, ShieldCheck, Sparkles, Globe } from 'lucide-react';
+import { MessageCircle, Mail, MapPin, CheckCircle, ArrowRight, ShieldCheck, Sparkles, Globe, Instagram, Facebook, Youtube } from 'lucide-react';
 import Button from './Button';
 import Logo from './Logo';
 import { FOOTER_CTA, CONTACT_INFO } from '../constants';
@@ -55,13 +55,13 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
   const selectStyles = "w-full p-4 bg-white/60 backdrop-blur-sm rounded-2xl border border-gray-100 outline-none focus:border-brand-blue focus:ring-4 focus:ring-brand-blue/5 transition-all duration-300 text-sm text-gray-500 font-medium shadow-sm cursor-pointer appearance-none";
 
   return (
-    <footer id="contact" className="bg-[#040B1A] text-white overflow-hidden font-sans">
+    <footer id="contact" className="bg-brand-darkBlue text-white overflow-hidden font-sans">
       {/* Contact Form Section */}
       <div className="pt-16 pb-16 lg:pt-24 lg:pb-24">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="bg-gradient-to-br from-brand-blue to-brand-darkBlue rounded-[3.5rem] p-1 md:p-1 shadow-[0_20px_50px_rgba(15,82,186,0.3)] border border-white/10 relative">
+          <div className="bg-gradient-to-br from-brand-orange to-brand-orangeHover rounded-[3.5rem] p-1 md:p-1 shadow-[0_20px_50px_rgba(255,107,0,0.15)] border border-white/10 relative">
 
-            <div className="bg-[#0A1931]/80 backdrop-blur-xl rounded-[3.4rem] p-6 md:p-16 grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center relative z-10">
+            <div className="bg-brand-navy/90 backdrop-blur-xl rounded-[3.4rem] p-6 md:p-16 grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center relative z-10">
 
               {/* Lado Esquerdo: Persuasão */}
               <div className="text-left space-y-8">
@@ -249,21 +249,33 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
 
           <div>
             <h4 className="font-heading font-bold text-sm mb-8 text-white uppercase tracking-[0.2em] opacity-50">Fale Conosco</h4>
-            <ul className="space-y-4 text-gray-400 text-sm font-medium">
+            <ul className="space-y-4 text-gray-400 text-sm font-medium mb-8">
               <li className="flex items-start gap-3">
                 <MapPin size={18} className="text-brand-blue shrink-0 mt-0.5" />
                 <span>Atendimento Nacional & Remoto</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={18} className="text-brand-blue shrink-0" />
-                <span>contato@mdigital.com.br</span>
+                <span>contato@mdsolution.com.br</span>
               </li>
             </ul>
+
+            <div className="flex gap-4">
+              <a href={CONTACT_INFO.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all duration-300" aria-label="Instagram">
+                <Instagram size={18} />
+              </a>
+              <a href={CONTACT_INFO.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all duration-300" aria-label="Facebook">
+                <Facebook size={18} />
+              </a>
+              <a href={CONTACT_INFO.youtube} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all duration-300" aria-label="YouTube">
+                <Youtube size={18} />
+              </a>
+            </div>
           </div>
         </div>
 
         <div className="py-10 flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-gray-600 font-bold uppercase tracking-widest">
-          <p>© {new Date().getFullYear()} MDigital Consultoria. Todos os direitos reservados.</p>
+          <p>© {new Date().getFullYear()} MD Solution Consultoria. Todos os direitos reservados.</p>
           <div className="flex gap-8">
             <a href="#" onClick={(e) => handleLinkClick(e, 'terms')} className="hover:text-white transition-colors">Termos</a>
             <a href="#" onClick={(e) => handleLinkClick(e, 'privacy')} className="hover:text-white transition-colors">Privacidade</a>

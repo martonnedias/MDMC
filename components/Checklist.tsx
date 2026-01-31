@@ -40,8 +40,8 @@ const Checklist: React.FC = () => {
                     key={index}
                     onClick={() => toggleItem(index)}
                     className={`flex items-start gap-4 p-4 rounded-lg cursor-pointer transition-all duration-200 border ${isChecked
-                        ? 'bg-red-50 border-red-200 shadow-sm'
-                        : 'bg-white border-gray-100 hover:border-blue-200 hover:bg-gray-50'
+                      ? 'bg-red-50 border-red-200 shadow-sm'
+                      : 'bg-white border-gray-100 hover:border-blue-200 hover:bg-gray-50'
                       }`}
                   >
                     <div className={`mt-0.5 shrink-0 ${isChecked ? 'text-red-500' : 'text-gray-300'}`}>
@@ -65,7 +65,7 @@ const Checklist: React.FC = () => {
                     Atenção! Você marcou {checkedItems.length} {checkedItems.length === 1 ? 'ponto' : 'pontos'} de alerta.
                   </h3>
                   <p className="text-gray-600 mb-6 max-w-lg">
-                    Esses problemas estão impedindo seu negócio de crescer. A boa notícia é que a MDigital resolve exatamente isso.
+                    Esses problemas estão impedindo seu negócio de crescer. A boa notícia é que a MD Solution resolve exatamente isso.
                   </p>
                   <Button onClick={scrollToPlans} variant="primary" withIcon>
                     Ver soluções para o meu negócio

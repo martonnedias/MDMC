@@ -23,7 +23,10 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
           {subtitle}
         </p>
       )}
-      <div className={`h-1.5 w-24 bg-brand-orange rounded-full mt-4 lg:mt-6 ${alignment === 'center' ? 'mx-auto' : ''}`} />
+      <div className={`mt-4 lg:mt-6 flex ${alignment === 'center' ? 'justify-center' : 'justify-start'} gap-1`}>
+        <div className="h-1.5 w-24 bg-brand-orange rounded-full" />
+        <div className="h-1.5 w-8 bg-brand-gold rounded-full opacity-60" />
+      </div>
     </div>
   );
 };

@@ -121,9 +121,33 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
     { label: 'Diagnóstico Marketing (Free)', view: 'marketing-diagnosis' as ViewState, icon: BarChart3, desc: 'Análise de Vendas' },
   ];
 
-  const isSolid = isScrolled || currentView !== 'landing';
+  // Header turns solid ONLY on scroll now as requested for ALL pages
+  const isSolid = isScrolled;
 
-  const navLinkClass = `text-sm font-bold tracking-tight transition-all relative group text-white hover:text-brand-orange`;
+  // To ensure readability when transparent, we check if the current page has a dark or light top section
+  const isDarkPage = ['landing', 'ads', 'consultancy', 'about', 'swot-service'].includes(currentView);
+
+  // Dynamic classes based on background state
+  const headerBgClass = isSolid
+    ? 'bg-brand-orange shadow-[0_10px_30px_rgba(255,107,0,0.3)] py-3'
+    : 'bg-transparent py-4 md:py-6';
+
+  // When solid (orange), we use darkBlue text.
+  // When transparent, we use white on dark pages and darkBlue on light pages.
+  const navLinkClass = `text-sm font-black tracking-tight transition-all relative group ${isSolid
+    ? 'text-brand-darkBlue hover:text-white'
+    : (isDarkPage ? 'text-white hover:text-brand-orange' : 'text-brand-darkBlue hover:text-brand-orange text-brand-darkBlue hover:text-brand-orange shadow-none')
+    }`;
+
+  const iconColorClass = isSolid
+    ? 'text-brand-darkBlue'
+    : (isDarkPage ? 'text-white' : 'text-brand-darkBlue');
+
+  const buttonVariant = isSolid ? 'outline' : 'primary';
+
+  const buttonExtraClass = isSolid
+    ? 'border-brand-darkBlue text-brand-darkBlue hover:bg-brand-darkBlue hover:text-white'
+    : (isDarkPage ? 'shadow-xl shadow-brand-orange/10' : 'bg-brand-darkBlue text-white hover:bg-brand-navy shadow-lg shadow-brand-darkBlue/20');
 
   // Enhanced hover handlers with delay
   const handleMouseEnter = (menu: 'services' | 'tools') => {
@@ -166,13 +190,13 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
   };
 
   return (
-    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-700 ${isSolid ? 'bg-[#0A1931]/95 backdrop-blur-md shadow-lg py-3' : 'bg-transparent py-4 md:py-6'}`}>
+    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${headerBgClass} backdrop-blur-md`}>
       <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
         {/* Logo Linkável para Home */}
         <a href="/" onClick={goHome} className="block transition-transform active:scale-95" aria-label="Voltar para Início">
           <Logo
             size={isScrolled ? 'sm' : 'md'}
-            variant={isScrolled ? 'dark' : 'light'}
+            variant={isSolid || !isDarkPage ? 'dark' : 'light'}
           />
         </a>
 
@@ -180,13 +204,13 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
         <nav className="hidden lg:flex items-center gap-10" role="navigation">
           <button onClick={goHome} className={navLinkClass}>
             Início
-            <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full bg-brand-orange`}></span>
+            <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${isSolid ? 'bg-white' : 'bg-brand-orange'}`}></span>
           </button>
 
           <div className="relative group" ref={servicesRef}>
             <button
               ref={servicesButtonRef}
-              className={`flex items-center gap-1.5 text-sm font-bold tracking-tight py-2 transition-all text-white hover:text-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/50 focus:ring-offset-2 focus:ring-offset-transparent rounded-lg px-2`}
+              className={`flex items-center gap-1.5 text-sm font-black tracking-tight py-2 transition-all focus:outline-none rounded-lg px-2 ${navLinkClass}`}
               onClick={() => toggleMenu('services')}
               onMouseEnter={() => handleMouseEnter('services')}
               onMouseLeave={() => handleMouseLeave('services')}
@@ -231,7 +255,7 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
           <div className="relative group" ref={toolsRef}>
             <button
               ref={toolsButtonRef}
-              className={`flex items-center gap-1.5 text-sm font-bold tracking-tight py-2 transition-all text-white hover:text-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/50 focus:ring-offset-2 focus:ring-offset-transparent rounded-lg px-2`}
+              className={`flex items-center gap-1.5 text-sm font-black tracking-tight py-2 transition-all focus:outline-none rounded-lg px-2 ${navLinkClass}`}
               onClick={() => toggleMenu('tools')}
               onMouseEnter={() => handleMouseEnter('tools')}
               onMouseLeave={() => handleMouseLeave('tools')}
@@ -275,17 +299,21 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
 
           <button onClick={() => onNavigate && onNavigate('about')} className={navLinkClass}>
             Sobre Nós
-            <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full bg-brand-orange`}></span>
+            <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${isSolid ? 'bg-white' : 'bg-brand-orange'}`}></span>
           </button>
 
-          <Button onClick={() => onNavigate && onNavigate('marketing-diagnosis')} variant="primary" className="py-3 px-7 text-xs font-black uppercase tracking-widest shadow-xl shadow-brand-orange/10 hover:shadow-brand-orange/30">
+          <Button
+            onClick={() => onNavigate && onNavigate('marketing-diagnosis')}
+            variant={buttonVariant}
+            className={`py-3 px-7 text-xs font-black uppercase tracking-widest transition-all duration-500 ${buttonExtraClass}`}
+          >
             Diagnóstico Grátis
           </Button>
         </nav>
 
         {/* Mobile Menu Button */}
         <button
-          className={`lg:hidden p-2.5 rounded-2xl border transition-all bg-white/10 backdrop-blur-md border-white/20 text-white`}
+          className={`lg:hidden p-2.5 rounded-2xl border transition-all duration-500 ${isSolid ? 'bg-brand-darkBlue/10 border-brand-darkBlue/20 text-brand-darkBlue' : (!isDarkPage ? 'bg-brand-darkBlue/10 border-brand-darkBlue/20 text-brand-darkBlue' : 'bg-white/10 backdrop-blur-md border-white/20 text-white')}`}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label={mobileMenuOpen ? 'Fechar menu' : 'Abrir menu'}
           aria-expanded={mobileMenuOpen}
@@ -296,7 +324,7 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-x-0 top-[65px] bg-white border-t p-4 shadow-2xl flex flex-col gap-2.5 overflow-y-auto max-h-[calc(100vh-75px)] rounded-b-[2rem] animate-fade-in">
+        <div className="lg:hidden fixed inset-x-0 top-[65px] bg-white border-t p-4 shadow-2xl flex flex-col gap-2.5 overflow-y-auto max-h-[calc(100vh-75px)] rounded-b-[2rem] animate-fade-in z-[60]">
           <button onClick={() => goHome()} className="text-left font-black text-lg text-brand-darkBlue flex justify-between items-center py-3 border-b border-gray-50 active:scale-98 transition-transform">
             Início <ArrowRight size={18} className="text-brand-orange" />
           </button>
@@ -306,7 +334,7 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
             <div className="grid grid-cols-1 gap-2">
               {services.map((s, i) => (
                 <button key={i} onClick={() => { onNavigate && onNavigate(s.view); setMobileMenuOpen(false); }} className="w-full text-left py-3 px-5 bg-gray-50 rounded-xl text-gray-800 font-bold text-sm flex items-center gap-3 active:scale-98 transition-transform">
-                  <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-brand-blue">
+                  <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-brand-blue shadow-sm">
                     <s.icon size={20} />
                   </div>
                   <div className="flex flex-col">
@@ -323,7 +351,7 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
             <div className="grid grid-cols-1 gap-2">
               {tools.map((t, i) => (
                 <button key={i} onClick={() => { onNavigate && onNavigate(t.view); setMobileMenuOpen(false); }} className="w-full text-left py-3 px-5 bg-gray-50 rounded-xl text-gray-800 font-bold text-sm flex items-center gap-3 active:scale-98 transition-transform">
-                  <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-brand-orange">
+                  <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-brand-orange shadow-sm">
                     <t.icon size={20} />
                   </div>
                   <div className="flex flex-col">
@@ -338,7 +366,7 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
           <button onClick={() => { onNavigate && onNavigate('about'); setMobileMenuOpen(false); }} className="text-left font-black text-lg text-gray-800 py-3 border-t border-gray-50 active:scale-98 transition-transform">Sobre Nós</button>
 
           <div className="pt-2">
-            <Button onClick={() => { onNavigate && onNavigate('marketing-diagnosis'); setMobileMenuOpen(false); }} fullWidth className="py-4 text-base shadow-xl">Diagnóstico Grátis</Button>
+            <Button onClick={() => { onNavigate && onNavigate('marketing-diagnosis'); setMobileMenuOpen(false); }} fullWidth className="py-4 text-base shadow-xl bg-brand-orange text-white">Diagnóstico Grátis</Button>
           </div>
         </div>
       )}

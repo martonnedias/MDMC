@@ -3,6 +3,7 @@ import SectionTitle from './SectionTitle';
 import Button from './Button';
 import { CONSULTANCY_CONTENT } from '../constants';
 import { LineChart, CheckCircle2, MessageSquare, Headphones, TrendingUp, Users, ShieldCheck, Star } from 'lucide-react';
+import ShareButtons from './ShareButtons';
 
 const ConsultancyServicePage: React.FC = () => {
   const scrollToContact = () => {
@@ -10,7 +11,7 @@ const ConsultancyServicePage: React.FC = () => {
   };
 
   return (
-    <div className="pt-0 pb-12 lg:pb-24 font-sans">
+    <div className="pt-0 pb-12 lg:pb-24 font-sans focus:outline-none">
       {/* Hero */}
       <section className="pt-40 md:pt-48 lg:pt-56 pb-12 lg:pb-32 bg-brand-darkBlue text-white overflow-hidden relative">
         <div className="absolute top-0 left-0 w-full h-full bg-[url(&quot;data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E&quot;)] opacity-40"></div>
@@ -32,9 +33,12 @@ const ConsultancyServicePage: React.FC = () => {
                 <div className="text-4xl font-black mb-4">R$ 1.800 <span className="text-sm font-normal text-blue-200">/ mês</span></div>
                 <p className="text-sm text-blue-200">Ciclo recomendado: 3 meses para implementação completa e colheita de resultados.</p>
               </div>
-              <Button onClick={scrollToContact} variant="primary" className="px-10 py-5 text-lg" withIcon>
-                Agendar Reunião Diagnóstica
-              </Button>
+              <div className="flex flex-col sm:flex-row items-center gap-8">
+                <Button onClick={scrollToContact} variant="primary" className="px-10 py-5 text-lg" withIcon>
+                  Agendar Reunião Diagnóstica
+                </Button>
+                <ShareButtons title="MD Solution - Consultoria de Vendas e Processo Comercial" />
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               {[
@@ -102,11 +106,11 @@ const ConsultancyServicePage: React.FC = () => {
               </div>
             </div>
             <div className="lg:w-1/2 bg-white p-10 rounded-[3rem] shadow-2xl border border-gray-100 relative">
-              <div className="bg-brand-orange text-white px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest absolute -top-4 left-10">Diferencial MDigital</div>
+              <div className="bg-brand-orange text-white px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest absolute -top-4 left-10">Diferencial MD Solution</div>
               <p className="text-2xl font-serif italic text-gray-800 leading-relaxed mb-6">"Não entregamos um relatório e vamos embora. Nós sentamos com você, ouvimos seus áudios de venda, analisamos sua conversa e corrigimos na hora."</p>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-blue-100 rounded-full"></div>
-                <span className="font-bold text-brand-darkBlue">Equipe de Estratégia MDigital</span>
+                <span className="font-bold text-brand-darkBlue">Equipe de Estratégia MD Solution</span>
               </div>
             </div>
           </div>

@@ -7,16 +7,15 @@ import {
   CheckCircle2, ChevronRight, Smartphone, Clock,
   ArrowRight, ShieldCheck, Sparkles, AlertCircle
 } from 'lucide-react';
+import ShareButtons from './ShareButtons';
 
 const GoogleBusinessProfile: React.FC = () => {
-  if (!GMB_CONTENT) return <div className="min-h-screen bg-white"></div>;
-
   const scrollToContact = () => {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <div className="pt-0 pb-12 lg:pb-24 font-sans bg-white">
+    <div className="pt-0 pb-12 lg:pb-24 font-sans bg-white min-h-screen">
       {/* Hero Section */}
       <section className="relative pt-40 md:pt-48 lg:pt-56 pb-12 lg:pb-32 overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-50/30">
         <div className="container mx-auto px-4 md:px-6">
@@ -34,9 +33,12 @@ const GoogleBusinessProfile: React.FC = () => {
               <p className="text-gray-600 mb-8 text-lg leading-relaxed max-w-xl">
                 {GMB_CONTENT.hero.pain}
               </p>
-              <Button onClick={scrollToContact} variant="primary" className="px-10 py-5 text-lg" withIcon>
-                {GMB_CONTENT.hero.cta}
-              </Button>
+              <div className="flex flex-col sm:flex-row items-center gap-8">
+                <Button onClick={scrollToContact} variant="primary" className="px-10 py-5 text-lg" withIcon>
+                  {GMB_CONTENT.hero.cta}
+                </Button>
+                <ShareButtons title="MD Solution - Google Meu Negócio e SEO Local" />
+              </div>
             </div>
             <div className="relative z-10 flex justify-center lg:justify-end">
               <div className="relative max-w-md w-full">
@@ -105,7 +107,7 @@ const GoogleBusinessProfile: React.FC = () => {
               <h2 className="text-3xl font-heading font-bold mb-6">{GMB_CONTENT.infoList.title}</h2>
               <p className="text-blue-100 leading-relaxed mb-8">{GMB_CONTENT.infoList.intro}</p>
               <div className="bg-white/10 p-4 rounded-xl border border-white/10">
-                <p className="text-xs font-bold uppercase tracking-widest text-brand-orange">Compromisso MDigital</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-brand-orange">Compromisso MD Solution</p>
                 <p className="text-sm mt-1">Seguimos rigorosamente as diretrizes do Google para evitar suspensões e garantir o topo.</p>
               </div>
             </div>

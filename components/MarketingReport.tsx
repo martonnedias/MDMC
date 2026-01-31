@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GoogleGenAI } from "@google/genai";
 import Button from './Button';
-import { 
-  FileText, Download, Share2, ArrowLeft, Loader2, Sparkles, 
-  Target, BarChart3, TrendingUp, CheckCircle2, Mail, 
+import {
+  FileText, Download, Share2, ArrowLeft, Loader2, Sparkles,
+  Target, BarChart3, TrendingUp, CheckCircle2, Mail,
   AlertCircle, ShieldCheck, Zap, MessageSquare, Briefcase
 } from 'lucide-react';
 import { leadService } from '../services/leadService';
+import { CONTACT_INFO } from '../constants';
+import ShareButtons from './ShareButtons';
 
 interface MarketingReportProps {
   formData: any;
@@ -27,8 +29,8 @@ const MarketingReport: React.FC<MarketingReportProps> = ({ formData, onBack }) =
       setLoading(true);
       try {
         const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-        
-        const systemInstruction = `Você é um Agente de IA especializado em análise estratégica de negócios, criado para a MDigital Marketing & Consultoria.
+
+        const systemInstruction = `Você é um Agente de IA especializado em análise estratégica de negócios, criado para a MD Solution Marketing & Consultoria.
         SUA FUNÇÃO: Analisar respostas de um briefing e gerar um Relatório de Diagnóstico profissional, conciso e humano.
         REGRAS DE OURO:
         - Nunca mencione ser uma IA.
@@ -73,7 +75,7 @@ const MarketingReport: React.FC<MarketingReportProps> = ({ formData, onBack }) =
     const element = reportRef.current;
     const opt = {
       margin: 10,
-      filename: `Diagnostico_MDigital_${formData.companyName.replace(/\s+/g, '_')}.pdf`,
+      filename: `Diagnostico_MDSolution_${formData.companyName.replace(/\s+/g, '_')}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -108,9 +110,9 @@ const MarketingReport: React.FC<MarketingReportProps> = ({ formData, onBack }) =
         <h3 className="text-2xl font-heading font-bold text-gray-900 mb-4">Gerando Auditoria 360º...</h3>
         <p className="text-gray-500 max-w-md mx-auto mb-10">Estamos cruzando seus dados com benchmarks de <strong>{formData.segment}</strong> para criar um plano de ação real.</p>
         <div className="space-y-3 max-w-xs mx-auto text-left">
-           <div className="flex items-center gap-3 text-sm text-gray-400 font-bold"><CheckCircle2 className="text-brand-green" size={16}/> Dados capturados</div>
-           <div className="flex items-center gap-3 text-sm text-gray-400 font-bold"><Loader2 className="animate-spin text-brand-blue" size={16}/> Analisando competitividade de preço</div>
-           <div className="flex items-center gap-3 text-sm text-gray-300 font-bold"><div className="w-4 h-4 rounded-full bg-gray-100"></div> Mapeando oportunidades de escala</div>
+          <div className="flex items-center gap-3 text-sm text-gray-400 font-bold"><CheckCircle2 className="text-brand-green" size={16} /> Dados capturados</div>
+          <div className="flex items-center gap-3 text-sm text-gray-400 font-bold"><Loader2 className="animate-spin text-brand-blue" size={16} /> Analisando competitividade de preço</div>
+          <div className="flex items-center gap-3 text-sm text-gray-300 font-bold"><div className="w-4 h-4 rounded-full bg-gray-100"></div> Mapeando oportunidades de escala</div>
         </div>
       </div>
     </div>
@@ -131,20 +133,25 @@ const MarketingReport: React.FC<MarketingReportProps> = ({ formData, onBack }) =
     <div className="container mx-auto px-4 pt-32 pb-32">
       <div className="max-w-4xl mx-auto">
         {/* Actions Bar */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 no-print">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 no-print">
           <button onClick={onBack} className="flex items-center gap-2 text-gray-500 font-bold hover:text-brand-blue transition-colors group">
-            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" /> Início
+            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" /> Voltar ao Início
           </button>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Button onClick={handleSendEmail} variant="secondary" className="px-6 py-2 text-sm bg-white" loading={sendingEmail}>
-              {emailSent ? <span className="text-green-600 flex items-center gap-2"><CheckCircle2 size={16}/> Enviado!</span> : <span className="flex items-center gap-2"><Mail size={16}/> Enviar p/ E-mail</span>}
-            </Button>
-            <Button onClick={handleDownloadPDF} variant="secondary" className="px-6 py-2 text-sm bg-white" loading={generatingPdf}>
-              <Download size={16} className="mr-2" /> Baixar PDF
-            </Button>
-            <Button onClick={() => window.open(`https://wa.me/5511999999999?text=Olá! Acabei de ler meu diagnóstico da ${formData.companyName} e quero marcar uma reunião.`)} variant="primary" className="px-6 py-2 text-sm">
-              Falar com Estrategista
-            </Button>
+
+          <div className="flex flex-col lg:flex-row items-center gap-6 w-full lg:w-auto">
+            <ShareButtons title={`MD Solution - Diagnóstico de Marketing para ${formData.companyName}`} />
+            <div className="h-10 w-px bg-gray-200 hidden lg:block"></div>
+            <div className="flex flex-wrap items-center gap-3">
+              <Button onClick={handleSendEmail} variant="secondary" className="px-6 py-2 text-sm bg-white" loading={sendingEmail}>
+                {emailSent ? <span className="text-green-600 flex items-center gap-2"><CheckCircle2 size={16} /> Enviado!</span> : <span className="flex items-center gap-2"><Mail size={16} /> Enviar p/ E-mail</span>}
+              </Button>
+              <Button onClick={handleDownloadPDF} variant="secondary" className="px-6 py-2 text-sm bg-white" loading={generatingPdf}>
+                <Download size={16} className="mr-2" /> {generatingPdf ? 'Gerando...' : 'Baixar PDF'}
+              </Button>
+              <Button onClick={() => window.open(`https://wa.me/55${CONTACT_INFO.whatsapp}?text=Olá! Acabei de ler meu diagnóstico da ${formData.companyName} e quero marcar uma reunião.`)} variant="primary" className="px-6 py-2 text-sm">
+                Falar com Estrategista
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -169,10 +176,10 @@ const MarketingReport: React.FC<MarketingReportProps> = ({ formData, onBack }) =
                 if (trimmed.startsWith('#')) return <h2 key={i} className="text-3xl font-bold text-brand-darkBlue mt-12 mb-6">{trimmed.replace(/#/g, '').trim()}</h2>;
                 if (trimmed.startsWith('-') || trimmed.startsWith('*')) return <li key={i} className="ml-5 mb-2 list-disc marker:text-brand-orange pl-2">{trimmed.replace(/[-*]/, '').trim()}</li>;
                 if (trimmed === '') return <div key={i} className="h-4" />;
-                
+
                 // Simulação de Tabela via Markdown simples (se a IA gerar)
                 if (trimmed.includes('|')) return <div key={i} className="bg-gray-50 p-4 rounded-xl font-mono text-xs overflow-x-auto my-4 border border-gray-100">{trimmed}</div>;
-                
+
                 return <p key={i} className="mb-4 text-base leading-relaxed">{trimmed}</p>;
               })}
             </div>
@@ -180,9 +187,9 @@ const MarketingReport: React.FC<MarketingReportProps> = ({ formData, onBack }) =
             <div className="mt-20 pt-12 border-t border-gray-100 text-center">
               <div className="inline-flex items-center gap-3 bg-gray-50 px-6 py-3 rounded-full border border-gray-100 mb-6">
                 <ShieldCheck className="text-brand-green" size={20} />
-                <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Validado pela Metodologia MDigital</span>
+                <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Validado pela Metodologia MD Solution</span>
               </div>
-              <p className="text-[10px] text-gray-400 max-w-md mx-auto leading-relaxed">Este documento é estritamente confidencial e contém recomendações baseadas em dados proprietários. MDigital Marketing & Consultoria © {new Date().getFullYear()}</p>
+              <p className="text-[10px] text-gray-400 max-w-md mx-auto leading-relaxed">Este documento é estritamente confidencial e contém recomendações baseadas em dados proprietários. MD Solution Marketing & Consultoria © {new Date().getFullYear()}</p>
             </div>
           </div>
         </article>

@@ -6,7 +6,10 @@ export const CONTACT_INFO = {
   whatsapp: "86994144709",
   whatsappFormatted: "(86) 99414-4709",
   whatsappLink: "https://wa.me/5586994144709",
-  email: "contato@mdigital.com.br"
+  email: "contato@mdsolution.com.br",
+  instagram: "https://instagram.com/mdsolution",
+  facebook: "https://facebook.com/mdsolution",
+  youtube: "https://youtube.com/@mdsolution"
 };
 
 export const HERO_CONTENT = {
@@ -38,7 +41,7 @@ export const GMB_CONTENT = {
   },
   infoList: {
     title: "O que cuidamos no seu perfil",
-    intro: "A MDigital se responsabiliza por coletar, organizar e preencher essas informações de forma profissional, seguindo as diretrizes do Google:",
+    intro: "A MD Solution se responsabiliza por coletar, organizar e preencher essas informações de forma profissional, seguindo as diretrizes do Google:",
     items: [
       "Nome da empresa exatamente como no mundo real",
       "Endereço completo (CEP, bairro, cidade) ou área de atendimento",
@@ -123,7 +126,7 @@ export const GMB_CONTENT = {
 export const SWOT_SECTION_CONTENT = {
   title: "Escolha o nível de profundidade do seu diagnóstico SWOT",
   subtitle: "Você decide até onde quer ir: desde um relatório estratégico pronto para usar até uma experiência completa com explicação personalizada.",
-  description: "Muitos empresários confundem marketing com gestão. Aqui na MDigital, ajudamos você nas duas frentes com clareza absoluta.",
+  description: "Muitos empresários confundem marketing com gestão. Aqui na MD Solution, ajudamos você nas duas frentes com clareza absoluta.",
   definitions: [
     {
       letter: "S",
@@ -180,7 +183,7 @@ export const SWOT_PLANS = [
     price: "R$ 247",
     description: "Para quem quer clareza rápida em um formato direto, sem reuniões. Um raio-x estratégico para ler no seu tempo.",
     features: [
-      "Acesso ao questionário completo MDigital",
+      "Acesso ao questionário completo MD Solution",
       "Relatório SWOT Personalizado (PDF)",
       "Análise Detalhada dos 4 quadrantes",
       "Resumo Executivo Estratégico",
@@ -255,7 +258,7 @@ export const PAIN_CONTENT = {
       text: "A incerteza de não saber se amanhã terá novos clientes batendo à porta."
     }
   ] as PainPointItem[],
-  transition: "A MDigital nasceu para transformar essa dor de cabeça em uma Operação de Performance Digital previsível."
+  transition: "A MD Solution nasceu para transformar essa dor de cabeça em uma Operação de Performance Digital previsível."
 };
 
 export const CHECKLIST_ITEMS = [
@@ -276,7 +279,7 @@ export const SERVICES_CONTENT = {
       title: "Campanhas de Captação",
       description: "Operação de Performance Digital no Meta Ads e Google Ads para atrair quem quer comprar agora.",
       icon: Megaphone,
-      color: "bg-blue-100 text-brand-blue"
+      color: "bg-brand-blueLight text-brand-blue"
     },
     {
       title: "Sites & Landing Pages",
@@ -288,7 +291,7 @@ export const SERVICES_CONTENT = {
       title: "Redes Sociais & Google",
       description: "Conteúdo profissional e gestão de Google Meu Negócio para passar credibilidade total.",
       icon: Share2,
-      color: "bg-orange-100 text-brand-orange"
+      color: "bg-brand-orangeLight text-brand-orange"
     },
     {
       title: "Consultoria de Vendas",
@@ -381,7 +384,7 @@ export const COMBOS_CONTENT: ComboItem[] = [
 
 export const TRUST_CONTENT = {
   title: "Somos novos, mas somos sérios.",
-  text1: "Na MDigital você não é apenas um número. Aqui, somos movidos pelo resultado do seu faturamento. Ser uma agência nova significa que temos fome de entrega e um atendimento humano que as grandes agências esqueceram.",
+  text1: "Na MD Solution você não é apenas um número. Aqui, somos movidos pelo resultado do seu faturamento. Ser uma agência nova significa que temos fome de entrega e um atendimento humano que as grandes agências esqueceram.",
   text2: "Valorizamos a transparência e a linguagem simples. Sem enrolação, sem promessas milagrosas: apenas trabalho duro e estratégia.",
   points: [
     { title: "Linguagem Simples", text: "Explicamos tudo sem termos técnicos complicados." },
@@ -394,7 +397,7 @@ export const TRUST_CONTENT = {
 export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "A verba de anúncios está inclusa nos planos?",
-    answer: "Não. O valor pago à MDigital é pela nossa gestão e inteligência. A verba dos anúncios (Google/Facebook) é paga diretamente para as plataformas pelo seu cartão de crédito ou boleto."
+    answer: "Não. O valor pago à MD Solution é pela nossa gestão e inteligência. A verba dos anúncios (Google/Facebook) é paga diretamente para as plataformas pelo seu cartão de crédito ou boleto."
   },
   {
     question: "Quanto tempo para ver os primeiros resultados?",
@@ -419,7 +422,7 @@ export const FAQ_ITEMS: FaqItem[] = [
 ];
 
 export const TESTIMONIAL_CONTENT = {
-  text: "O pessoal da MDigital organizou minha casa. Eu recebia curiosos e agora recebo clientes. Meu faturamento subiu 30% em 3 meses com as campanhas de captação que eles montaram.",
+  text: "O pessoal da MD Solution organizou minha casa. Eu recebia curiosos e agora recebo clientes. Meu faturamento subiu 30% em 3 meses com as campanhas de captação que eles montaram.",
   author: "Ricardo Souza",
   role: "Proprietário da RS Odontologia"
 };

@@ -8,6 +8,8 @@ import {
 } from 'lucide-react';
 import { leadService } from '../services/leadService';
 
+import ShareButtons from './ShareButtons';
+
 interface SwotReportProps {
   formData: any;
   onBack: () => void;
@@ -163,31 +165,22 @@ const SwotReport: React.FC<SwotReportProps> = ({ formData, onBack }) => {
   return (
     <div className="container mx-auto px-4 pt-32 pb-32">
       <div className="max-w-4xl mx-auto">
-        {/* Header de Ações (Apenas Web) */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 no-print">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-8 no-print">
           <button onClick={onBack} className="flex items-center gap-2 text-gray-500 font-bold hover:text-brand-blue transition-colors group">
             <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" /> Voltar ao Início
           </button>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Button onClick={handleSendEmail} variant="secondary" className="px-6 py-2 text-sm bg-white" loading={sendingEmail}>
-              {emailSent ? (
-                <span className="flex items-center gap-2 text-green-600 font-bold"><CheckCircle2 size={18} /> E-mail Enviado!</span>
-              ) : (
-                <span className="flex items-center gap-2"><Mail size={18} /> Receber por E-mail</span>
-              )}
-            </Button>
-            <Button onClick={handleDownloadPDF} variant="secondary" className="px-6 py-2 text-sm bg-white" loading={generatingPdf}>
-              {generatingPdf ? (
-                <span className="flex items-center gap-2"><Loader2 size={18} className="animate-spin" /> Gerando PDF...</span>
-              ) : (
-                <span className="flex items-center gap-2"><Download size={18} /> Baixar PDF</span>
-              )}
-            </Button>
-            <Button onClick={() => {
-              navigator.clipboard.writeText(window.location.href);
-              alert('Link copiado!');
-            }} variant="primary" className="px-6 py-2 text-sm">
-              <Share2 size={18} className="mr-2" /> Compartilhar
+
+          <div className="flex flex-col sm:flex-row items-center gap-6">
+            <ShareButtons title={`MD Solution - Análise SWOT para ${formData.companyName}`} />
+            <div className="h-10 w-px bg-gray-200 hidden sm:block"></div>
+            <Button
+              onClick={handleDownloadPDF}
+              loading={generatingPdf}
+              variant="outline"
+              className="border-brand-blue text-brand-blue hover:bg-brand-blue hover:text-white px-6 py-2"
+              withIcon
+            >
+              Baixar Relatório (PDF)
             </Button>
           </div>
         </div>
@@ -227,7 +220,7 @@ const SwotReport: React.FC<SwotReportProps> = ({ formData, onBack }) => {
             <div className="mt-20 pt-12 border-t border-gray-100 text-center">
               <div className="bg-gray-50 inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-brand-blue font-bold text-sm mb-6 border border-gray-100">
                 <ShieldCheck size={20} className="text-brand-green" />
-                <span>Validado pela Metodologia MDigital © {new Date().getFullYear()}</span>
+                <span>Validado pela Metodologia MD Solution © {new Date().getFullYear()}</span>
               </div>
               <p className="text-gray-400 text-[10px] uppercase tracking-widest max-w-lg mx-auto leading-relaxed">
                 Este diagnóstico é estritamente confidencial e foi gerado com base nos dados fornecidos pelo usuário em {new Date().toLocaleString('pt-BR')}.
@@ -249,8 +242,8 @@ const SwotReport: React.FC<SwotReportProps> = ({ formData, onBack }) => {
             <Button onClick={onBack} variant="secondary">Voltar ao Início</Button>
           </div>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 

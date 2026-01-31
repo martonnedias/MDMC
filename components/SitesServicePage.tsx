@@ -3,6 +3,7 @@ import React from 'react';
 import SectionTitle from './SectionTitle';
 import Button from './Button';
 import { Layout, Smartphone, Zap, Search, Target, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import ShareButtons from './ShareButtons';
 
 const SitesServicePage: React.FC = () => {
   const scrollToContact = () => {
@@ -33,9 +34,12 @@ const SitesServicePage: React.FC = () => {
                 </div>
                 <p className="text-xs text-brand-green font-bold mt-2">Pagamento facilitado em até 10x</p>
               </div>
-              <Button onClick={scrollToContact} variant="primary" className="px-10 py-5 text-lg" withIcon>
-                Solicitar Orçamento de Site
-              </Button>
+              <div className="flex flex-col sm:flex-row items-center gap-8">
+                <Button onClick={scrollToContact} variant="primary" className="px-10 py-5 text-lg" withIcon>
+                  Solicitar Orçamento de Site
+                </Button>
+                <ShareButtons title="MD Solution - Criação de Sites e Landing Pages de Alta Conversão" />
+              </div>
             </div>
             <div className="relative">
               <div className="absolute -inset-4 bg-brand-blue/10 rounded-[4rem] rotate-3 blur-2xl"></div>
@@ -53,7 +57,7 @@ const SitesServicePage: React.FC = () => {
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4 md:px-6">
           <SectionTitle
-            title="O que um site da MDigital tem de diferente?"
+            title="O que um site da MD Solution tem de diferente?"
             subtitle="Construímos pensando no algoritmo do Google e na experiência do seu cliente."
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">

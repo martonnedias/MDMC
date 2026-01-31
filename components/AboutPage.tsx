@@ -4,6 +4,7 @@ import SectionTitle from './SectionTitle';
 import { ShieldCheck, Target, TrendingUp, Search, Eye, Users, Heart, Sparkles, CheckCircle2 } from 'lucide-react';
 import Button from './Button';
 import { CONTACT_INFO } from '../constants';
+import ShareButtons from './ShareButtons';
 
 const AboutPage: React.FC = () => {
   const scrollToContact = () => {
@@ -16,16 +17,35 @@ const AboutPage: React.FC = () => {
       <section className="pt-40 md:pt-48 lg:pt-56 pb-12 lg:pb-32 bg-brand-darkBlue text-white relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[url(&quot;data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E&quot;)] opacity-40"></div>
         <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 bg-brand-orange/20 text-brand-orange px-4 py-1.5 rounded-full mb-8 font-black text-[10px] uppercase tracking-widest border border-brand-orange/30 shadow-lg">
-              Nosso Manifesto
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="max-w-4xl animate-fade-in">
+              <div className="inline-flex items-center gap-2 bg-brand-orange/20 text-brand-orange px-4 py-1.5 rounded-full mb-8 font-black text-[10px] uppercase tracking-widest border border-brand-orange/30 shadow-lg">
+                Nosso Manifesto
+              </div>
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold mb-8 leading-tight">
+                O marketing digital está quebrado. <span className="text-brand-orange">Nós viemos consertar.</span>
+              </h1>
+              <p className="text-xl md:text-2xl text-blue-100/80 leading-relaxed mb-10 font-light">
+                Chega de promessas milagrosas e relatórios cheios de métricas de vaidade. A MD Solution nasceu para unir a clareza da **estratégia de gestão** com a força da **performance digital**.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center gap-8">
+                <Button onClick={scrollToContact} variant="primary" className="px-10 py-5 text-lg shadow-2xl shadow-brand-orange/20" withIcon>
+                  Fazer Parte do Futuro
+                </Button>
+                <ShareButtons title="MD Solution - Nosso Manifesto por um Marketing Honesto" />
+              </div>
             </div>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold mb-8 leading-tight">
-              O marketing digital está quebrado. <span className="text-brand-orange">Nós viemos consertar.</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-blue-100/80 leading-relaxed mb-10 max-w-2xl font-light">
-              Chega de promessas milagrosas e relatórios cheios de métricas de vaidade. A MDigital nasceu para unir a clareza da **estratégia de gestão** com a força da **performance digital**.
-            </p>
+            <div className="relative group perspective-1000 hidden lg:block">
+              <div className="absolute -inset-4 bg-brand-orange/20 rounded-[3rem] blur-2xl group-hover:bg-brand-orange/30 transition-all duration-700"></div>
+              <div className="relative rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl transform transition-all duration-700 hover:rotate-2 hover:scale-105">
+                <img
+                  src="/about-team.png"
+                  alt="Time MD Solution em reunião estratégica"
+                  className="w-full h-auto object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-darkBlue/80 via-transparent to-transparent opacity-60"></div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -64,7 +84,7 @@ const AboutPage: React.FC = () => {
         <div className="container mx-auto px-4 md:px-6">
           <SectionTitle
             title="A Transparência como Fundação"
-            subtitle="Na MDigital, a honestidade não é um diferencial, é o pré-requisito."
+            subtitle="Na MD Solution, a honestidade não é um diferencial, é o pré-requisito."
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
@@ -150,7 +170,7 @@ const AboutPage: React.FC = () => {
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto">
             <ShieldCheck size={64} className="text-brand-orange mx-auto mb-8 animate-pulse" />
-            <h2 className="text-3xl md:text-5xl font-heading font-bold mb-6">Compromisso MDigital</h2>
+            <h2 className="text-3xl md:text-5xl font-heading font-bold mb-6">Compromisso MD Solution</h2>
             <p className="text-xl md:text-2xl font-light opacity-80 mb-12 italic leading-relaxed">
               "Nós nunca recomendaremos uma estratégia que nós mesmos não usaríamos com o nosso próprio dinheiro."
             </p>
@@ -158,7 +178,7 @@ const AboutPage: React.FC = () => {
               <Button onClick={scrollToContact} variant="primary" className="bg-brand-orange hover:bg-brand-orangeHover border-none px-12 py-5 text-lg">
                 Agendar Diagnóstico Grátis
               </Button>
-              <Button onClick={() => window.open(`${CONTACT_INFO.whatsappLink}?text=Olá! Gostaria de falar sobre a consultoria MDigital.`, '_blank')} variant="outline" className="px-12 py-5 text-lg">
+              <Button onClick={() => window.open(`${CONTACT_INFO.whatsappLink}?text=Olá! Gostaria de falar sobre a consultoria MD Solution.`, '_blank')} variant="outline" className="px-12 py-5 text-lg">
                 Falar no WhatsApp
               </Button>
             </div>

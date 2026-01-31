@@ -11,17 +11,17 @@ const SitesAndLandingPages: React.FC = () => {
   return (
     <section id="sites" className="py-24 bg-white">
       <div className="container mx-auto px-4 md:px-6">
-        <SectionTitle 
-          title="Sites e Landing Pages que vendem por você" 
+        <SectionTitle
+          title="Sites e Landing Pages que vendem por você"
           subtitle="Não tenha apenas um cartão de visitas digital. Tenha uma máquina de conversão."
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
           <div className="space-y-8">
             <p className="text-lg text-gray-600 leading-relaxed">
-              De nada adianta investir em anúncios se o seu site é lento, feio ou confuso. Na MDigital, criamos estruturas focadas no que importa: <strong>transformar visitantes em clientes.</strong>
+              De nada adianta investir em anúncios se o seu site é lento, feio ou confuso. Na MD Solution, criamos estruturas focadas no que importa: <strong>transformar visitantes em clientes.</strong>
             </p>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {[
                 { icon: Smartphone, title: "100% Mobile", text: "Perfeito em qualquer celular." },
@@ -54,9 +54,9 @@ const SitesAndLandingPages: React.FC = () => {
 
           <div className="relative">
             <div className="absolute -inset-4 bg-brand-blue/5 rounded-[3rem] -rotate-2"></div>
-            <img 
-              src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800" 
-              alt="Design de Landing Page Profissional" 
+            <img
+              src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800"
+              alt="Design de Landing Page Profissional"
               className="relative rounded-[2.5rem] shadow-2xl border-4 border-white"
             />
           </div>

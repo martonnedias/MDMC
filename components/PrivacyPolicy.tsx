@@ -9,10 +9,10 @@ const PrivacyPolicy: React.FC = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 md:p-12 animate-fade-in">
           <SectionTitle title="Política de Privacidade" alignment="left" />
-          
+
           <div className="prose prose-blue max-w-none text-gray-600 space-y-8">
             <p className="text-lg leading-relaxed">
-              Na <strong>MDigital Marketing & Consultoria</strong>, a privacidade e a segurança dos seus dados são prioridades fundamentais. Esta política explica como coletamos, usamos e protegemos suas informações em conformidade com a <strong>Lei Geral de Proteção de Dados (LGPD)</strong>.
+              Na <strong>MD Solution Marketing & Consultoria</strong>, a privacidade e a segurança dos seus dados são prioridades fundamentais. Esta política explica como coletamos, usamos e protegemos suas informações em conformidade com a <strong>Lei Geral de Proteção de Dados (LGPD)</strong>.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
@@ -54,7 +54,7 @@ const PrivacyPolicy: React.FC = () => {
             <section>
               <h3 className="text-xl font-heading font-bold text-gray-900 mb-3">3. Compartilhamento de Dados</h3>
               <p>
-                <strong>A MDigital não vende, aluga ou compartilha seus dados pessoais com terceiros</strong> para fins de marketing. Seus dados só são acessados por nossa equipe interna de estrategistas e consultores.
+                <strong>A MD Solution não vende, aluga ou compartilha seus dados pessoais com terceiros</strong> para fins de marketing. Seus dados só são acessados por nossa equipe interna de estrategistas e consultores.
               </p>
             </section>
 

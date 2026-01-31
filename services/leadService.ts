@@ -224,17 +224,17 @@ class LeadService {
     html += `
             <!-- Footer -->
             <div style="margin-top: 20px; padding-top: 30px; border-top: 2px solid #f0f4f8; text-align: center;">
-              <p style="font-size: 14px; color: #95a5a6; margin: 0;">Este é um relatório gerado automaticamente pela plataforma <strong>MDigital</strong>.</p>
+              <p style="font-size: 14px; color: #95a5a6; margin: 0;">Este é um relatório gerado automaticamente pela plataforma <strong>MD Solution</strong>.</p>
               <div style="margin-top: 15px;">
                 <a href="#" style="color: #0047FF; text-decoration: none; font-size: 13px; font-weight: 600;">Acessar Dashboard</a>
                 <span style="margin: 0 10px; color: #e1e8ed;">|</span>
-                <a href="mailto:contato@mdigital.com.br" style="color: #0047FF; text-decoration: none; font-size: 13px; font-weight: 600;">Suporte Técnico</a>
+                <a href="mailto:contato@mdsolution.com.br" style="color: #0047FF; text-decoration: none; font-size: 13px; font-weight: 600;">Suporte Técnico</a>
               </div>
             </div>
           </div>
 
           <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #e1e8ed;">
-            <p style="font-size: 12px; color: #bdc3c7; margin: 0;">&copy; ${new Date().getFullYear()} MDigital Estratégia Digital. Todos os direitos reservados.</p>
+            <p style="font-size: 12px; color: #bdc3c7; margin: 0;">&copy; ${new Date().getFullYear()} MD Solution Estratégia Digital. Todos os direitos reservados.</p>
           </div>
         </div>
       </div>
@@ -260,13 +260,13 @@ class LeadService {
 
   private saveToBackup(type: string, data: any) {
     try {
-      const backup = JSON.parse(localStorage.getItem('mdigital_leads_backup') || '[]');
+      const backup = JSON.parse(localStorage.getItem('mdsolution_leads_backup') || '[]');
       backup.push({
         type,
         data,
         timestamp: new Date().toISOString()
       });
-      localStorage.setItem('mdigital_leads_backup', JSON.stringify(backup));
+      localStorage.setItem('mdsolution_leads_backup', JSON.stringify(backup));
     } catch (e) {
       console.warn('Falha no backup local:', e);
     }

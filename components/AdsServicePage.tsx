@@ -4,6 +4,7 @@ import SectionTitle from './SectionTitle';
 import Button from './Button';
 import { PLANS } from '../constants';
 import { Check, Megaphone, Target, BarChart3 } from 'lucide-react';
+import ShareButtons from './ShareButtons';
 
 const AdsServicePage: React.FC = () => {
   const scrollToContact = () => {
@@ -13,30 +14,33 @@ const AdsServicePage: React.FC = () => {
   return (
     <div className="pt-0 pb-0 font-sans">
       {/* Hero */}
-      <section className="relative pt-32 pb-12 lg:pt-32 lg:pb-32 overflow-hidden bg-gradient-to-br from-blue-900 to-brand-darkBlue text-white">
+      <section className="relative pt-40 md:pt-48 lg:pt-56 pb-12 lg:pb-32 overflow-hidden bg-gradient-to-br from-brand-darkBlue via-brand-navy to-brand-darkBlue text-white">
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full mb-6 font-bold text-xs uppercase tracking-widest border border-white/10">
-              <Megaphone size={14} className="text-brand-orange" /> Performance & Vendas
+            <div className="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full mb-6 font-bold text-xs uppercase tracking-widest border border-white/10 backdrop-blur-md">
+              <Megaphone size={14} className="text-brand-orange animate-pulse" /> Performance & Vendas
             </div>
-            <h1 className="text-4xl md:text-6xl font-heading font-bold leading-tight mb-6">
+            <h1 className="text-4xl md:text-6xl font-heading font-bold leading-tight mb-6 animate-fade-in text-white">
               Campanhas de Captação que <span className="text-brand-orange">não param</span> de vender.
             </h1>
-            <p className="text-xl text-blue-100 mb-10 leading-relaxed">
+            <p className="text-xl text-blue-100/80 mb-10 leading-relaxed font-light">
               Gestão estratégica de tráfego pago no Google Ads e Meta Ads. Chega de "tentar a sorte" com o botão impulsionar. Vamos construir uma máquina de leads qualificados.
             </p>
-            <Button onClick={scrollToContact} variant="primary" className="px-10 py-5 text-lg" withIcon>
-              Quero Vender Mais Agora
-            </Button>
+            <div className="flex flex-col sm:flex-row items-center gap-8">
+              <Button onClick={scrollToContact} variant="primary" className="px-10 py-5 text-lg shadow-2xl shadow-brand-orange/20" withIcon>
+                Quero Vender Mais Agora
+              </Button>
+              <ShareButtons title="MD Solution - Campanhas de Captação e Tráfego Pago" />
+            </div>
           </div>
         </div>
-        <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none hidden lg:block">
+        <div className="absolute top-0 right-0 w-1/2 h-full opacity-5 pointer-events-none hidden lg:block">
           <BarChart3 size={600} className="text-white transform translate-x-1/4 translate-y-1/4" />
         </div>
       </section>
 
       {/* Benefits */}
-      <section className="py-24 bg-gray-50">
+      <section className="py-24 bg-brand-blueLight/30">
         <div className="container mx-auto px-4 md:px-6">
           <SectionTitle
             title="Como nossa gestão acelera seu caixa"
@@ -48,12 +52,12 @@ const AdsServicePage: React.FC = () => {
               { icon: Megaphone, title: "Velocidade de Resultado", text: "Campanhas que podem gerar os primeiros contatos já nas primeiras 24 horas." },
               { icon: BarChart3, title: "Otimização Diária", text: "Nossos analistas cuidam do seu dinheiro como se fosse deles." }
             ].map((b, i) => (
-              <div key={i} className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl transition-all">
-                <div className="w-14 h-14 bg-blue-50 text-brand-blue rounded-2xl flex items-center justify-center mb-6">
-                  <b.icon size={28} />
+              <div key={i} className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-brand-blueLight hover:shadow-2xl transition-all group">
+                <div className="w-16 h-16 bg-brand-orangeLight text-brand-orange rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+                  <b.icon size={32} />
                 </div>
-                <h4 className="text-xl font-bold mb-4">{b.title}</h4>
-                <p className="text-gray-600 leading-relaxed">{b.text}</p>
+                <h4 className="text-xl font-bold mb-4 text-brand-darkBlue">{b.title}</h4>
+                <p className="text-gray-600 leading-relaxed text-sm">{b.text}</p>
               </div>
             ))}
           </div>
@@ -73,39 +77,39 @@ const AdsServicePage: React.FC = () => {
                 key={index}
                 className={`relative rounded-[2.5rem] transition-all duration-300 flex flex-col h-full overflow-hidden
                   ${plan.highlight
-                    ? 'bg-white border-2 border-brand-blue shadow-2xl lg:scale-105 z-10'
-                    : 'bg-gray-50 border border-gray-200 shadow-lg'
+                    ? 'bg-white border-2 border-brand-orange shadow-2xl lg:scale-105 z-10'
+                    : 'bg-brand-blueLight/20 border border-brand-blue/10 shadow-lg'
                   }
                 `}
               >
                 {plan.highlight && (
-                  <div className="bg-brand-blue text-white py-2 text-center text-xs font-black uppercase tracking-widest">
+                  <div className="bg-brand-orange text-white py-2.5 text-center text-xs font-black uppercase tracking-widest">
                     Performance Acelerada
                   </div>
                 )}
-                <div className="p-8 flex-grow">
-                  <h3 className="text-2xl font-heading font-bold text-gray-900 mb-1">{plan.name}</h3>
-                  <p className="text-brand-blue font-bold text-sm mb-6">{plan.subtitle}</p>
+                <div className="p-10 flex-grow">
+                  <h3 className="text-2xl font-heading font-bold text-brand-darkBlue mb-1">{plan.name}</h3>
+                  <p className="text-brand-orange font-bold text-xs uppercase tracking-widest mb-6">{plan.subtitle}</p>
 
                   <div className="mb-8">
-                    <span className="text-4xl font-black text-gray-900">{plan.price}</span>
+                    <span className="text-4xl font-black text-brand-darkBlue">{plan.price}</span>
                     <span className="text-gray-400 text-sm">/mês</span>
                   </div>
 
                   <ul className="space-y-4 mb-10">
                     {plan.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-3">
-                        <Check size={18} className="text-green-500 shrink-0 mt-0.5" strokeWidth={3} />
-                        <span className="text-gray-600 text-sm leading-snug">{feature}</span>
+                        <Check size={18} className="text-brand-green shrink-0 mt-0.5" strokeWidth={3} />
+                        <span className="text-gray-500 text-sm leading-snug">{feature}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
-                <div className="p-8 pt-0 mt-auto">
-                  <div className="bg-blue-50 p-4 rounded-xl mb-6 border border-blue-100">
-                    <p className="text-[10px] font-black text-blue-800 uppercase text-center">{plan.adBudget}</p>
+                <div className="p-10 pt-0 mt-auto">
+                  <div className="bg-brand-navy text-white p-4 rounded-2xl mb-6 border border-white/10">
+                    <p className="text-[10px] font-black uppercase text-center tracking-widest opacity-80">{plan.adBudget}</p>
                   </div>
-                  <Button onClick={scrollToContact} variant={plan.highlight ? 'primary' : 'secondary'} fullWidth>
+                  <Button onClick={scrollToContact} variant={plan.highlight ? 'primary' : 'outline'} fullWidth className={plan.highlight ? '' : 'text-brand-darkBlue border-brand-darkBlue hover:bg-brand-darkBlue hover:text-white'}>
                     Solicitar Orçamento
                   </Button>
                 </div>
@@ -116,12 +120,13 @@ const AdsServicePage: React.FC = () => {
       </section>
 
       {/* CTA Final */}
-      <section className="py-24 bg-gray-50">
+      <section className="py-24 bg-brand-blueLight/30">
         <div className="container mx-auto px-4">
-          <div className="bg-brand-orange p-12 rounded-[3rem] text-center text-white shadow-2xl">
-            <h2 className="text-3xl md:text-5xl font-heading font-bold mb-6">Pronto para dominar seu mercado local?</h2>
-            <p className="text-xl mb-10 opacity-90 max-w-2xl mx-auto">Sua concorrência já está anunciando. O seu próximo cliente está te procurando no Google agora.</p>
-            <Button onClick={scrollToContact} variant="outline" className="px-12 py-5 text-lg hover:bg-white hover:text-brand-orange border-white">
+          <div className="bg-gradient-to-br from-brand-orange to-brand-orangeHover p-12 lg:p-20 rounded-[4rem] text-center text-white shadow-2xl relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl group-hover:scale-125 transition-transform duration-1000"></div>
+            <h2 className="text-3xl md:text-5xl font-heading font-bold mb-6 relative z-10">Pronto para dominar seu mercado local?</h2>
+            <p className="text-xl mb-10 opacity-90 max-w-2xl mx-auto relative z-10">Sua concorrência já está anunciando. O seu próximo cliente está te procurando no Google agora.</p>
+            <Button onClick={scrollToContact} variant="outline" className="px-12 py-5 text-lg hover:bg-white hover:text-brand-orange border-white relative z-10 font-black uppercase tracking-widest">
               Falar com Especialista
             </Button>
           </div>

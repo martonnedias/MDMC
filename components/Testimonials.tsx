@@ -14,7 +14,7 @@ const Testimonials: React.FC = () => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-heading font-bold text-white mb-4">
-              Histórias de quem confia na MDigital
+              Histórias de quem confia na MD Solution
             </h2>
             <div className="h-1 w-20 bg-brand-orange mx-auto rounded-full"></div>
           </div>

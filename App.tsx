@@ -107,51 +107,35 @@ const AppContent: React.FC = () => {
         )}
 
         {currentView === 'gmb' && (
-          <FadeIn>
-            <GoogleBusinessProfile />
-          </FadeIn>
+          <GoogleBusinessProfile />
         )}
 
         {currentView === 'ads' && (
-          <FadeIn>
-            <AdsServicePage />
-          </FadeIn>
+          <AdsServicePage />
         )}
 
         {currentView === 'sites' && (
-          <FadeIn>
-            <SitesServicePage />
-          </FadeIn>
+          <SitesServicePage />
         )}
 
         {currentView === 'consultancy' && (
-          <FadeIn>
-            <ConsultancyServicePage />
-          </FadeIn>
+          <ConsultancyServicePage />
         )}
 
         {currentView === 'swot-service' && (
-          <FadeIn>
-            <SwotServicePage onSelectPlan={handleSwotPlanSelection} />
-          </FadeIn>
+          <SwotServicePage onSelectPlan={handleSwotPlanSelection} />
         )}
 
         {currentView === 'marketing-diagnosis' && (
-          <FadeIn>
-            <MarketingDiagnosisPage onStart={() => navigateTo('briefing')} />
-          </FadeIn>
+          <MarketingDiagnosisPage onStart={() => navigateTo('briefing')} />
         )}
 
         {currentView === 'briefing' && (
-          <FadeIn>
-            <Briefing />
-          </FadeIn>
+          <Briefing />
         )}
 
         {currentView === 'swot-pricing' && (
-          <FadeIn>
-            <SwotPricing onSelectPlan={handleSwotPlanSelection} />
-          </FadeIn>
+          <SwotPricing onSelectPlan={handleSwotPlanSelection} />
         )}
 
         {currentView === 'auth' && (
@@ -159,21 +143,15 @@ const AppContent: React.FC = () => {
         )}
 
         {currentView === 'swot' && (
-          <FadeIn>
-            <SwotBriefing selectedPlan={selectedSwotPlan} />
-          </FadeIn>
+          <SwotBriefing selectedPlan={selectedSwotPlan} />
         )}
 
         {currentView === 'terms' && (
-          <FadeIn>
-            <TermsOfUse />
-          </FadeIn>
+          <TermsOfUse />
         )}
 
         {currentView === 'privacy' && (
-          <FadeIn>
-            <PrivacyPolicy />
-          </FadeIn>
+          <PrivacyPolicy />
         )}
       </main>
 

@@ -45,13 +45,14 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
           ))}
         </div>
 
-        <div className="max-w-4xl mx-auto bg-brand-orange/10 border border-brand-orange/20 rounded-2xl p-6 flex items-start gap-4 shadow-sm">
-          <div className="bg-brand-orange text-white p-2 rounded-lg shrink-0 mt-1">
-            <Lightbulb size={24} />
+        <div className="max-w-4xl mx-auto bg-brand-darkBlue rounded-[2rem] p-8 flex flex-col md:flex-row items-center gap-6 shadow-2xl relative overflow-hidden border border-brand-orange/20">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-brand-orange/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+          <div className="bg-gradient-to-br from-brand-orange to-brand-orangeHover text-white p-4 rounded-2xl shrink-0 shadow-lg">
+            <Lightbulb size={32} className="animate-pulse" />
           </div>
-          <div>
-            <h4 className="font-bold text-brand-orangeHover text-lg mb-1">Estratégia sob medida</h4>
-            <p className="text-gray-700 leading-relaxed">
+          <div className="text-center md:text-left">
+            <h4 className="font-bold text-white text-xl mb-2">Estratégia Sob Medida</h4>
+            <p className="text-blue-100/80 leading-relaxed text-sm">
               Cada negócio tem um desafio diferente. Por isso, oferecemos páginas detalhadas para cada solução, ajudando você a entender qual o melhor investimento para o seu momento atual.
             </p>
           </div>

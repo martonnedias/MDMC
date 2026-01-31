@@ -5,6 +5,7 @@ import Button from './Button';
 import SwotPricing from './SwotPricing';
 import { Target, ShieldCheck, Zap, AlertTriangle, Lightbulb, TrendingUp, ClipboardList, CheckCircle2 } from 'lucide-react';
 import { SWOT_SECTION_CONTENT } from '../constants';
+import ShareButtons from './ShareButtons';
 
 interface SwotServicePageProps {
   onSelectPlan: (planId: string) => void;
@@ -26,9 +27,12 @@ const SwotServicePage: React.FC<SwotServicePageProps> = ({ onSelectPlan }) => {
             <p className="text-xl text-blue-100 mb-10 leading-relaxed">
               O Marketing atrai clientes, mas a Análise SWOT garante que você tenha uma empresa sólida para atendê-los. Audite seus processos, identifique riscos e planeje o futuro com dados.
             </p>
-            <Button onClick={() => document.getElementById('precos')?.scrollIntoView({ behavior: 'smooth' })} variant="primary" className="px-10 py-5 text-lg">
-              Ver Planos de Auditoria
-            </Button>
+            <div className="flex flex-col sm:flex-row items-center gap-8">
+              <Button onClick={() => document.getElementById('precos')?.scrollIntoView({ behavior: 'smooth' })} variant="primary" className="px-10 py-5 text-lg">
+                Ver Planos de Auditoria
+              </Button>
+              <ShareButtons title="MD Solution - Análise SWOT e Auditoria Empresarial" />
+            </div>
           </div>
         </div>
         <div className="absolute top-0 right-0 w-1/2 h-full opacity-5 pointer-events-none hidden lg:block">

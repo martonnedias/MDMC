@@ -247,7 +247,7 @@ const Briefing: React.FC = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center mb-12 gap-4">
           <div className="text-center md:text-left">
-            <h1 className="text-3xl font-heading font-bold text-brand-darkBlue leading-tight">Diagnóstico Estratégico MDigital</h1>
+            <h1 className="text-3xl font-heading font-bold text-brand-darkBlue leading-tight">Diagnóstico Estratégico MD Solution</h1>
             <p className="text-gray-500 text-sm">Entenda os gargalos que impedem sua empresa de faturar mais.</p>
           </div>
           <button type="button" onClick={handleAutoFill} className="flex items-center gap-2 bg-brand-blue/10 text-brand-blue px-6 py-3 rounded-full font-bold text-sm hover:bg-brand-blue hover:text-white transition-all shadow-sm">
@@ -266,7 +266,7 @@ const Briefing: React.FC = () => {
                 <div className={stepContentClass}>
                   <h3 className="text-2xl font-heading font-bold mb-6 flex items-center gap-3 text-brand-blue"><UserCheck /> Dados da Empresa</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="md:col-span-2"><label className={labelClass}>Nome da Empresa *</label><input required value={formData.companyName} onChange={e => updateField('companyName', e.target.value)} className={getInputClass('companyName')} placeholder="Ex: MDigital Consultoria" /></div>
+                    <div className="md:col-span-2"><label className={labelClass}>Nome da Empresa *</label><input required value={formData.companyName} onChange={e => updateField('companyName', e.target.value)} className={getInputClass('companyName')} placeholder="Ex: MD Solution Consultoria" /></div>
                     <div><label className={labelClass}>Seu Nome *</label><input required value={formData.responsibleName} onChange={e => updateField('responsibleName', e.target.value)} className={getInputClass('responsibleName')} placeholder="Como devemos te chamar?" /></div>
                     <div><label className={labelClass}>Cargo *</label><input required value={formData.role} onChange={e => updateField('role', e.target.value)} className={getInputClass('role')} placeholder="Ex: Sócio-Fundador" /></div>
                     <div><label className={labelClass}>E-mail Profissional *</label><input required type="email" value={formData.email} onChange={e => updateField('email', e.target.value)} className={getInputClass('email')} placeholder="empresa@exemplo.com.br" /></div>
