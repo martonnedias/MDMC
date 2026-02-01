@@ -16,9 +16,11 @@ const Logo: React.FC<LogoProps> = ({ className = '', size = 'md', variant = 'dar
   };
 
   // Seleção automática do arquivo de imagem com base na variante
+  // Usar BASE_URL para funcionar no GitHub Pages (caminho relativo ao deploy)
   // logo.png = versão escura (letras azuis/pretas)
   // logo-light.png = versão clara (letras brancas/rainbow)
-  const logoSrc = variant === 'light' ? '/logo-light.png' : '/logo.png';
+  const base = import.meta.env.BASE_URL;
+  const logoSrc = `${base}${variant === 'light' ? 'logo-light.png' : 'logo.png'}`;
 
   return (
     <div className={`flex items-center group transition-all duration-300 ${className}`}>
