@@ -56,7 +56,7 @@ const SitesAndLandingPages: React.FC = () => {
             <div className="absolute -inset-4 bg-brand-blue/5 rounded-[3rem] -rotate-2"></div>
             <img
               src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800"
-              alt="Design de Landing Page Profissional"
+              alt="Design de landing page profissional focada em conversão - MD Solution"
               className="relative rounded-[2.5rem] shadow-2xl border-4 border-white"
             />
           </div>

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap (atualize o domínio se necessário)
+Sitemap: https://mdsolution.com.br/sitemap.xml

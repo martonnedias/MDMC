@@ -127,15 +127,15 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
   // To ensure readability when transparent, we check if the current page has a dark or light top section
   const isDarkPage = ['landing', 'ads', 'consultancy', 'about', 'swot-service'].includes(currentView);
 
-  // Dynamic classes based on background state
+  // Dynamic classes based on background state (altura fixa em todas as páginas)
   const headerBgClass = isSolid
-    ? 'bg-brand-orange shadow-[0_10px_30px_rgba(255,107,0,0.3)] py-3'
-    : 'bg-transparent py-4 md:py-6';
+    ? 'bg-white shadow-[0_10px_30px_rgba(0,0,0,0.1)]'
+    : 'bg-transparent';
 
   // When solid (orange), we use darkBlue text.
   // When transparent, we use white on dark pages and darkBlue on light pages.
   const navLinkClass = `text-sm font-black tracking-tight transition-all relative group ${isSolid
-    ? 'text-brand-darkBlue hover:text-white'
+    ? 'text-brand-darkBlue hover:text-brand-orange'
     : (isDarkPage ? 'text-white hover:text-brand-orange' : 'text-brand-darkBlue hover:text-brand-orange text-brand-darkBlue hover:text-brand-orange shadow-none')
     }`;
 
@@ -143,10 +143,10 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
     ? 'text-brand-darkBlue'
     : (isDarkPage ? 'text-white' : 'text-brand-darkBlue');
 
-  const buttonVariant = isSolid ? 'outline' : 'primary';
+  const buttonVariant = 'primary';
 
   const buttonExtraClass = isSolid
-    ? 'border-brand-darkBlue text-brand-darkBlue hover:bg-brand-darkBlue hover:text-white'
+    ? 'bg-brand-orange text-white hover:bg-brand-orangeHover border-none shadow-xl shadow-brand-orange/10'
     : (isDarkPage ? 'shadow-xl shadow-brand-orange/10' : 'bg-brand-darkBlue text-white hover:bg-brand-navy shadow-lg shadow-brand-darkBlue/20');
 
   // Enhanced hover handlers with delay
@@ -190,7 +190,7 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
   };
 
   return (
-    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${headerBgClass} backdrop-blur-md`}>
+    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 h-[90px] flex items-center ${headerBgClass} backdrop-blur-md`}>
       <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
         {/* Logo Linkável para Home */}
         <a href="/" onClick={goHome} className="block transition-transform active:scale-95" aria-label="Voltar para Início">
@@ -201,10 +201,10 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
         </a>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-10" role="navigation">
+        <nav className="hidden lg:flex items-center gap-10" role="navigation" aria-label="Navegação principal">
           <button onClick={goHome} className={navLinkClass}>
             Início
-            <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${isSolid ? 'bg-white' : 'bg-brand-orange'}`}></span>
+            <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${isSolid ? 'bg-brand-orange' : 'bg-brand-orange'}`}></span>
           </button>
 
           <div className="relative group" ref={servicesRef}>
@@ -297,9 +297,9 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
             )}
           </div>
 
-          <button onClick={() => onNavigate && onNavigate('about')} className={navLinkClass}>
+          <button onClick={() => onNavigate && onNavigate('about')} className={navLinkClass} aria-label="Ir para Sobre Nós">
             Sobre Nós
-            <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${isSolid ? 'bg-white' : 'bg-brand-orange'}`}></span>
+            <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${isSolid ? 'bg-brand-orange' : 'bg-brand-orange'}`}></span>
           </button>
 
           <Button
@@ -324,7 +324,7 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-x-0 top-[65px] bg-white border-t p-4 shadow-2xl flex flex-col gap-2.5 overflow-y-auto max-h-[calc(100vh-75px)] rounded-b-[2rem] animate-fade-in z-[60]">
+        <div className="lg:hidden fixed inset-x-0 top-[90px] bg-white border-t p-4 shadow-2xl flex flex-col gap-2.5 overflow-y-auto max-h-[calc(100vh-90px)] rounded-b-[2rem] animate-fade-in z-[60]">
           <button onClick={() => goHome()} className="text-left font-black text-lg text-brand-darkBlue flex justify-between items-center py-3 border-b border-gray-50 active:scale-98 transition-transform">
             Início <ArrowRight size={18} className="text-brand-orange" />
           </button>

@@ -1,6 +1,6 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
+import { PAGE_TITLES } from './constants';
 import Hero from './components/Hero';
 import PainPoints from './components/PainPoints';
 import Checklist from './components/Checklist';
@@ -42,6 +42,12 @@ const AppContent: React.FC = () => {
     window.scrollTo(0, 0);
   };
 
+  // SEO: atualiza document.title por página
+  useEffect(() => {
+    const title = PAGE_TITLES[currentView] || PAGE_TITLES.landing;
+    document.title = title;
+  }, [currentView]);
+
   const handleSwotPlanSelection = (planId: string) => {
     setSelectedSwotPlan(planId);
     // Verifica se o usuário está logado
@@ -56,7 +62,7 @@ const AppContent: React.FC = () => {
     <div className="font-sans antialiased text-gray-900 bg-white min-h-screen flex flex-col w-full overflow-x-hidden">
       <Header currentView={currentView} onNavigate={navigateTo} />
 
-      <main className={`flex-grow ${currentView !== 'landing' ? 'pt-0' : ''}`}>
+      <main id="main-content" role="main" aria-label="Conteúdo principal" className={`flex-grow ${currentView !== 'landing' ? 'pt-0' : ''}`}>
         {currentView === 'landing' && (
           <>
             <Hero

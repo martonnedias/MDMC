@@ -2,6 +2,21 @@
 import { PricingPlan, FaqItem, ServiceItem, ComboItem, PainPointItem } from './types';
 import { Megaphone, MapPin, Share2, LineChart, Layout, Target, TrendingUp, Zap, AlertTriangle, Lightbulb, Users, ShieldCheck, Clock, MessageCircle, BarChart3, Star, Search, Smartphone, CheckCircle2 } from 'lucide-react';
 
+/** Mensagens de validação de formulários em português */
+export const FORM_VALIDATION_MSGS = {
+  required: 'Por favor, preencha este campo.',
+  email: 'Por favor, informe um e-mail válido.',
+  select: 'Por favor, selecione uma opção.',
+  phone: 'Por favor, informe um telefone válido (10 ou 11 dígitos).',
+  fixErrors: 'Por favor, corrija os erros no formulário antes de enviar.',
+  fillAllRequired: 'Por favor, preencha todos os campos obrigatórios em destaque antes de prosseguir.',
+  saveError: 'Erro ao salvar os dados. Tente novamente.',
+  sendError: 'Ocorreu um erro ao enviar sua mensagem.',
+  processError: 'Erro ao processar seu acesso. Tente novamente.',
+  linkCopied: 'Link copiado para a área de transferência!',
+  demoFilled: 'Preenchido com dados de demonstração estrategicamente restaurados!',
+} as const;
+
 export const CONTACT_INFO = {
   whatsapp: "86994144709",
   whatsappFormatted: "(86) 99414-4709",
@@ -430,4 +445,22 @@ export const TESTIMONIAL_CONTENT = {
 export const FOOTER_CTA = {
   title: "Pronto para fazer sua empresa crescer?",
   text: "Escolha o caminho: fale conosco agora ou comece por um de nossos diagnósticos gratuitos para entendermos o seu momento."
+};
+
+/** Títulos de página para SEO (document.title) por view */
+export const PAGE_TITLES: Record<string, string> = {
+  landing: 'MD Solution Marketing & Consultoria | Performance Digital e Análise SWOT',
+  about: 'Sobre Nós | MD Solution Marketing & Consultoria',
+  gmb: 'Google Meu Negócio | Apareça no Google e Maps | MD Solution',
+  ads: 'Tráfego Pago e Anúncios | Meta & Google Ads | MD Solution',
+  sites: 'Sites e Landing Pages Profissionais | MD Solution',
+  consultancy: 'Consultoria de Vendas | Atendimento e Conversão | MD Solution',
+  'swot-service': 'Análise SWOT | Auditoria Estratégica | MD Solution',
+  'marketing-diagnosis': 'Diagnóstico de Marketing Grátis | MD Solution',
+  briefing: 'Diagnóstico Estratégico | MD Solution',
+  'swot-pricing': 'Planos SWOT | Análise Estratégica | MD Solution',
+  swot: 'Auditoria SWOT | MD Solution',
+  terms: 'Termos de Uso | MD Solution',
+  privacy: 'Política de Privacidade | MD Solution',
+  auth: 'Acesso | MD Solution',
 };

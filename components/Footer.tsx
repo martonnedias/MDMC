@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { MessageCircle, Mail, MapPin, CheckCircle, ArrowRight, ShieldCheck, Sparkles, Globe, Instagram, Facebook, Youtube } from 'lucide-react';
 import Button from './Button';
 import Logo from './Logo';
-import { FOOTER_CTA, CONTACT_INFO } from '../constants';
+import { FOOTER_CTA, CONTACT_INFO, FORM_VALIDATION_MSGS } from '../constants';
 import { ViewState } from '../App';
 import { leadService } from '../services/leadService';
 
@@ -33,7 +33,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
         setFormData({ name: '', email: '', phone: '', interest: '', companySize: '' });
       } else {
         setFormState('error');
-        alert('Ocorreu um erro ao enviar sua mensagem.');
+        alert(FORM_VALIDATION_MSGS.sendError);
       }
     } catch (error) {
       console.error(error);
@@ -108,7 +108,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
                   <div className="flex -space-x-3">
                     {[1, 2, 3].map(i => (
                       <div key={i} className="w-10 h-10 rounded-full border-2 border-[#0A1931] bg-gray-300 overflow-hidden shadow-lg">
-                        <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="Expert" />
+                        <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="Especialista em marketing digital MD Solution" />
                       </div>
                     ))}
                   </div>
@@ -146,23 +146,23 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Nome</label>
-                        <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Seu Nome" className={inputStyles} required />
+                        <input type="text" name="name" value={formData.name} onChange={(e) => { handleChange(e); (e.target as HTMLInputElement).setCustomValidity(''); }} onInvalid={e => { (e.target as HTMLInputElement).setCustomValidity(FORM_VALIDATION_MSGS.required); }} placeholder="Seu Nome" className={inputStyles} required title={FORM_VALIDATION_MSGS.required} />
                       </div>
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">WhatsApp</label>
-                        <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="(00) 00000-0000" className={inputStyles} required />
+                        <input type="tel" name="phone" value={formData.phone} onChange={(e) => { handleChange(e); (e.target as HTMLInputElement).setCustomValidity(''); }} onInvalid={e => { (e.target as HTMLInputElement).setCustomValidity(FORM_VALIDATION_MSGS.required); }} placeholder="(00) 00000-0000" className={inputStyles} required title={FORM_VALIDATION_MSGS.required} />
                       </div>
                     </div>
 
                     <div className="space-y-1.5">
                       <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">E-mail Corporativo</label>
-                      <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="seu@email.com.br" className={inputStyles} required />
+                      <input type="email" name="email" value={formData.email} onChange={(e) => { handleChange(e); (e.target as HTMLInputElement).setCustomValidity(''); }} onInvalid={e => { const el = e.target as HTMLInputElement; el.setCustomValidity(el.validity.typeMismatch ? FORM_VALIDATION_MSGS.email : FORM_VALIDATION_MSGS.required); }} placeholder="seu@email.com.br" className={inputStyles} required title={FORM_VALIDATION_MSGS.email} />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div className="space-y-1.5 relative">
                         <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Objetivo</label>
-                        <select name="interest" value={formData.interest} onChange={handleChange} className={selectStyles} required>
+                        <select name="interest" value={formData.interest} onChange={(e) => { handleChange(e); (e.target as HTMLSelectElement).setCustomValidity(''); }} onInvalid={e => { (e.target as HTMLSelectElement).setCustomValidity(FORM_VALIDATION_MSGS.select); }} className={selectStyles} required title={FORM_VALIDATION_MSGS.select}>
                           <option value="" disabled>Escolha...</option>
                           <option value="Google Meu Negócio">Google Meu Negócio</option>
                           <option value="Tráfego Pago">Tráfego Pago</option>
@@ -173,7 +173,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
                       </div>
                       <div className="space-y-1.5 relative">
                         <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Tamanho da Equipe</label>
-                        <select name="companySize" value={formData.companySize} onChange={handleChange} className={selectStyles} required>
+                        <select name="companySize" value={formData.companySize} onChange={(e) => { handleChange(e); (e.target as HTMLSelectElement).setCustomValidity(''); }} onInvalid={e => { (e.target as HTMLSelectElement).setCustomValidity(FORM_VALIDATION_MSGS.select); }} className={selectStyles} required title={FORM_VALIDATION_MSGS.select}>
                           <option value="" disabled>Escolha...</option>
                           <option value="Só eu">Só eu</option>
                           <option value="2-5">2 a 5 pessoas</option>

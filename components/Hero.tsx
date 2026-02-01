@@ -1,5 +1,5 @@
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import Button from './Button';
 import { HERO_CONTENT } from '../constants';
 import { Sparkles, BarChart3, TrendingUp } from 'lucide-react';
@@ -10,22 +10,8 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ onStartBriefing, onStartSwot }) => {
-  // Lista de Headlines estratégicas para variação de Copy
-  const headlines = useMemo(() => [
-    "Sua empresa merece ser vista por quem realmente importa.",
-    "Seu negócio no topo do digital com estratégia de elite.",
-    "Resultados reais e faturamento previsível para sua empresa.",
-    "Transforme sua presença online em uma máquina de vendas.",
-    "O crescimento da sua empresa não pode ser por acaso.",
-    "A estratégia certa para colocar sua marca em destaque real.",
-    "Domine seu mercado local com performance e inteligência."
-  ], []);
-
-  // Seleciona uma headline aleatória no carregamento da página
-  const dynamicHeadline = useMemo(() => {
-    const randomIndex = Math.floor(Math.random() * headlines.length);
-    return headlines[randomIndex];
-  }, [headlines]);
+  // H1 consistente para SEO: headline principal otimizada para buscas
+  const mainHeadline = HERO_CONTENT.headline;
 
   const scrollToPlans = () => {
     document.getElementById('planos')?.scrollIntoView({ behavior: 'smooth' });
@@ -45,9 +31,8 @@ const Hero: React.FC<HeroProps> = ({ onStartBriefing, onStartSwot }) => {
               <Sparkles size={14} className="animate-pulse" /> Operação de Performance Digital
             </div>
 
-            {/* Headline Dinâmica */}
             <h1 className="text-4xl md:text-5xl lg:text-7xl font-heading font-bold text-white leading-tight mb-6 animate-fade-in">
-              {dynamicHeadline}
+              {mainHeadline}
             </h1>
 
             <p className="text-xl md:text-2xl text-blue-200 font-bold mb-4">
@@ -87,7 +72,7 @@ const Hero: React.FC<HeroProps> = ({ onStartBriefing, onStartSwot }) => {
                   <Button
                     onClick={onStartSwot}
                     variant="outline"
-                    className="w-full min-h-[84px] text-lg px-4 flex flex-col items-center justify-center leading-tight py-4 border-2 hover:bg-white hover:text-brand-darkBlue"
+                    className="w-full min-h-[84px] text-lg px-4 flex flex-col items-center justify-center leading-tight py-4 border-2 hover:bg-white hover:text-brand-orange"
                   >
                     <span className="block text-center">{HERO_CONTENT.swotCta}</span>
                   </Button>

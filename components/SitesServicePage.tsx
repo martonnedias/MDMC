@@ -45,7 +45,7 @@ const SitesServicePage: React.FC = () => {
               <div className="absolute -inset-4 bg-brand-blue/10 rounded-[4rem] rotate-3 blur-2xl"></div>
               <img
                 src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800"
-                alt="Layout de Landing Page"
+                alt="Layout de landing page profissional para conversão - sites MD Solution"
                 className="relative rounded-[3rem] shadow-2xl border-8 border-white"
               />
             </div>

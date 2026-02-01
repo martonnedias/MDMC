@@ -86,7 +86,7 @@ class LeadService {
 
     // Verificação de segurança das chaves
     if (!serviceId || !templateId || !publicKey) {
-      alert(`[DEBUG] Chaves do EmailJS não encontradas!\nVerifique o arquivo .env.local\n\nService: ${serviceId || 'N/A'}\nTemplate: ${templateId || 'N/A'}`);
+      alert(`Chaves do EmailJS não encontradas. Verifique o arquivo .env.local\n\nService: ${serviceId || 'N/A'}\nTemplate: ${templateId || 'N/A'}`);
       console.warn('[LeadService] EmailJS não configurado. Verifique as variáveis VITE_EMAILJS_*.');
       return true; // Retorna true para não bloquear a UI do usuário
     }
@@ -112,7 +112,7 @@ class LeadService {
       adminSuccess = true;
     } catch (e: any) {
       console.error('[LeadService] Erro ao enviar para ADMIN:', e);
-      alert(`ERRO AO ENVIAR PARA ADMIN:\n\n${e?.text || e?.message || 'Erro desconhecido'}\n\nVerifique se o Service ID e Template ID estão corretos.`);
+      alert(`Erro ao enviar para o administrador:\n\n${e?.text || e?.message || 'Erro desconhecido'}\n\nVerifique se o Service ID e Template ID estão corretos.`);
     }
 
     // 2. Envio para o CLIENTE (Confirmação)
@@ -141,7 +141,7 @@ class LeadService {
     }
 
     if (adminSuccess) {
-      alert('SUCESSO! E-mail enviado para o Administrador.');
+      alert('Sucesso! E-mail enviado para o administrador.');
       return true;
     }
 

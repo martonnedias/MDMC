@@ -4,6 +4,7 @@ import SectionTitle from './SectionTitle';
 import Button from './Button';
 import { BarChart3, Search, Target, Users, Smartphone, Zap, CheckCircle2, FileText, Sparkles, User, Mail, MessageCircle, Lock } from 'lucide-react';
 import { leadService } from '../services/leadService';
+import { FORM_VALIDATION_MSGS } from '../constants';
 
 interface MarketingDiagnosisPageProps {
   onStart: () => void;
@@ -26,7 +27,7 @@ const MarketingDiagnosisPage: React.FC<MarketingDiagnosisPageProps> = ({ onStart
     if (success) {
       onStart();
     } else {
-      alert('Erro ao processar seu acesso. Tente novamente.');
+      alert(FORM_VALIDATION_MSGS.processError);
     }
     setLoading(false);
   };
@@ -71,9 +72,11 @@ const MarketingDiagnosisPage: React.FC<MarketingDiagnosisPageProps> = ({ onStart
                       required
                       type="text"
                       placeholder="Seu Nome Completo"
+                      title={FORM_VALIDATION_MSGS.required}
                       className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:border-brand-blue outline-none transition-all"
                       value={formData.name}
-                      onChange={e => setFormData({ ...formData, name: e.target.value })}
+                      onChange={e => { setFormData({ ...formData, name: e.target.value }); (e.target as HTMLInputElement).setCustomValidity(''); }}
+                      onInvalid={e => { const el = e.target as HTMLInputElement; el.setCustomValidity(FORM_VALIDATION_MSGS.required); }}
                     />
                   </div>
                   <div className="relative">
@@ -82,9 +85,11 @@ const MarketingDiagnosisPage: React.FC<MarketingDiagnosisPageProps> = ({ onStart
                       required
                       type="email"
                       placeholder="E-mail Profissional"
+                      title={FORM_VALIDATION_MSGS.email}
                       className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:border-brand-blue outline-none transition-all"
                       value={formData.email}
-                      onChange={e => setFormData({ ...formData, email: e.target.value })}
+                      onChange={e => { setFormData({ ...formData, email: e.target.value }); (e.target as HTMLInputElement).setCustomValidity(''); }}
+                      onInvalid={e => { const el = e.target as HTMLInputElement; el.setCustomValidity(el.validity.typeMismatch ? FORM_VALIDATION_MSGS.email : FORM_VALIDATION_MSGS.required); }}
                     />
                   </div>
                   <div className="relative">
@@ -93,9 +98,11 @@ const MarketingDiagnosisPage: React.FC<MarketingDiagnosisPageProps> = ({ onStart
                       required
                       type="tel"
                       placeholder="Seu WhatsApp"
+                      title={FORM_VALIDATION_MSGS.required}
                       className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:border-brand-blue outline-none transition-all"
                       value={formData.phone}
-                      onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                      onChange={e => { setFormData({ ...formData, phone: e.target.value }); (e.target as HTMLInputElement).setCustomValidity(''); }}
+                      onInvalid={e => { (e.target as HTMLInputElement).setCustomValidity(FORM_VALIDATION_MSGS.required); }}
                     />
                   </div>
 

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import Button from './Button';
+import { FORM_VALIDATION_MSGS } from '../constants';
 import {
   Zap, AlertTriangle, Lightbulb, TrendingUp, PackageSearch,
   Target, Gauge, Rocket, User, Lock, Wand2, CheckCircle2,
@@ -94,22 +95,21 @@ const SwotBriefing: React.FC<{ selectedPlan?: string | null }> = ({ selectedPlan
     // Email validation
     if (name === 'email' && value) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(value)) return 'E-mail inválido';
+      if (!emailRegex.test(value)) return FORM_VALIDATION_MSGS.email;
     }
 
     // Phone and WhatsApp validation (Brazilian format)
     if ((name === 'phone' || name === 'whatsapp') && value) {
-      const phoneRegex = /^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/;
       const cleanPhone = value.replace(/\D/g, '');
       if (cleanPhone.length < 10 || cleanPhone.length > 11) {
-        return 'Telefone deve ter 10 ou 11 dígitos';
+        return FORM_VALIDATION_MSGS.phone;
       }
     }
 
     // Required field validation for text inputs
     const requiredFields = ['name', 'email', 'phone', 'companyName', 'segment', 'businessTime', 'teamSize'];
     if (requiredFields.includes(name) && !value) {
-      return 'Campo obrigatório';
+      return FORM_VALIDATION_MSGS.required;
     }
 
     return null;
@@ -146,7 +146,7 @@ const SwotBriefing: React.FC<{ selectedPlan?: string | null }> = ({ selectedPlan
       mainGoal12m: 'Ser referência regional.', directionClarity: 4, firstImprovement: 'Contratar comercial.', longTermDream: 'Expansão para 3 estados.',
       changeDisposition: 5, biggestObstacle: 'Verba de investimento imediato.', recommendationOpenness: 'Total'
     });
-    alert('Preenchido com dados de demonstração estrategicamente restaurados!');
+    alert(FORM_VALIDATION_MSGS.demoFilled);
   };
 
   const updateField = (field: string, value: any) => {
@@ -178,7 +178,7 @@ const SwotBriefing: React.FC<{ selectedPlan?: string | null }> = ({ selectedPlan
 
     if (Object.keys(errors).length > 0) {
       setValidationErrors(errors);
-      alert('Por favor, corrija os erros no formulário antes de enviar.');
+      alert(FORM_VALIDATION_MSGS.fixErrors);
       return;
     }
 

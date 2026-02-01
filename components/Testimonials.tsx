@@ -32,7 +32,7 @@ const Testimonials: React.FC = () => {
               <div className="w-16 h-16 bg-gray-200 rounded-full mb-4 overflow-hidden border-2 border-brand-blue">
                 <img
                   src="https://picsum.photos/seed/businessman/200/200"
-                  alt="Foto do cliente"
+                  alt={`${TESTIMONIAL_CONTENT.author} - ${TESTIMONIAL_CONTENT.role}, cliente MD Solution`}
                   className="w-full h-full object-cover"
                 />
               </div>

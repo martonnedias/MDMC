@@ -1,6 +1,7 @@
 
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import Button from './Button';
+import { FORM_VALIDATION_MSGS } from '../constants';
 import MarketingReport from './MarketingReport';
 import {
   UserCheck, Briefcase, BarChart3, Target, Heart, Users, Globe,
@@ -220,7 +221,7 @@ const Briefing: React.FC = () => {
     if (success) {
       setShowReport(true);
     } else {
-      setFormError("Erro ao salvar os dados. Tente novamente.");
+      setFormError(FORM_VALIDATION_MSGS.saveError);
     }
     setLoading(false);
   };
