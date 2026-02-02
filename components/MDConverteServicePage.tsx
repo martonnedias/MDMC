@@ -132,7 +132,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                         <div className="relative">
                             <div className="relative z-10 transform hover:scale-105 transition-transform duration-500">
                                 <img
-                                    src="/MDMC/images/md-converte/md_converte_dashboard.png"
+                                    src="/images/md-converte/md_converte_dashboard.png"
                                     alt="Painel MD Converte"
                                     className="rounded-2xl shadow-2xl border-4 border-white/10"
                                 />
@@ -381,7 +381,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                         <div className="order-2 lg:order-1">
                             <div className="relative transform hover:scale-105 transition-transform duration-500">
                                 <img
-                                    src="/MDMC/images/md-converte/md_converte_automation.png"
+                                    src="/images/md-converte/md_converte_automation.png"
                                     alt="Automação MD Converte"
                                     className="rounded-2xl shadow-2xl"
                                 />
@@ -430,7 +430,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                         </div>
                         <div className="relative transform hover:scale-105 transition-transform duration-500">
                             <img
-                                src="/MDMC/images/md-converte/md_converte_reports.png"
+                                src="/images/md-converte/md_converte_reports.png"
                                 alt="Relatórios MD Converte"
                                 className="rounded-2xl shadow-2xl"
                             />
