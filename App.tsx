@@ -30,7 +30,9 @@ import { AuthPage } from './components/AuthPage';
 
 import CookieConsent from './components/CookieConsent';
 
-export type ViewState = 'landing' | 'briefing' | 'terms' | 'privacy' | 'swot' | 'swot-pricing' | 'gmb' | 'ads' | 'sites' | 'consultancy' | 'swot-service' | 'marketing-diagnosis' | 'about' | 'auth';
+import { AdminPanel } from './components/Admin/AdminPanel';
+
+export type ViewState = 'landing' | 'briefing' | 'terms' | 'privacy' | 'swot' | 'swot-pricing' | 'gmb' | 'ads' | 'sites' | 'consultancy' | 'swot-service' | 'marketing-diagnosis' | 'about' | 'auth' | 'blog' | 'admin';
 
 const AppContent: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewState>('landing');
@@ -60,7 +62,7 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="font-sans antialiased text-gray-900 bg-white min-h-screen flex flex-col w-full overflow-x-hidden">
-      <Header currentView={currentView} onNavigate={navigateTo} />
+      {currentView !== 'admin' && <Header currentView={currentView} onNavigate={navigateTo} />}
 
       <main id="main-content" role="main" aria-label="Conteúdo principal" className={`flex-grow ${currentView !== 'landing' ? 'pt-0' : ''}`}>
         {currentView === 'landing' && (
@@ -159,10 +161,18 @@ const AppContent: React.FC = () => {
         {currentView === 'privacy' && (
           <PrivacyPolicy />
         )}
+
+        {currentView === 'admin' && (
+          <AdminPanel />
+        )}
       </main>
 
-      <Footer onNavigate={navigateTo} currentView={currentView} />
-      <WhatsAppWidget />
+      {currentView !== 'admin' && (
+        <>
+          <Footer onNavigate={navigateTo} currentView={currentView} />
+          <WhatsAppWidget />
+        </>
+      )}
       <CookieConsent />
     </div>
   );
