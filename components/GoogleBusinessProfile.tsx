@@ -8,8 +8,29 @@ import {
   ArrowRight, ShieldCheck, Sparkles, AlertCircle
 } from 'lucide-react';
 import ShareButtons from './ShareButtons';
+import { adminService } from '../services/adminService';
 
 const GoogleBusinessProfile: React.FC = () => {
+  const [displayPackages, setDisplayPackages] = React.useState<any[]>(GMB_CONTENT.packages);
+
+  React.useEffect(() => {
+    const fetchGmb = async () => {
+      const data = await adminService.getServices();
+      const gmbPlans = data.filter(s => s.category === 'gmb');
+      if (gmbPlans.length > 0) {
+        setDisplayPackages(gmbPlans.map(s => ({
+          name: s.name,
+          description: s.description,
+          price: s.price,
+          features: s.features,
+          cta: "Contratar agora",
+          highlight: s.name.toLowerCase().includes('gestão')
+        })));
+      }
+    };
+    fetchGmb();
+  }, []);
+
   const scrollToContact = () => {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -255,7 +276,7 @@ const GoogleBusinessProfile: React.FC = () => {
             subtitle="Temos a solução ideal para o seu momento."
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-16">
-            {GMB_CONTENT.packages.map((pkg, i) => (
+            {displayPackages.map((pkg, i) => (
               <div key={i} className={`bg-white rounded-[2.5rem] p-10 border transition-all duration-300 flex flex-col h-full ${pkg.highlight ? 'border-brand-blue shadow-2xl scale-105 z-10' : 'border-gray-100 shadow-xl'}`}>
                 {pkg.highlight && (
                   <div className="bg-brand-blue text-white px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 w-fit">Mais Procurado</div>

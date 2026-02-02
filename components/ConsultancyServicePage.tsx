@@ -4,8 +4,22 @@ import Button from './Button';
 import { CONSULTANCY_CONTENT } from '../constants';
 import { LineChart, CheckCircle2, MessageSquare, Headphones, TrendingUp, Users, ShieldCheck, Star } from 'lucide-react';
 import ShareButtons from './ShareButtons';
+import { adminService } from '../services/adminService';
 
 const ConsultancyServicePage: React.FC = () => {
+  const [investment, setInvestment] = React.useState<string>('R$ 1.800');
+
+  React.useEffect(() => {
+    const fetchConsultancy = async () => {
+      const data = await adminService.getServices();
+      const consultancy = data.find(s => s.category === 'consultancy');
+      if (consultancy) {
+        setInvestment(consultancy.price);
+      }
+    };
+    fetchConsultancy();
+  }, []);
+
   const scrollToContact = () => {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -30,7 +44,7 @@ const ConsultancyServicePage: React.FC = () => {
               </p>
               <div className="bg-white/10 p-8 rounded-[2.5rem] border border-white/20 backdrop-blur-md mb-10">
                 <p className="text-brand-orange font-black text-xs uppercase tracking-widest mb-2">Investimento em Performance</p>
-                <div className="text-4xl font-black mb-4">R$ 1.800 <span className="text-sm font-normal text-blue-200">/ mês</span></div>
+                <div className="text-4xl font-black mb-4">{investment} <span className="text-sm font-normal text-blue-200">/ mês</span></div>
                 <p className="text-sm text-blue-200">Ciclo recomendado: 3 meses para implementação completa e colheita de resultados.</p>
               </div>
               <div className="flex flex-col sm:flex-row items-center gap-8">
