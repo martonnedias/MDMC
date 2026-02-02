@@ -194,10 +194,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                             </div>
                         )}
 
-                        {!config && !loading && (
-                            <div className="bg-orange-50 border border-orange-100 p-6 rounded-3xl text-orange-800 text-sm flex items-center gap-3">
-                                <Settings size={20} />
-                                Nenhuma configuração encontrada no banco de dados.
+                        {(!config && !loading) && (
+                            <div className="bg-blue-50 border border-blue-100 p-8 rounded-[3rem] text-center space-y-4">
+                                <Settings className="mx-auto text-blue-400" size={32} />
+                                <h3 className="font-bold text-blue-900">Nenhuma configuração ativa</h3>
+                                <p className="text-blue-600 text-sm max-w-xs mx-auto">Você ainda não definiu as cores e contatos do site. Clique abaixo para gerar o modelo inicial.</p>
+                                <Button onClick={() => setConfig({ id: 1, site_name: 'MD Solution', phone: '', whatsapp: '', facebook_url: '', instagram_url: '', youtube_url: '', primary_color: '#2563eb', secondary_color: '#f97316', is_blog_active: true, is_swot_active: true })} variant="primary">
+                                    Iniciar Configuração
+                                </Button>
                             </div>
                         )}
 
