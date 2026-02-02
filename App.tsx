@@ -25,6 +25,7 @@ import SwotServicePage from './components/SwotServicePage';
 import MarketingDiagnosisPage from './components/MarketingDiagnosisPage';
 import AboutPage from './components/AboutPage';
 import Pricing from './components/Pricing';
+import MDConverteServicePage from './components/MDConverteServicePage';
 import { AuthProvider, useAuth } from './components/Auth/AuthProvider';
 import { AuthPage } from './components/AuthPage';
 import CommentPolicy from './components/CommentPolicy';
@@ -36,7 +37,7 @@ import { AdminPanel } from './components/Admin/AdminPanel';
 import BlogList from './components/BlogList';
 import BlogPostDetail from './components/BlogPostDetail';
 
-export type ViewState = 'landing' | 'briefing' | 'terms' | 'privacy' | 'swot' | 'swot-pricing' | 'gmb' | 'ads' | 'sites' | 'consultancy' | 'swot-service' | 'marketing-diagnosis' | 'about' | 'auth' | 'blog' | 'admin' | 'blog-post' | 'comment-policy';
+export type ViewState = 'landing' | 'briefing' | 'terms' | 'privacy' | 'swot' | 'swot-pricing' | 'gmb' | 'ads' | 'sites' | 'consultancy' | 'swot-service' | 'marketing-diagnosis' | 'about' | 'auth' | 'blog' | 'admin' | 'blog-post' | 'comment-policy' | 'md-converte';
 
 const VIEW_CONFIGS: Record<ViewState, { hash: string; title: string }> = {
   landing: { hash: '', title: '' },
@@ -56,7 +57,8 @@ const VIEW_CONFIGS: Record<ViewState, { hash: string; title: string }> = {
   blog: { hash: 'blog', title: 'Blog' },
   admin: { hash: 'admin', title: 'Painel Admin' },
   'blog-post': { hash: 'artigo', title: 'Artigo' },
-  'comment-policy': { hash: 'regras-comunidade', title: 'Regras da Comunidade' }
+  'comment-policy': { hash: 'regras-comunidade', title: 'Regras da Comunidade' },
+  'md-converte': { hash: 'md-converte', title: 'MD Converte' }
 };
 
 const AppContent: React.FC = () => {
@@ -136,7 +138,7 @@ const AppContent: React.FC = () => {
     <div className="font-sans antialiased text-gray-900 bg-white min-h-screen flex flex-col w-full overflow-x-hidden">
       {currentView !== 'admin' && <Header currentView={currentView} onNavigate={navigateTo} />}
 
-      <main id="main-content" role="main" aria-label="Conteúdo principal" className={`flex-grow ${currentView !== 'landing' && !['ads', 'gmb', 'sites', 'consultancy', 'swot-service', 'marketing-diagnosis', 'about', 'blog', 'blog-post', 'admin', 'auth', 'comment-policy'].includes(currentView) ? 'pt-24 lg:pt-32' : 'pt-0'}`}>
+      <main id="main-content" role="main" aria-label="Conteúdo principal" className={`flex-grow ${currentView !== 'landing' && !['ads', 'gmb', 'sites', 'consultancy', 'swot-service', 'marketing-diagnosis', 'about', 'blog', 'blog-post', 'admin', 'auth', 'comment-policy', 'md-converte'].includes(currentView) ? 'pt-24 lg:pt-32' : 'pt-0'}`}>
         {currentView === 'landing' && (
           <>
             <Hero
@@ -252,6 +254,10 @@ const AppContent: React.FC = () => {
 
         {currentView === 'comment-policy' && (
           <CommentPolicy onNavigate={navigateTo} />
+        )}
+
+        {currentView === 'md-converte' && (
+          <MDConverteServicePage />
         )}
       </main>
 

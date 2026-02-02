@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, ChevronDown, Target, BarChart3, ArrowRight, MapPin, Megaphone, Globe, Handshake, FileText } from 'lucide-react';
+import { Menu, X, ChevronDown, Target, BarChart3, ArrowRight, MapPin, Megaphone, Globe, Handshake, FileText, MessageSquare } from 'lucide-react';
 import Button from './Button';
 import Logo from './Logo';
 import { ViewState } from '../App';
@@ -115,6 +115,7 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
   };
 
   const services = [
+    { label: 'MD Converte', view: 'md-converte' as ViewState, icon: MessageSquare, desc: 'Atendimento + CRM' },
     { label: 'Google Meu Negócio', view: 'gmb' as ViewState, icon: MapPin, desc: 'Local SEO' },
     { label: 'Tráfego Pago (Anúncios)', view: 'ads' as ViewState, icon: Megaphone, desc: 'Meta & Google Ads' },
     { label: 'Sites & Landing Pages', view: 'sites' as ViewState, icon: Globe, desc: 'Alta Conversão' },
