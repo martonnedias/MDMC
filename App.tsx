@@ -30,18 +30,22 @@ import { AuthPage } from './components/AuthPage';
 
 import CookieConsent from './components/CookieConsent';
 import { SiteProvider } from './lib/SiteContext';
-
 import { AdminPanel } from './components/Admin/AdminPanel';
 
-export type ViewState = 'landing' | 'briefing' | 'terms' | 'privacy' | 'swot' | 'swot-pricing' | 'gmb' | 'ads' | 'sites' | 'consultancy' | 'swot-service' | 'marketing-diagnosis' | 'about' | 'auth' | 'blog' | 'admin';
+import BlogList from './components/BlogList';
+import BlogPostDetail from './components/BlogPostDetail';
+
+export type ViewState = 'landing' | 'briefing' | 'terms' | 'privacy' | 'swot' | 'swot-pricing' | 'gmb' | 'ads' | 'sites' | 'consultancy' | 'swot-service' | 'marketing-diagnosis' | 'about' | 'auth' | 'blog' | 'admin' | 'blog-post';
 
 const AppContent: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewState>('landing');
+  const [viewParams, setViewParams] = useState<any>(null);
   const [selectedSwotPlan, setSelectedSwotPlan] = useState<string | null>(null);
   const { user, loading } = useAuth();
 
-  const navigateTo = (view: ViewState) => {
+  const navigateTo = (view: ViewState, params: any = null) => {
     setCurrentView(view);
+    setViewParams(params);
     window.scrollTo(0, 0);
   };
 
@@ -165,6 +169,14 @@ const AppContent: React.FC = () => {
 
         {currentView === 'admin' && (
           <AdminPanel />
+        )}
+
+        {currentView === 'blog' && (
+          <BlogList onNavigate={navigateTo} />
+        )}
+
+        {currentView === 'blog-post' && (
+          <BlogPostDetail slug={viewParams?.slug} onNavigate={navigateTo} />
         )}
       </main>
 

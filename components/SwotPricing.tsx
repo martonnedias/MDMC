@@ -2,6 +2,7 @@ import React from 'react';
 import SectionTitle from './SectionTitle';
 import Button from './Button';
 import { SWOT_PLANS } from '../constants';
+import { adminService } from '../services/adminService';
 import { Check, Star, ShieldCheck, Zap, Users } from 'lucide-react';
 
 interface SwotPricingProps {
@@ -9,24 +10,45 @@ interface SwotPricingProps {
 }
 
 const SwotPricing: React.FC<SwotPricingProps> = ({ onSelectPlan }) => {
+  const [displayPlans, setDisplayPlans] = React.useState<any[]>(SWOT_PLANS);
+
+  React.useEffect(() => {
+    const fetchSwot = async () => {
+      const data = await adminService.getServices();
+      const swotPlans = data.filter(s => s.category === 'swot');
+      if (swotPlans.length > 0) {
+        setDisplayPlans(swotPlans.map(s => ({
+          id: s.id,
+          name: s.name,
+          subtitle: s.description.split('.')[0],
+          price: s.price,
+          description: s.description,
+          features: s.features,
+          cta: "Escolher Plano",
+          highlight: s.name.toLowerCase().includes('estratégico'),
+          badge: "Mais Procurado"
+        })));
+      }
+    };
+    fetchSwot();
+  }, []);
   return (
     <section id="swot-pricing" className="py-24 bg-gray-50">
       <div className="container mx-auto px-4 md:px-6">
-        <SectionTitle 
+        <SectionTitle
           title="Qual nível de profundidade você precisa agora?"
           subtitle="Temos a solução ideal, desde um raio-x estratégico rápido até um acompanhamento de 30 dias na sua implementação."
           alignment="center"
         />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto pt-8">
-          {SWOT_PLANS.map((plan) => (
-            <div 
+          {displayPlans.map((plan) => (
+            <div
               key={plan.id}
-              className={`relative flex flex-col h-full rounded-[2.5rem] p-8 md:p-10 transition-all duration-300 border ${
-                plan.highlight 
-                ? 'bg-white border-brand-blue shadow-2xl lg:scale-105 z-10' 
-                : 'bg-white/50 border-gray-100 hover:border-gray-300 shadow-xl'
-              }`}
+              className={`relative flex flex-col h-full rounded-[2.5rem] p-8 md:p-10 transition-all duration-300 border ${plan.highlight
+                  ? 'bg-white border-brand-blue shadow-2xl lg:scale-105 z-10'
+                  : 'bg-white/50 border-gray-100 hover:border-gray-300 shadow-xl'
+                }`}
             >
               {plan.highlight && (
                 <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-brand-blue text-white px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-lg flex items-center gap-2">
@@ -59,9 +81,9 @@ const SwotPricing: React.FC<SwotPricingProps> = ({ onSelectPlan }) => {
                 ))}
               </ul>
 
-              <Button 
+              <Button
                 onClick={() => onSelectPlan(plan.id)}
-                fullWidth 
+                fullWidth
                 variant={plan.highlight ? 'primary' : 'secondary'}
                 className={`py-4 text-base font-bold rounded-2xl ${!plan.highlight && 'border-gray-200 text-gray-700 hover:bg-gray-50'}`}
               >
