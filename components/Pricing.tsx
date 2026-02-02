@@ -13,17 +13,24 @@ const Pricing: React.FC = () => {
       const data = await adminService.getServices();
       const marketingPlans = data.filter(s => s.category === 'marketing');
       if (marketingPlans.length > 0) {
-        // Mapeia os dados do Supabase para o formato esperado pelo componente
-        setDisplayPlans(marketingPlans.map(s => ({
-          name: s.name,
-          subtitle: s.description.split('.')[0], // Pega a primeira frase como subtítulo
-          description: s.description,
-          price: s.price,
-          adBudget: "Verba sugerida conforme estratégia.",
-          ctaText: "Quero este Plano",
-          features: s.features,
-          highlight: s.name.toLowerCase().includes('profissional') // Simula destaque
-        })));
+        setDisplayPlans(marketingPlans.map((s, index) => {
+          // Tenta encontrar o plano padrão pelo nome, ou usa o índice como fallback
+          const normalizedName = (s.name || '').toLowerCase().trim();
+          const defaultPlan = PLANS.find(p => p.name.toLowerCase().includes(normalizedName)) || PLANS[index] || PLANS[0];
+
+          return {
+            name: s.name || defaultPlan.name,
+            subtitle: s.subtitle || defaultPlan.subtitle,
+            description: s.description || defaultPlan.description,
+            price: s.price || defaultPlan.price,
+            adBudget: s.extra_info || defaultPlan.adBudget,
+            ctaText: s.cta_text || defaultPlan.ctaText || "Solicitar Orçamento",
+            features: (Array.isArray(s.features) && s.features.length > 0 && s.features[0] !== '')
+              ? s.features
+              : defaultPlan.features,
+            highlight: s.is_highlighted !== undefined ? s.is_highlighted : defaultPlan.highlight
+          };
+        }));
       }
     };
     fetchServices();
@@ -80,7 +87,7 @@ const Pricing: React.FC = () => {
 
               <div className="p-8 pt-0 flex-grow flex flex-col justify-between">
                 <ul className="space-y-4 mb-8">
-                  {plan.features.map((feature, idx) => (
+                  {plan.features.map((feature: string, idx: number) => (
                     <li key={idx} className="flex items-start gap-3">
                       <div className="mt-1 shrink-0">
                         <Check size={18} className="text-green-500" />

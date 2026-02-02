@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useSiteConfig } from '../lib/SiteContext';
 
 interface LogoProps {
   className?: string;
@@ -8,11 +9,12 @@ interface LogoProps {
 }
 
 const Logo: React.FC<LogoProps> = ({ className = '', size = 'md', variant = 'dark' }) => {
+  const { config } = useSiteConfig();
   // Configuração de alturas máximas (max-height) conforme especificado pelo usuário
   const heights = {
-    sm: 'max-h-[100px] max-w-[100px] w-auto h-auto',  // Header (100px)
-    md: 'h-[100px] w-auto',            // Header - altura fixa 100px
-    lg: 'max-h-[120px] w-auto h-auto'  // Footer
+    sm: 'max-h-[50px] w-auto h-auto',  // Scrolled Header
+    md: 'max-h-[70px] w-auto h-auto',  // Static Header
+    lg: 'max-h-[90px] w-auto h-auto'   // Footer
   };
 
   // Seleção automática do arquivo de imagem com base na variante
@@ -20,14 +22,15 @@ const Logo: React.FC<LogoProps> = ({ className = '', size = 'md', variant = 'dar
   // logo.png = versão escura (letras azuis/pretas)
   // logo-light.png = versão clara (letras brancas/rainbow)
   const base = import.meta.env.BASE_URL;
-  const logoSrc = `${base}${variant === 'light' ? 'logo-light.png' : 'logo.png'}`;
+  const defaultLogo = `${base}${variant === 'light' ? 'logo-light.png' : 'logo.png'}`;
+  const logoSrc = config.logo_url && variant === 'dark' ? config.logo_url : defaultLogo;
 
   return (
     <div className={`flex items-center group transition-all duration-300 ${className}`}>
       <img
         src={logoSrc}
         alt="MD Solution Marketing e Consultoria"
-        className={`${heights[size]} mt-0 mb-0 mx-[50px] object-contain transition-all duration-500 group-hover:scale-[1.02] group-hover:brightness-110`}
+        className={`${heights[size]} mt-0 mb-0 object-contain transition-all duration-500 group-hover:scale-[1.02] group-hover:brightness-110`}
         loading="eager"
         onError={(e) => {
           // Fallback visual caso a imagem não seja encontrada

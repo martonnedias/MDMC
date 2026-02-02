@@ -5,11 +5,14 @@ import SectionTitle from './SectionTitle';
 import { Lightbulb, ArrowUpRight } from 'lucide-react';
 import { ViewState } from '../App';
 
+import { useSiteConfig } from '../lib/SiteContext';
+
 interface ServicesProps {
   onNavigate?: (view: ViewState) => void;
 }
 
 const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
+  const { config } = useSiteConfig();
   const serviceViews: Record<string, ViewState> = {
     "Campanhas de Captação": "ads",
     "Sites & Landing Pages": "sites",
@@ -17,12 +20,14 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
     "Consultoria de Vendas": "consultancy"
   };
 
+  const bgColor = config.content?.sections?.services?.background_color || '#f9fafb'; // fallback bg-gray-50 hex
+
   return (
-    <section id="servicos" className="py-12 lg:py-20 bg-gray-50">
+    <section id="servicos" className="py-12 lg:py-20" style={{ backgroundColor: bgColor }}>
       <div className="container mx-auto px-4 md:px-6">
         <SectionTitle
-          title={SERVICES_CONTENT.title}
-          subtitle={SERVICES_CONTENT.intro}
+          title={config.content?.sections?.services?.title || SERVICES_CONTENT.title}
+          subtitle={config.content?.sections?.services?.subtitle || SERVICES_CONTENT.intro}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
@@ -30,13 +35,13 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
             <div
               key={index}
               onClick={() => onNavigate && onNavigate(serviceViews[service.title])}
-              className="bg-white p-8 rounded-[2rem] shadow-sm hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group border border-gray-100 cursor-pointer flex flex-col h-full"
+              className="bg-card p-8 rounded-[2rem] shadow-sm hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group border border-gray-100/5 cursor-pointer flex flex-col h-full"
             >
               <div className={`w-16 h-16 rounded-2xl ${service.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
                 <service.icon size={32} />
               </div>
-              <h3 className="text-xl font-heading font-bold mb-3 text-gray-900">{service.title}</h3>
-              <p className="text-gray-600 leading-relaxed text-sm mb-6 flex-grow">{service.description}</p>
+              <h3 className="text-xl font-heading font-bold mb-3 text-txtPrimary">{service.title}</h3>
+              <p className="text-txtSecondary leading-relaxed text-sm mb-6 flex-grow">{service.description}</p>
 
               <div className="flex items-center gap-2 text-brand-blue font-bold text-xs uppercase tracking-widest mt-auto group-hover:gap-4 transition-all">
                 Ver Detalhes e Preços <ArrowUpRight size={16} />

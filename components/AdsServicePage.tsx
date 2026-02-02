@@ -3,6 +3,7 @@ import React from 'react';
 import SectionTitle from './SectionTitle';
 import Button from './Button';
 import { PLANS } from '../constants';
+import { adminService } from '../services/adminService';
 import { Check, Megaphone, Target, BarChart3 } from 'lucide-react';
 import ShareButtons from './ShareButtons';
 
@@ -10,6 +11,33 @@ const AdsServicePage: React.FC = () => {
   const scrollToContact = () => {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  const [displayPlans, setDisplayPlans] = React.useState<any[]>(PLANS);
+
+  React.useEffect(() => {
+    const fetchServices = async () => {
+      const data = await adminService.getServices();
+      const marketingPlans = data.filter(s => s.category === 'marketing');
+      if (marketingPlans.length > 0) {
+        setDisplayPlans(marketingPlans.map((s, index) => {
+          const normalizedName = (s.name || '').toLowerCase().trim();
+          const defaultPlan = PLANS.find(p => p.name.toLowerCase().includes(normalizedName)) || PLANS[index] || PLANS[0];
+          return {
+            name: s.name || defaultPlan.name,
+            subtitle: s.subtitle || defaultPlan.subtitle,
+            price: s.price || defaultPlan.price,
+            adBudget: s.extra_info || defaultPlan.adBudget,
+            ctaText: s.cta_text || defaultPlan.ctaText || "Solicitar Orçamento",
+            features: (Array.isArray(s.features) && s.features.length > 0 && s.features[0] !== '')
+              ? s.features
+              : defaultPlan.features,
+            highlight: s.is_highlighted !== undefined ? s.is_highlighted : defaultPlan.highlight
+          };
+        }));
+      }
+    };
+    fetchServices();
+  }, []);
 
   return (
     <div className="pt-0 pb-0 font-sans">
@@ -72,7 +100,7 @@ const AdsServicePage: React.FC = () => {
             subtitle="Escolha o fôlego que seu negócio precisa hoje."
           />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start max-w-7xl mx-auto pt-8">
-            {PLANS.map((plan, index) => (
+            {displayPlans.map((plan, index) => (
               <div
                 key={index}
                 className={`relative rounded-[2.5rem] transition-all duration-300 flex flex-col h-full overflow-hidden
@@ -109,8 +137,13 @@ const AdsServicePage: React.FC = () => {
                   <div className="bg-brand-navy text-white p-4 rounded-2xl mb-6 border border-white/10">
                     <p className="text-[10px] font-black uppercase text-center tracking-widest opacity-80">{plan.adBudget}</p>
                   </div>
-                  <Button onClick={scrollToContact} variant={plan.highlight ? 'primary' : 'outline'} fullWidth className={plan.highlight ? '' : 'text-brand-darkBlue border-brand-darkBlue hover:bg-brand-darkBlue hover:text-white'}>
-                    Solicitar Orçamento
+                  <Button
+                    onClick={scrollToContact}
+                    variant={plan.highlight ? 'primary' : 'secondary'}
+                    fullWidth
+                    className={plan.highlight ? '' : 'text-brand-darkBlue border-brand-darkBlue'}
+                  >
+                    {plan.ctaText || "Solicitar Orçamento"}
                   </Button>
                 </div>
               </div>

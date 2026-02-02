@@ -9,6 +9,7 @@ import {
   CheckCircle2, PackageSearch, Lock, Wand2, ChevronLeft, ChevronRight, AlertCircle
 } from 'lucide-react';
 import { leadService } from '../services/leadService';
+import { useAuth } from './Auth/AuthProvider';
 
 const sections = [
   { title: 'Empresa', icon: UserCheck },
@@ -89,6 +90,7 @@ const ProgressIndicator: React.FC<{ currentStep: number }> = ({ currentStep }) =
 };
 
 const Briefing: React.FC = () => {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
@@ -112,6 +114,16 @@ const Briefing: React.FC = () => {
     topCompetitors: '', competitorAdvantages: '', ownAdvantages: '', competitorAdSpend: '',
     investmentBudget: '', startTime: '', previousExperience: '', whatNotToDo: '', extraInfo: ''
   });
+
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        responsibleName: user.user_metadata?.full_name || prev.responsibleName,
+        email: user.email || prev.email
+      }));
+    }
+  }, [user]);
 
   useLayoutEffect(() => {
     if (showReport) return;

@@ -177,7 +177,7 @@ const SwotReport: React.FC<SwotReportProps> = ({ formData, onBack }) => {
               onClick={handleDownloadPDF}
               loading={generatingPdf}
               variant="outline"
-              className="border-brand-blue text-brand-blue hover:bg-brand-blue hover:text-white px-6 py-2"
+              className="!border-brand-blue !text-brand-blue hover:!bg-brand-blue hover:!text-white px-6 py-2"
               withIcon
             >
               Baixar Relatório (PDF)

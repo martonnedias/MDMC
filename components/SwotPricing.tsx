@@ -17,17 +17,22 @@ const SwotPricing: React.FC<SwotPricingProps> = ({ onSelectPlan }) => {
       const data = await adminService.getServices();
       const swotPlans = data.filter(s => s.category === 'swot');
       if (swotPlans.length > 0) {
-        setDisplayPlans(swotPlans.map(s => ({
-          id: s.id,
-          name: s.name,
-          subtitle: s.description.split('.')[0],
-          price: s.price,
-          description: s.description,
-          features: s.features,
-          cta: "Escolher Plano",
-          highlight: s.name.toLowerCase().includes('estratégico'),
-          badge: "Mais Procurado"
-        })));
+        setDisplayPlans(swotPlans.map((s, index) => {
+          const defaultPlan = SWOT_PLANS[index] || SWOT_PLANS[0];
+          return {
+            id: s.id,
+            name: s.name || defaultPlan.name,
+            subtitle: s.subtitle || defaultPlan.subtitle,
+            price: s.price || defaultPlan.price,
+            description: s.description || defaultPlan.description,
+            features: (Array.isArray(s.features) && s.features.length > 0 && s.features[0] !== '')
+              ? s.features
+              : defaultPlan.features,
+            cta: s.cta_text || defaultPlan.cta,
+            highlight: s.is_highlighted !== undefined ? s.is_highlighted : defaultPlan.highlight,
+            badge: s.badge_text || defaultPlan.badge
+          };
+        }));
       }
     };
     fetchSwot();
@@ -46,8 +51,8 @@ const SwotPricing: React.FC<SwotPricingProps> = ({ onSelectPlan }) => {
             <div
               key={plan.id}
               className={`relative flex flex-col h-full rounded-[2.5rem] p-8 md:p-10 transition-all duration-300 border ${plan.highlight
-                  ? 'bg-white border-brand-blue shadow-2xl lg:scale-105 z-10'
-                  : 'bg-white/50 border-gray-100 hover:border-gray-300 shadow-xl'
+                ? 'bg-white border-brand-blue shadow-2xl lg:scale-105 z-10'
+                : 'bg-white/50 border-gray-100 hover:border-gray-300 shadow-xl'
                 }`}
             >
               {plan.highlight && (
@@ -85,7 +90,7 @@ const SwotPricing: React.FC<SwotPricingProps> = ({ onSelectPlan }) => {
                 onClick={() => onSelectPlan(plan.id)}
                 fullWidth
                 variant={plan.highlight ? 'primary' : 'secondary'}
-                className={`py-4 text-base font-bold rounded-2xl ${!plan.highlight && 'border-gray-200 text-gray-700 hover:bg-gray-50'}`}
+                className={`py-4 text-base font-bold rounded-2xl ${!plan.highlight && '!border-gray-200 !text-gray-700 hover:!bg-gray-50'}`}
               >
                 {plan.cta}
               </Button>

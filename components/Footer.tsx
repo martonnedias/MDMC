@@ -230,35 +230,40 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
           </div>
 
           <div>
-            <h4 className="font-heading font-bold text-sm mb-8 text-white uppercase tracking-[0.2em] opacity-50">Empresa</h4>
-            <ul className="space-y-4 text-gray-400 text-sm font-medium">
-              <li><a href="#" onClick={(e) => handleLinkClick(e, 'landing')} className="hover:text-brand-blue transition-colors">Início</a></li>
-              <li><a href="#" onClick={(e) => handleLinkClick(e, 'about')} className="hover:text-brand-blue transition-colors">Sobre Nós</a></li>
-              <li><a href="#" onClick={(e) => handleLinkClick(e, 'marketing-diagnosis')} className="hover:text-brand-blue transition-colors">Diagnóstico Grátis</a></li>
-              <li><a href="#" onClick={(e) => handleLinkClick(e, 'swot-service')} className="hover:text-brand-blue transition-colors">Análise SWOT</a></li>
-            </ul>
-          </div>
-
-          <div>
             <h4 className="font-heading font-bold text-sm mb-8 text-white uppercase tracking-[0.2em] opacity-50">Soluções</h4>
             <ul className="space-y-4 text-gray-400 text-sm font-medium">
               <li><a href="#" onClick={(e) => handleLinkClick(e, 'gmb')} className="hover:text-brand-blue transition-colors">Google Meu Negócio</a></li>
-              <li><a href="#" onClick={(e) => handleLinkClick(e, 'ads')} className="hover:text-brand-blue transition-colors">Tráfego Pago</a></li>
-              <li><a href="#" onClick={(e) => handleLinkClick(e, 'sites')} className="hover:text-brand-blue transition-colors">Sites & LPs</a></li>
-              <li><a href="#" onClick={(e) => handleLinkClick(e, 'consultancy')} className="hover:text-brand-blue transition-colors">Vendas</a></li>
+              <li><a href="#" onClick={(e) => handleLinkClick(e, 'ads')} className="hover:text-brand-blue transition-colors">Tráfego Pago (Anúncios)</a></li>
+              <li><a href="#" onClick={(e) => handleLinkClick(e, 'sites')} className="hover:text-brand-blue transition-colors">Sites & Landing Pages</a></li>
+              <li><a href="#" onClick={(e) => handleLinkClick(e, 'consultancy')} className="hover:text-brand-blue transition-colors">Consultoria de Vendas</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-heading font-bold text-sm mb-8 text-white uppercase tracking-[0.2em] opacity-50">Fale Conosco</h4>
+            <h4 className="font-heading font-bold text-sm mb-8 text-white uppercase tracking-[0.2em] opacity-50">Inteligência</h4>
+            <ul className="space-y-4 text-gray-400 text-sm font-medium">
+              {config.is_blog_active && (
+                <li><a href="#" onClick={(e) => handleLinkClick(e, 'blog')} className="hover:text-brand-blue transition-colors">Blog & Artigos</a></li>
+              )}
+              {config.is_swot_active && (
+                <li><a href="#" onClick={(e) => handleLinkClick(e, 'swot-service')} className="hover:text-brand-blue transition-colors">Análise SWOT (Audit)</a></li>
+              )}
+              <li><a href="#" onClick={(e) => handleLinkClick(e, 'marketing-diagnosis')} className="hover:text-brand-blue transition-colors">Diagnóstico Marketing (Free)</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-heading font-bold text-sm mb-8 text-white uppercase tracking-[0.2em] opacity-50">Institucional</h4>
             <ul className="space-y-4 text-gray-400 text-sm font-medium mb-8">
-              <li className="flex items-start gap-3">
+              <li><a href="#" onClick={(e) => handleLinkClick(e, 'landing')} className="hover:text-brand-blue transition-colors">Início</a></li>
+              <li><a href="#" onClick={(e) => handleLinkClick(e, 'about')} className="hover:text-brand-blue transition-colors">Sobre Nós</a></li>
+              <li className="flex items-start gap-3 border-t border-white/5 pt-4 mt-4">
                 <MapPin size={18} className="text-brand-blue shrink-0 mt-0.5" />
                 <span>Atendimento Nacional & Remoto</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={18} className="text-brand-blue shrink-0" />
-                <span>contato@mdsolution.com.br</span>
+                <span>{config.email || 'contato@mdsolution.com.br'}</span>
               </li>
             </ul>
 

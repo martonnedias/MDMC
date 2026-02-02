@@ -4,8 +4,22 @@ import SectionTitle from './SectionTitle';
 import Button from './Button';
 import { Layout, Smartphone, Zap, Search, Target, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import ShareButtons from './ShareButtons';
+import { adminService } from '../services/adminService';
 
 const SitesServicePage: React.FC = () => {
+  const [investment, setInvestment] = React.useState<string>('R$ 800');
+
+  React.useEffect(() => {
+    const fetchSites = async () => {
+      const data = await adminService.getServices();
+      const sitesService = data.find(s => s.category === 'sites');
+      if (sitesService) {
+        setInvestment(sitesService.price || 'R$ 800');
+      }
+    };
+    fetchSites();
+  }, []);
+
   const scrollToContact = () => {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -30,7 +44,7 @@ const SitesServicePage: React.FC = () => {
                 <p className="text-sm font-black text-gray-400 uppercase tracking-widest mb-1">Investimento Inicial</p>
                 <div className="flex items-baseline gap-2">
                   <span className="text-gray-500 text-sm font-bold">A partir de</span>
-                  <span className="text-4xl font-black text-brand-darkBlue">R$ 800</span>
+                  <span className="text-4xl font-black text-brand-darkBlue">{investment}</span>
                 </div>
                 <p className="text-xs text-brand-green font-bold mt-2">Pagamento facilitado em até 10x</p>
               </div>

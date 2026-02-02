@@ -6,18 +6,22 @@ import { SWOT_SECTION_CONTENT } from '../constants';
 import { CheckCircle2, ClipboardList, Target, ShieldCheck } from 'lucide-react';
 import { ViewState } from '../App';
 
+import { useSiteConfig } from '../lib/SiteContext';
+
 interface SwotSectionProps {
   onNavigate: (view: ViewState) => void;
 }
 
 const SwotSection: React.FC<SwotSectionProps> = ({ onNavigate }) => {
+  const { config } = useSiteConfig();
+
   return (
-    <section id="swot" className="py-12 lg:py-24 bg-white relative overflow-hidden">
+    <section id="swot" className="py-12 lg:py-24 relative overflow-hidden" style={{ backgroundColor: config.content?.sections?.swot?.background_color || '#ffffff' }}>
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-4xl mx-auto mb-16 text-center">
           <SectionTitle
-            title={SWOT_SECTION_CONTENT.title}
-            subtitle={SWOT_SECTION_CONTENT.subtitle}
+            title={config.content?.sections?.swot?.title || SWOT_SECTION_CONTENT.title}
+            subtitle={config.content?.sections?.swot?.subtitle || SWOT_SECTION_CONTENT.subtitle}
             alignment="center"
           />
         </div>

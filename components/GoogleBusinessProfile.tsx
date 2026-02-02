@@ -18,14 +18,19 @@ const GoogleBusinessProfile: React.FC = () => {
       const data = await adminService.getServices();
       const gmbPlans = data.filter(s => s.category === 'gmb');
       if (gmbPlans.length > 0) {
-        setDisplayPackages(gmbPlans.map(s => ({
-          name: s.name,
-          description: s.description,
-          price: s.price,
-          features: s.features,
-          cta: "Contratar agora",
-          highlight: s.name.toLowerCase().includes('gestão')
-        })));
+        setDisplayPackages(gmbPlans.map((s, index) => {
+          const defaultPkg = GMB_CONTENT.packages[index] || GMB_CONTENT.packages[0];
+          return {
+            name: s.name || defaultPkg.name,
+            description: s.description || defaultPkg.description,
+            price: s.price || defaultPkg.price,
+            features: (Array.isArray(s.features) && s.features.length > 0 && s.features[0] !== '')
+              ? s.features
+              : defaultPkg.features,
+            cta: s.cta_text || defaultPkg.cta,
+            highlight: s.is_highlighted !== undefined ? s.is_highlighted : defaultPkg.highlight
+          };
+        }));
       }
     };
     fetchGmb();

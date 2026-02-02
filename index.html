@@ -47,19 +47,27 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            heading: ['Poppins', 'sans-serif'],
+            sans: ['var(--font-sans, Inter)', 'sans-serif'],
+            heading: ['var(--font-heading, Poppins)', 'sans-serif'],
           },
           colors: {
+            // Semantic dynamic colors
+            page: 'var(--bg-page, #ffffff)',
+            card: 'var(--bg-card, #f9fafb)',
+            header: 'var(--bg-header, #ffffff)',
+            footer: 'var(--bg-footer, #112240)',
+            txtPrimary: 'var(--text-primary, #111827)',
+            txtSecondary: 'var(--text-secondary, #6b7280)',
+
             brand: {
-              blue: '#0052FF',
+              blue: 'var(--color-brand-blue, #0052FF)',
               blueLight: '#F0F5FF',
               darkBlue: '#0A1931',
               navy: '#112240',
               slate: '#233554',
-              orange: '#FF6B00',
+              orange: 'var(--color-brand-orange, #FF6B00)',
               orangeLight: '#FFF5EB',
-              orangeHover: '#E65600',
+              orangeHover: 'var(--color-brand-orange, #E65600)', // Fallback simplificado para hover usar a mesma base por enquanto
               gold: '#FFD700', // For premium accents
               green: '#10B981',
             }

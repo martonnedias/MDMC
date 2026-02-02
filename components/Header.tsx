@@ -1,10 +1,12 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, ChevronDown, Target, BarChart3, ArrowRight, MapPin, Megaphone, Globe, Handshake } from 'lucide-react';
+import { Menu, X, ChevronDown, Target, BarChart3, ArrowRight, MapPin, Megaphone, Globe, Handshake, FileText } from 'lucide-react';
 import Button from './Button';
 import Logo from './Logo';
 import { ViewState } from '../App';
 import { useSiteConfig } from '../lib/SiteContext';
+import { useAuth } from './Auth/AuthProvider';
+import { LogOut, User as UserIcon } from 'lucide-react';
 
 interface HeaderProps {
   currentView?: ViewState;
@@ -13,6 +15,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) => {
   const { config } = useSiteConfig();
+  const { user, signOut } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesMenuOpen, setServicesMenuOpen] = useState(false);
@@ -119,27 +122,29 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
   ];
 
   const tools = [
-    { label: 'Análise SWOT (Audit)', view: 'swot-service' as ViewState, icon: Target, desc: 'Auditoria Estratégica' },
-    { label: 'Diagnóstico Marketing (Free)', view: 'marketing-diagnosis' as ViewState, icon: BarChart3, desc: 'Análise de Vendas' },
-  ];
+    { label: 'Blog & Artigos', view: 'blog' as ViewState, icon: FileText, desc: 'Conteúdo Educativo', active: config.is_blog_active },
+    { label: 'Análise SWOT (Audit)', view: 'swot-service' as ViewState, icon: Target, desc: 'Auditoria Estratégica', active: config.is_swot_active },
+    { label: 'Diagnóstico Marketing (Free)', view: 'marketing-diagnosis' as ViewState, icon: BarChart3, desc: 'Análise de Vendas', active: true },
+  ].filter(t => t.active);
 
   // Header turns solid ONLY on scroll now as requested for ALL pages
   const isSolid = isScrolled;
 
   // To ensure readability when transparent, we check if the current page has a dark or light top section
-  const isDarkPage = ['landing', 'ads', 'consultancy', 'about', 'swot-service'].includes(currentView);
+  const isDarkPage = ['landing', 'ads', 'consultancy', 'about', 'swot-service', 'blog-post'].includes(currentView);
 
   // Dynamic classes based on background state (altura fixa em todas as páginas)
   const headerBgClass = isSolid
     ? 'bg-white shadow-[0_10px_30px_rgba(0,0,0,0.1)]'
     : 'bg-transparent';
 
-  // When solid (orange), we use darkBlue text.
+  // When solid (scrolled), we always use darkBlue text on white background.
   // When transparent, we use white on dark pages and darkBlue on light pages.
-  const navLinkClass = `text-sm font-black tracking-tight transition-all relative group ${isSolid
-    ? 'text-brand-darkBlue hover:text-brand-orange'
-    : (isDarkPage ? 'text-white hover:text-brand-orange' : 'text-brand-darkBlue hover:text-brand-orange text-brand-darkBlue hover:text-brand-orange shadow-none')
-    }`;
+  const navLinkClass = isSolid
+    ? 'text-sm font-black tracking-tight transition-all relative group text-brand-darkBlue hover:text-brand-orange'
+    : isDarkPage
+      ? 'text-sm font-black tracking-tight transition-all relative group text-white hover:text-brand-orange'
+      : 'text-sm font-black tracking-tight transition-all relative group text-brand-darkBlue hover:text-brand-orange';
 
   const iconColorClass = isSolid
     ? 'text-brand-darkBlue'
@@ -311,6 +316,42 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
           >
             Diagnóstico Grátis
           </Button>
+
+          {user ? (
+            <div className="flex items-center gap-4 ml-4 pl-6 border-l border-gray-100">
+              <div className="flex items-center gap-3">
+                <div className="text-right hidden xl:block">
+                  <p className={`text-[10px] font-black uppercase tracking-widest leading-none mb-1 ${isSolid ? 'text-gray-400' : (isDarkPage ? 'text-white/60' : 'text-gray-400')}`}>Olá,</p>
+                  <p className={`text-xs font-bold leading-none ${isSolid ? 'text-gray-900' : (isDarkPage ? 'text-white' : 'text-gray-900')}`}>
+                    {user.user_metadata?.full_name?.split(' ')[0] || 'Usuário'}
+                  </p>
+                </div>
+                <div className="w-10 h-10 rounded-2xl overflow-hidden border-2 border-white shadow-sm">
+                  {user.user_metadata?.avatar_url ? (
+                    <img src={user.user_metadata.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-brand-blue/10 flex items-center justify-center text-brand-blue">
+                      <UserIcon size={20} />
+                    </div>
+                  )}
+                </div>
+              </div>
+              <button
+                onClick={() => signOut()}
+                className={`p-2.5 rounded-xl transition-all hover:bg-red-50 hover:text-red-500 ${isSolid ? 'text-gray-400' : (isDarkPage ? 'text-white/60' : 'text-gray-400')}`}
+                title="Sair da conta"
+              >
+                <LogOut size={18} />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => onNavigate && onNavigate('auth' as any)}
+              className={`ml-4 px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest border transition-all ${isSolid || !isDarkPage ? 'border-gray-100 text-gray-900 hover:bg-gray-50' : 'border-white/20 text-white hover:bg-white/10'}`}
+            >
+              Entrar
+            </button>
+          )}
         </nav>
 
         {/* Mobile Menu Button */}
@@ -367,8 +408,41 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
 
           <button onClick={() => { onNavigate && onNavigate('about'); setMobileMenuOpen(false); }} className="text-left font-black text-lg text-gray-800 py-3 border-t border-gray-50 active:scale-98 transition-transform">Sobre Nós</button>
 
-          <div className="pt-2">
+          <div className="pt-2 flex flex-col gap-3">
             <Button onClick={() => { onNavigate && onNavigate('marketing-diagnosis'); setMobileMenuOpen(false); }} fullWidth className="py-4 text-base shadow-xl bg-brand-orange text-white">Diagnóstico Grátis</Button>
+
+            {user ? (
+              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl mt-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-xl overflow-hidden border border-white shadow-sm">
+                    {user.user_metadata?.avatar_url ? (
+                      <img src={user.user_metadata.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-brand-blue/10 flex items-center justify-center text-brand-blue">
+                        <UserIcon size={24} />
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Logado como</p>
+                    <p className="font-bold text-gray-900">{user.user_metadata?.full_name || 'Usuário'}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => { signOut(); setMobileMenuOpen(false); }}
+                  className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-red-500 shadow-sm active:scale-95 transition-transform"
+                >
+                  <LogOut size={20} />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => { onNavigate && onNavigate('auth' as any); setMobileMenuOpen(false); }}
+                className="w-full py-4 text-gray-900 font-black uppercase tracking-widest text-xs border border-gray-100 rounded-2xl active:scale-98 transition-transform"
+              >
+                Entrar na Conta
+              </button>
+            )}
           </div>
         </div>
       )}

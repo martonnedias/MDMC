@@ -7,14 +7,18 @@ import ShareButtons from './ShareButtons';
 import { adminService } from '../services/adminService';
 
 const ConsultancyServicePage: React.FC = () => {
-  const [investment, setInvestment] = React.useState<string>('R$ 1.800');
+  const [investment, setInvestment] = React.useState<string>(CONSULTANCY_CONTENT.pricing.split('(')[0].trim());
+  const [scope, setScope] = React.useState<string[]>(CONSULTANCY_CONTENT.details);
 
   React.useEffect(() => {
     const fetchConsultancy = async () => {
       const data = await adminService.getServices();
       const consultancy = data.find(s => s.category === 'consultancy');
       if (consultancy) {
-        setInvestment(consultancy.price);
+        setInvestment(consultancy.price || CONSULTANCY_CONTENT.pricing.split('(')[0].trim());
+        if (Array.isArray(consultancy.features) && consultancy.features.length > 0 && consultancy.features[0] !== '') {
+          setScope(consultancy.features);
+        }
       }
     };
     fetchConsultancy();
@@ -79,7 +83,7 @@ const ConsultancyServicePage: React.FC = () => {
             subtitle="Uma imersão completa na sua operação comercial para tirar os gargalos que impedem você de escalar."
           />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
-            {CONSULTANCY_CONTENT.details.map((item, i) => (
+            {scope.map((item, i) => (
               <div key={i} className="flex gap-4 p-6 bg-gray-50 rounded-2xl border border-gray-100 hover:bg-white hover:shadow-xl transition-all">
                 <CheckCircle2 className="text-brand-green shrink-0" size={24} />
                 <span className="font-bold text-gray-800 leading-snug">{item}</span>

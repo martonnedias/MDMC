@@ -7,6 +7,7 @@ import {
   ChevronRight, ChevronLeft
 } from 'lucide-react';
 import { leadService } from '../services/leadService';
+import { useAuth } from './Auth/AuthProvider';
 
 const swotSteps = [
   { title: 'Cadastro', icon: User },
@@ -71,9 +72,10 @@ const ProgressIndicator: React.FC<{ currentStep: number }> = ({ currentStep }) =
 };
 
 const SwotBriefing: React.FC<{ selectedPlan?: string | null }> = ({ selectedPlan }) => {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(user ? 1 : 0);
   const sliderContainerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -88,6 +90,16 @@ const SwotBriefing: React.FC<{ selectedPlan?: string | null }> = ({ selectedPlan
     changeDisposition: 4, biggestObstacle: '', recommendationOpenness: 'Total',
     plan: selectedPlan || 'essencial'
   });
+
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.user_metadata?.full_name || prev.name,
+        email: user.email || prev.email
+      }));
+    }
+  }, [user]);
 
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 

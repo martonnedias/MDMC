@@ -12,11 +12,14 @@ const Combos: React.FC = () => {
       const data = await adminService.getServices();
       const comboPlans = data.filter(s => s.category === 'combos');
       if (comboPlans.length > 0) {
-        setDisplayCombos(comboPlans.map(s => ({
-          name: s.name,
-          includes: s.description,
-          advantage: s.price
-        })));
+        setDisplayCombos(comboPlans.map((s, index) => {
+          const defaultCombo = COMBOS_CONTENT[index] || COMBOS_CONTENT[0];
+          return {
+            name: s.name || defaultCombo.name,
+            includes: s.description || defaultCombo.includes,
+            advantage: s.extra_info || s.price || defaultCombo.advantage
+          };
+        }));
       }
     };
     fetchCombos();
@@ -37,10 +40,8 @@ const Combos: React.FC = () => {
                   <h3 className="text-white font-heading font-bold text-lg">{combo.name}</h3>
                 </div>
                 <div className="p-6 text-center">
-                  <div className="flex items-center justify-center gap-2 text-gray-800 font-medium mb-4">
-                    <span>{combo.includes.split('+')[0]}</span>
-                    <Plus size={16} className="text-brand-orange" />
-                    <span>Consultoria</span>
+                  <div className="text-gray-800 font-medium mb-4 min-h-[3rem] flex items-center justify-center">
+                    {combo.includes}
                   </div>
                   <div className="h-px w-16 bg-gray-200 mx-auto mb-4"></div>
                   <p className="text-green-600 font-bold bg-green-50 py-2 px-4 rounded-full inline-block text-sm">
@@ -55,7 +56,7 @@ const Combos: React.FC = () => {
           </p>
         </div>
       </div>
-    </section>
+    </section >
   );
 };
 

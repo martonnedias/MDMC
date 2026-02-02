@@ -1,8 +1,8 @@
-
 import React from 'react';
 import Button from './Button';
 import { HERO_CONTENT } from '../constants';
-import { Sparkles, BarChart3, TrendingUp } from 'lucide-react';
+import { ArrowRight, BarChart3, Target, ChevronDown } from 'lucide-react';
+import { useSiteConfig } from '../lib/SiteContext';
 
 interface HeroProps {
   onStartBriefing: () => void;
@@ -10,51 +10,53 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ onStartBriefing, onStartSwot }) => {
-  // H1 consistente para SEO: headline principal otimizada para buscas
-  const mainHeadline = HERO_CONTENT.headline;
+  const { config } = useSiteConfig();
 
-  const scrollToPlans = () => {
+  const scrollToPricing = () => {
     document.getElementById('planos')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const mainHeadline = config.content?.hero_title || HERO_CONTENT.headline;
+  const subHeadline = config.content?.hero_subtitle || HERO_CONTENT.subheadline;
+  const ctaText = config.content?.hero_cta || HERO_CONTENT.cta;
+
   return (
-    <section id="hero" className="relative pt-40 md:pt-48 lg:pt-56 pb-20 lg:pb-32 overflow-hidden bg-gradient-to-br from-brand-darkBlue via-brand-navy to-brand-darkBlue">
-      {/* Decorative patterns */}
-      <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Ccircle cx=\'1\' cy=\'1\' r=\'0.5\' fill=\'rgba(255,255,255,0.05)\'/%3E%3C/svg%3E')] opacity-40 pointer-events-none"></div>
-      <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-blue/20 rounded-full blur-3xl pointer-events-none"></div>
+    <section className="relative pt-32 lg:pt-48 pb-20 lg:pb-32 overflow-hidden text-white">
+      {/* Background Elements - Always Blue Gradient for Hero Identity */}
+      <div
+        className="absolute inset-0 z-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle at 50% 0%, #112240 0%, #0A1931 100%)'
+        }}
+      ></div>
 
       <div className="container mx-auto px-4 md:px-6 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
 
-          <div className="lg:order-1">
-            <div className="inline-flex items-center gap-2 bg-white/10 text-brand-orange px-4 py-2 rounded-full mb-6 font-bold text-xs uppercase tracking-widest border border-white/10 backdrop-blur-md">
-              <Sparkles size={14} className="animate-pulse" /> Operação de Performance Digital
+          {/* Left Column: Text and Buttons */}
+          <div className="flex-1 text-center lg:text-left animate-fade-in-up flex flex-col items-center lg:items-start">
+            <div className="inline-flex items-center gap-2 bg-blue-500/10 text-blue-300 px-4 py-2 rounded-full mb-8 font-bold text-xs uppercase tracking-widest border border-blue-500/20">
+              <Target size={14} className="animate-pulse" /> Performance & Gestão
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-heading font-bold text-white leading-tight mb-6 animate-fade-in">
-              {mainHeadline}
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-heading font-bold leading-[1.1] tracking-tight mb-6 text-white"
+              style={{ fontFamily: 'var(--font-heading)' }}>
+              {mainHeadline.split(' ').map((word, i) =>
+                word.toLowerCase() === 'vendas' || word.toLowerCase() === 'marketing' ? <span key={i} className="text-brand-blue">{word} </span> : word + ' '
+              )}
             </h1>
 
-            <p className="text-xl md:text-2xl text-blue-200 font-bold mb-4">
-              {HERO_CONTENT.subheadline}
-            </p>
-            <p className="text-blue-100/70 mb-8 max-w-xl text-lg leading-relaxed">
-              {HERO_CONTENT.pain}
-            </p>
-
-            <div className="block lg:hidden pb-10 relative z-10 flex justify-center">
-              <div className="relative">
-                <div className="absolute -inset-4 bg-brand-orange/20 rounded-3xl transform rotate-3 blur-sm"></div>
-                <img
-                  src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800"
-                  alt="Empresários trabalhando em performance digital"
-                  className="relative rounded-3xl shadow-2xl object-cover w-full max-w-md h-auto border-4 border-white/10"
-                />
-              </div>
+            <div className="text-lg text-blue-100 mb-8 max-w-2xl leading-relaxed space-y-4">
+              <p>
+                Unimos estratégia de gestão e performance digital para colocar sua empresa no topo.
+              </p>
+              <p>
+                Oferecemos dois caminhos gratuitos para o seu crescimento: Um foco em <strong>Vendas Imediatas (Marketing)</strong> ou um foco em <strong>Estratégia de Negócio (SWOT)</strong>. Escolha o seu momento abaixo:
+              </p>
             </div>
 
-            <div className="flex flex-col gap-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="flex flex-col gap-6 w-full max-w-2xl">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
                 {/* Botão Marketing */}
                 <div className="flex flex-col gap-3">
                   <Button
@@ -72,7 +74,7 @@ const Hero: React.FC<HeroProps> = ({ onStartBriefing, onStartSwot }) => {
                   <Button
                     onClick={onStartSwot}
                     variant="outline"
-                    className="w-full min-h-[84px] text-lg px-4 flex flex-col items-center justify-center leading-tight py-4 border-2 hover:bg-white hover:text-brand-orange"
+                    className="w-full min-h-[84px] text-lg px-4 flex flex-col items-center justify-center leading-tight py-4 border-2 hover:bg-white hover:text-brand-orange text-white border-white/20"
                   >
                     <span className="block text-center">{HERO_CONTENT.swotCta}</span>
                   </Button>
@@ -80,19 +82,12 @@ const Hero: React.FC<HeroProps> = ({ onStartBriefing, onStartSwot }) => {
                 </div>
               </div>
 
-              <div className="pt-6 border-t border-white/10 mt-2">
-                <button
-                  onClick={scrollToPlans}
-                  className="text-blue-200 hover:text-brand-orange font-bold text-sm transition-colors flex items-center gap-2 group"
-                >
-                  Ou veja nossos Planos de Gestão Mensal
-                  <span className="group-hover:translate-x-1 transition-transform">&rarr;</span>
-                </button>
-              </div>
+              {/* Link para planos removido para focar na escolha binária */}
             </div>
           </div>
 
-          <div className="relative z-10 hidden lg:flex justify-center lg:justify-end lg:order-2">
+          {/* Right Column: Image */}
+          <div className="relative z-10 hidden lg:flex justify-center lg:justify-end lg:order-2 flex-1">
             <div className="relative">
               <div className="absolute -inset-4 bg-brand-orange/20 rounded-3xl transform rotate-3 blur-sm"></div>
               <img
@@ -104,11 +99,12 @@ const Hero: React.FC<HeroProps> = ({ onStartBriefing, onStartSwot }) => {
                 <p className="font-black text-gray-900 text-lg">Qual seu desafio hoje?</p>
                 <div className="flex gap-4 mt-2">
                   <div className="flex items-center gap-1 text-xs text-brand-blue font-bold"><BarChart3 size={14} /> Vendas?</div>
-                  <div className="flex items-center gap-1 text-xs text-brand-orange font-bold"><TrendingUp size={14} /> Estratégia?</div>
+                  <div className="flex items-center gap-1 text-xs text-brand-orange font-bold"><Target size={14} /> Estratégia?</div>
                 </div>
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </section>

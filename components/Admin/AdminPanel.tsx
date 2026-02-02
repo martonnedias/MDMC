@@ -4,11 +4,14 @@ import {
     Save, Plus, Trash2, Globe, MessageCircle,
     Instagram, Facebook, Youtube, Palette, Power,
     ArrowLeft, X, Check, Image as ImageIcon,
-    LogOut, ExternalLink
+    LogOut, ExternalLink, Star, Sparkles, Upload, Eye
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { adminService, SiteConfig, BlogPost, ServiceData } from '../../services/adminService';
+import { aiService } from '../../services/aiService';
+import { PLANS, SWOT_PLANS, COMBOS_CONTENT, GMB_CONTENT } from '../../constants';
 import Button from '../Button';
+import RichTextEditor from './RichTextEditor';
 
 interface AdminPanelProps {
     onNavigate?: (view: any) => void;
@@ -63,7 +66,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
         const success = await adminService.saveBlogPost(editingPost);
         if (success) {
             alert('Post salvo com sucesso!');
-            setEditingPost(null);
+            // setEditingPost(null); // Comentado para ficar na tela de edição
             loadData();
         }
         setLoading(false);
@@ -73,7 +76,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
         e.preventDefault();
         if (!editingService) return;
         setLoading(true);
-        const success = await adminService.saveService(editingService);
+
+        // Limpa features vazias antes de salvar
+        const cleanedService = {
+            ...editingService,
+            features: editingService.features.filter(f => f.trim() !== '')
+        };
+
+        const success = await adminService.saveService(cleanedService);
         if (success) {
             alert('Serviço salvo com sucesso!');
             setEditingService(null);
@@ -90,6 +100,79 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
         setLoading(false);
     };
 
+    const handleDeleteService = async (id: string) => {
+        if (!confirm('Tem certeza que deseja excluir este serviço?')) return;
+        setLoading(true);
+        const success = await adminService.deleteService(id);
+        if (success) loadData();
+        setLoading(false);
+    };
+
+    const handleSyncDefaults = async () => {
+        if (!confirm('Isso irá importar os planos padrões das constantes do site para o banco de dados. Deseja continuar?')) return;
+        setLoading(true);
+
+        const defaults: ServiceData[] = [
+            // Marketing Plans
+            ...PLANS.map((p, i) => ({
+                name: p.name,
+                description: p.description,
+                price: p.price,
+                features: p.features,
+                category: 'marketing',
+                is_active: true,
+                display_order: i,
+                subtitle: p.subtitle,
+                cta_text: p.ctaText,
+                extra_info: p.adBudget,
+                is_highlighted: p.highlight || false
+            })),
+            // SWOT Plans
+            ...SWOT_PLANS.map((p, i) => ({
+                name: p.name,
+                description: p.description,
+                price: p.price,
+                features: p.features,
+                category: 'swot',
+                is_active: true,
+                display_order: i + 10,
+                subtitle: p.subtitle,
+                badge_text: p.badge,
+                is_highlighted: p.highlight || false
+            })),
+            // Combos
+            ...COMBOS_CONTENT.map((p, i) => ({
+                name: p.name,
+                description: p.includes,
+                price: 'Consulte-nos',
+                features: [],
+                category: 'combos',
+                is_active: true,
+                display_order: i + 20,
+                extra_info: p.advantage
+            })),
+            // GMB
+            ...GMB_CONTENT.packages.map((p, i) => ({
+                name: p.name,
+                description: p.description,
+                price: p.price,
+                features: p.features,
+                category: 'gmb',
+                is_active: true,
+                display_order: i + 30,
+                cta_text: p.cta,
+                is_highlighted: p.highlight || false
+            }))
+        ];
+
+        const success = await adminService.syncDefaultServices(defaults);
+        if (success) {
+            alert('Sincronização concluída!');
+            loadData();
+        }
+        setLoading(false);
+    };
+
     const handleLogout = async () => {
         await supabase.auth.signOut();
         if (onNavigate) onNavigate('landing');
@@ -101,6 +184,26 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
         else window.location.hash = '';
     };
 
+    const handleGenerateAI = async () => {
+        const topic = prompt("Sobre qual tema você quer que a IA escreva?");
+        if (!topic) return;
+
+        setLoading(true);
+        const generated = await aiService.generateBlogPost(topic, editingPost?.category || 'Marketing');
+
+        if (generated) {
+            setEditingPost(prev => prev ? ({
+                ...prev,
+                title: generated.title,
+                slug: generated.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''),
+                excerpt: generated.excerpt,
+                content: generated.content
+            }) : null);
+            alert('Conteúdo gerado com sucesso! Revise antes de salvar.');
+        }
+        setLoading(false);
+    };
+
     const inputStyles = "w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm";
     const labelStyles = "text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 mb-1 block";
 
@@ -108,7 +211,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
         <div className="min-h-screen bg-gray-50 flex">
             {/* Sidebar */}
             <aside className="w-64 bg-white border-r border-gray-200 flex flex-col sticky top-0 h-screen">
-                <div className="p-8 border-b border-gray-100 uppercase tracking-tighter">
+                <div className="p-6 border-b border-gray-100 uppercase tracking-tighter">
                     <h2 className="text-xl font-black text-gray-900 flex items-center gap-2">
                         <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">
                             <Settings size={18} />
@@ -159,7 +262,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-grow p-10 overflow-auto">
+            <main className="flex-grow pt-6 px-10 pb-10 overflow-auto">
                 {/* DASHBOARD */}
                 {activeTab === 'dashboard' && (
                     <div className="space-y-8 animate-fade-in">
@@ -177,8 +280,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                 <h3 className="text-4xl font-black text-gray-900 tracking-tighter">{posts.length}</h3>
                             </div>
                             <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-transform hover:scale-[1.02]">
-                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Páginas Ativas</p>
-                                <h3 className="text-4xl font-black text-gray-900 tracking-tighter">5</h3>
+                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Serviços Ativos</p>
+                                <h3 className="text-4xl font-black text-gray-900 tracking-tighter">{services.length}</h3>
                             </div>
                         </div>
                     </div>
@@ -217,13 +320,80 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                     </Button>
                                 </header>
 
+                                <div className="flex justify-end mb-4">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            if (confirm('Isso irá resetar todas as cores e fontes para o padrão original do tema. Deseja continuar?')) {
+                                                setConfig({
+                                                    ...config,
+                                                    primary_color: '#0052FF',
+                                                    secondary_color: '#FF6B00',
+                                                    theme: {
+                                                        ...config.theme,
+                                                        colors: {
+                                                            background: '#ffffff',
+                                                            card_background: '#f9fafb',
+                                                            header_background: '#ffffff',
+                                                            footer_background: '#112240',
+                                                            text_primary: '#111827',
+                                                            text_secondary: '#6b7280'
+                                                        },
+                                                        typography: {
+                                                            font_family: 'Inter',
+                                                            heading_font: 'Poppins'
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }}
+                                        className="text-xs font-bold text-gray-400 hover:text-red-500 underline decoration-dashed underline-offset-4"
+                                    >
+                                        Restaurar Padrões de Fábrica (Cores/Fontes)
+                                    </button>
+                                </div>
+
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     {/* Contato */}
                                     <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm space-y-8">
                                         <h4 className="font-black text-lg flex items-center gap-3 border-b border-gray-50 pb-6 text-gray-900">
-                                            <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600"><Globe size={20} /></div> Contato Principal
+                                            <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600"><Globe size={20} /></div> Conteúdo e Logo
                                         </h4>
                                         <div className="space-y-6">
+                                            <div>
+                                                <label className={labelStyles}>Nome da Empresa/Site</label>
+                                                <input type="text" value={config.site_name} onChange={(e) => setConfig({ ...config, site_name: e.target.value })} className={inputStyles} />
+                                            </div>
+                                            <div>
+                                                <label className={labelStyles}>Logo do Site (URL / Upload)</label>
+                                                <div className="flex gap-4 items-center">
+                                                    <div className="relative flex-1">
+                                                        <input type="text" value={config.logo_url || ''} onChange={(e) => setConfig({ ...config, logo_url: e.target.value })} className={inputStyles + " pr-10"} placeholder="https://..." />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                const input = document.createElement('input');
+                                                                input.type = 'file';
+                                                                input.accept = 'image/*';
+                                                                input.onchange = async (e: any) => {
+                                                                    const file = e.target.files[0];
+                                                                    if (file) {
+                                                                        const url = await adminService.uploadImage(file);
+                                                                        if (url) setConfig({ ...config, logo_url: url });
+                                                                    }
+                                                                };
+                                                                input.click();
+                                                            }}
+                                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-500"
+                                                        >
+                                                            <Upload size={18} />
+                                                        </button>
+                                                    </div>
+                                                    <div className="w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center border border-gray-100 overflow-hidden">
+                                                        {config.logo_url ? <img src={config.logo_url} className="max-h-full" /> : <ImageIcon className="text-gray-200" />}
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div>
                                                 <label className={labelStyles}>Telefone Exibido</label>
                                                 <input type="text" value={config.phone} onChange={(e) => setConfig({ ...config, phone: e.target.value })} className={inputStyles} />
@@ -297,6 +467,180 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                             </label>
                                         </div>
                                     </div>
+
+                                    {/* Conteúdo Hero - Mantido */}
+                                    <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm space-y-8 md:col-span-2">
+                                        <h4 className="font-black text-lg flex items-center gap-3 border-b border-gray-50 pb-6 text-gray-900">
+                                            <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600"><FileText size={20} /></div> Conteúdo da Home (Hero)
+                                        </h4>
+                                        <div className="grid grid-cols-1 gap-6">
+                                            <div>
+                                                <label className={labelStyles}>Título Principal</label>
+                                                <input
+                                                    type="text"
+                                                    value={config.content?.hero_title || ''}
+                                                    onChange={(e) => setConfig({ ...config, content: { ...config.content, hero_title: e.target.value } })}
+                                                    className={inputStyles}
+                                                    placeholder="Escale sua operação com Marketing e Vendas"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className={labelStyles}>Subtítulo</label>
+                                                <textarea
+                                                    value={config.content?.hero_subtitle || ''}
+                                                    onChange={(e) => setConfig({ ...config, content: { ...config.content, hero_subtitle: e.target.value } })}
+                                                    className={`${inputStyles} h-24 resize-none`}
+                                                    placeholder="Acelere seu crescimento com estratégias validadas..."
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className={labelStyles}>Texto do Botão (CTA)</label>
+                                                <input
+                                                    type="text"
+                                                    value={config.content?.hero_cta || ''}
+                                                    onChange={(e) => setConfig({ ...config, content: { ...config.content, hero_cta: e.target.value } })}
+                                                    className={inputStyles}
+                                                    placeholder="Iniciar Diagnóstico Grátis"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Customização de Seções */}
+                                    <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm space-y-8 md:col-span-2">
+                                        <h4 className="font-black text-lg flex items-center gap-3 border-b border-gray-50 pb-6 text-gray-900">
+                                            <div className="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center text-teal-600"><LayoutDashboard size={20} /></div> Customização de Seções
+                                        </h4>
+
+                                        <div className="space-y-8">
+                                            {/* Seção Serviços */}
+                                            <div className="bg-gray-50 p-6 rounded-3xl border border-gray-200">
+                                                <h5 className="font-black text-gray-900 mb-4 flex items-center gap-2"><div className="w-2 h-2 bg-blue-500 rounded-full"></div> Seção Serviços</h5>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label className={labelStyles}>Título da Seção</label>
+                                                        <input
+                                                            type="text"
+                                                            value={config.content?.sections?.services?.title || ''}
+                                                            onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, services: { ...config.content?.sections?.services, title: e.target.value } } } })}
+                                                            className={inputStyles}
+                                                            placeholder="Nossas Soluções"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className={labelStyles}>Cor de Fundo (Override)</label>
+                                                        <input
+                                                            type="color"
+                                                            value={config.content?.sections?.services?.background_color || '#ffffff'}
+                                                            onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, services: { ...config.content?.sections?.services, background_color: e.target.value } } } })}
+                                                            className="w-full h-10 rounded-xl cursor-pointer bg-white border border-gray-200 p-1"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Seção SWOT */}
+                                            <div className="bg-gray-50 p-6 rounded-3xl border border-gray-200">
+                                                <h5 className="font-black text-gray-900 mb-4 flex items-center gap-2"><div className="w-2 h-2 bg-orange-500 rounded-full"></div> Seção SWOT</h5>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label className={labelStyles}>Título da Seção</label>
+                                                        <input
+                                                            type="text"
+                                                            value={config.content?.sections?.swot?.title || ''}
+                                                            onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, swot: { ...config.content?.sections?.swot, title: e.target.value } } } })}
+                                                            className={inputStyles}
+                                                            placeholder="Análise SWOT"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className={labelStyles}>Subtítulo</label>
+                                                        <input
+                                                            type="text"
+                                                            value={config.content?.sections?.swot?.subtitle || ''}
+                                                            onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, swot: { ...config.content?.sections?.swot, subtitle: e.target.value } } } })}
+                                                            className={inputStyles}
+                                                            placeholder="Descubra suas forças e fraquezas"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Aparência Avançada */}
+                                    <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm space-y-8 md:col-span-2">
+                                        <h4 className="font-black text-lg flex items-center gap-3 border-b border-gray-50 pb-6 text-gray-900">
+                                            <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600"><Palette size={20} /></div> Personalização Avançada
+                                        </h4>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                            <div className="space-y-4">
+                                                <h5 className="font-bold text-sm text-gray-900 uppercase tracking-widest border-b pb-2">Cores de Fundo</h5>
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label className={labelStyles}>Fundo da Página</label>
+                                                        <div className="flex items-center gap-2">
+                                                            <input type="color" value={config.theme?.colors?.background || '#ffffff'} onChange={(e) => setConfig({ ...config, theme: { ...config.theme, colors: { ...config.theme?.colors, background: e.target.value } as any } })} className="w-8 h-8 rounded cursor-pointer border-none bg-transparent" />
+                                                            <span className="text-xs text-gray-500">{config.theme?.colors?.background || '#ffffff'}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <label className={labelStyles}>Fundo dos Cards</label>
+                                                        <div className="flex items-center gap-2">
+                                                            <input type="color" value={config.theme?.colors?.card_background || '#f9fafb'} onChange={(e) => setConfig({ ...config, theme: { ...config.theme, colors: { ...config.theme?.colors, card_background: e.target.value } as any } })} className="w-8 h-8 rounded cursor-pointer border-none bg-transparent" />
+                                                            <span className="text-xs text-gray-500">{config.theme?.colors?.card_background || '#f9fafb'}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <label className={labelStyles}>Cabeçalho</label>
+                                                        <div className="flex items-center gap-2">
+                                                            <input type="color" value={config.theme?.colors?.header_background || '#ffffff'} onChange={(e) => setConfig({ ...config, theme: { ...config.theme, colors: { ...config.theme?.colors, header_background: e.target.value } as any } })} className="w-8 h-8 rounded cursor-pointer border-none bg-transparent" />
+                                                            <span className="text-xs text-gray-500">{config.theme?.colors?.header_background || '#ffffff'}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <label className={labelStyles}>Rodapé</label>
+                                                        <div className="flex items-center gap-2">
+                                                            <input type="color" value={config.theme?.colors?.footer_background || '#112240'} onChange={(e) => setConfig({ ...config, theme: { ...config.theme, colors: { ...config.theme?.colors, footer_background: e.target.value } as any } })} className="w-8 h-8 rounded cursor-pointer border-none bg-transparent" />
+                                                            <span className="text-xs text-gray-500">{config.theme?.colors?.footer_background || '#112240'}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-4">
+                                                <h5 className="font-bold text-sm text-gray-900 uppercase tracking-widest border-b pb-2">Tipografia e Textos</h5>
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label className={labelStyles}>Texto Principal</label>
+                                                        <div className="flex items-center gap-2">
+                                                            <input type="color" value={config.theme?.colors?.text_primary || '#111827'} onChange={(e) => setConfig({ ...config, theme: { ...config.theme, colors: { ...config.theme?.colors, text_primary: e.target.value } as any } })} className="w-8 h-8 rounded cursor-pointer border-none bg-transparent" />
+                                                            <span className="text-xs text-gray-500">Cor Títulos</span>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <label className={labelStyles}>Texto Secundário</label>
+                                                        <div className="flex items-center gap-2">
+                                                            <input type="color" value={config.theme?.colors?.text_secondary || '#6b7280'} onChange={(e) => setConfig({ ...config, theme: { ...config.theme, colors: { ...config.theme?.colors, text_secondary: e.target.value } as any } })} className="w-8 h-8 rounded cursor-pointer border-none bg-transparent" />
+                                                            <span className="text-xs text-gray-500">Cor Parágrafos</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="pt-2">
+                                                    <label className={labelStyles}>Fonte Principal (Google Fonts Name)</label>
+                                                    <input
+                                                        type="text"
+                                                        value={config.theme?.typography?.font_family || 'Inter'}
+                                                        onChange={(e) => setConfig({ ...config, theme: { ...config.theme, typography: { ...config.theme?.typography, font_family: e.target.value } as any } })}
+                                                        className={inputStyles}
+                                                        placeholder="Ex: Inter, Roboto, Lato"
+                                                    />
+                                                    <p className="text-[10px] text-gray-400 mt-1">Certifique-se que a fonte é válida.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </>
                         )}
@@ -309,9 +653,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                         {editingPost ? (
                             <form onSubmit={handleSavePost} className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-xl space-y-8 max-w-5xl mx-auto">
                                 <header className="flex justify-between items-center mb-8">
-                                    <button type="button" onClick={() => setEditingPost(null)} className="flex items-center gap-2 text-gray-400 hover:text-gray-900 transition-colors font-bold text-sm">
-                                        <ArrowLeft size={18} /> Voltar à Lista
-                                    </button>
+                                    <div className="flex gap-4">
+                                        <button type="button" onClick={() => setEditingPost(null)} className="flex items-center gap-2 text-gray-400 hover:text-gray-900 transition-colors font-bold text-sm">
+                                            <ArrowLeft size={18} /> Voltar à Lista
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={handleGenerateAI}
+                                            className="flex items-center gap-2 text-purple-600 hover:text-purple-800 transition-colors font-bold text-sm bg-purple-50 px-4 py-2 rounded-lg border border-purple-100 hover:bg-purple-100 hover:border-purple-200"
+                                        >
+                                            <Sparkles size={16} /> Criar com IA
+                                        </button>
+                                    </div>
                                     <Button type="submit" loading={loading} variant="primary" className="px-8 py-3 rounded-xl flex items-center gap-2">
                                         <Save size={18} /> Salvar Artigo
                                     </Button>
@@ -339,10 +692,32 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                     </div>
                                     <div className="space-y-6">
                                         <div>
-                                            <label className={labelStyles}>Imagem de Capa (URL)</label>
-                                            <div className="flex gap-4">
-                                                <input type="text" value={editingPost.featured_image} onChange={(e) => setEditingPost({ ...editingPost, featured_image: e.target.value })} className={inputStyles} placeholder="https://..." />
-                                                <div className="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center shrink-0 border border-gray-200 overflow-hidden">
+                                            <label className={labelStyles}>Imagem de Capa (URL / Upload)</label>
+                                            <div className="flex gap-4 items-center">
+                                                <div className="relative flex-1">
+                                                    <input type="text" value={editingPost.featured_image} onChange={(e) => setEditingPost({ ...editingPost, featured_image: e.target.value })} className={inputStyles + " pr-10"} placeholder="https://..." />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const input = document.createElement('input');
+                                                            input.type = 'file';
+                                                            input.accept = 'image/*';
+                                                            input.onchange = async (e: any) => {
+                                                                const file = e.target.files[0];
+                                                                if (file) {
+                                                                    const url = await adminService.uploadImage(file);
+                                                                    if (url) setEditingPost({ ...editingPost, featured_image: url });
+                                                                }
+                                                            };
+                                                            input.click();
+                                                        }}
+                                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-700"
+                                                        title="Carregar do computador"
+                                                    >
+                                                        <Upload size={18} />
+                                                    </button>
+                                                </div>
+                                                <div className="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center shrink-0 border border-gray-200 overflow-hidden shadow-sm">
                                                     {editingPost.featured_image ? <img src={editingPost.featured_image} className="w-full h-full object-cover" /> : <ImageIcon className="text-gray-300" />}
                                                 </div>
                                             </div>
@@ -355,9 +730,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                 </div>
 
                                 <div>
-                                    <label className={labelStyles}>Conteúdo do Artigo (HTML / Texto)</label>
-                                    <textarea value={editingPost.content} onChange={(e) => setEditingPost({ ...editingPost, content: e.target.value })} className={inputStyles + " h-96 font-mono text-xs"} placeholder="Seu conteúdo aqui..." required />
-                                    <p className="text-[10px] text-gray-400 mt-2 italic">* Use tags HTML para formatação personalizada.</p>
+                                    <label className={labelStyles}>Conteúdo do Artigo (Editor Visual)</label>
+                                    <RichTextEditor
+                                        value={editingPost.content}
+                                        onChange={(val) => setEditingPost({ ...editingPost, content: val })}
+                                        placeholder="Escreva seu artigo aqui... Use a barra de ferramentas acima para formatar."
+                                    />
+                                    <p className="text-[10px] text-gray-400 mt-2 italic">* O editor insere tags HTML automaticamente para garantir a formatação correta no site.</p>
                                 </div>
                             </form>
                         ) : (
@@ -391,7 +770,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                                 <h3 className="font-black text-gray-900 mb-2 truncate">{post.title}</h3>
                                                 <p className="text-xs text-gray-400 mb-6">{new Date(post.created_at || '').toLocaleDateString('pt-BR')}</p>
                                                 <div className="flex justify-between items-center border-t border-gray-50 pt-6">
-                                                    <button onClick={() => setEditingPost(post)} className="text-blue-600 font-bold text-xs uppercase tracking-widest flex items-center gap-1 hover:text-blue-700">Editar <Check size={14} /></button>
+                                                    <div className="flex gap-4">
+                                                        <button onClick={() => setEditingPost(post)} className="text-blue-600 font-bold text-xs uppercase tracking-widest flex items-center gap-1 hover:text-blue-700">Editar <Check size={14} /></button>
+                                                        <button onClick={() => post.slug && onNavigate && onNavigate('blog-post', { slug: post.slug })} className="text-purple-600 font-bold text-xs uppercase tracking-widest flex items-center gap-1 hover:text-purple-700">Visualizar <Eye size={14} /></button>
+                                                    </div>
                                                     <button onClick={() => post.id && handleDeletePost(post.id)} className="text-red-400 font-bold text-xs uppercase tracking-widest flex items-center gap-1 hover:text-red-600">Excluir <X size={14} /></button>
                                                 </div>
                                             </div>
@@ -430,20 +812,61 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                                 <option value="swot">Análise SWOT / Estratégia</option>
                                                 <option value="gmb">Google Meu Negócio</option>
                                                 <option value="sites">Sites & LPs</option>
+                                                <option value="combos">Combos (Combinações)</option>
+                                                <option value="consultancy">Consultoria</option>
                                             </select>
                                         </div>
-                                        <div>
-                                            <label className={labelStyles}>Valor / Investimento</label>
-                                            <input type="text" value={editingService.price} onChange={(e) => setEditingService({ ...editingService, price: e.target.value })} className={inputStyles} placeholder="Ex: R$ 997/mês ou Sob Consulta" required />
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className={labelStyles}>Valor / Investimento</label>
+                                                <input type="text" value={editingService.price} onChange={(e) => setEditingService({ ...editingService, price: e.target.value })} className={inputStyles} placeholder="Ex: R$ 997/mês" required />
+                                            </div>
+                                            <div>
+                                                <label className={labelStyles}>Ordem de Exibição</label>
+                                                <input type="number" value={editingService.display_order} onChange={(e) => setEditingService({ ...editingService, display_order: parseInt(e.target.value) })} className={inputStyles} />
+                                            </div>
+                                        </div>
+
+                                        <div className="p-6 bg-blue-50/50 rounded-3xl border border-blue-100 space-y-6">
+                                            <h4 className="text-xs font-black text-blue-900 uppercase tracking-widest flex items-center gap-2">
+                                                <Star size={14} className="text-brand-orange" /> Refinamento Estético
+                                            </h4>
+
+                                            <div>
+                                                <label className={labelStyles}>Subtítulo (Curto)</label>
+                                                <input type="text" value={editingService.subtitle || ''} onChange={(e) => setEditingService({ ...editingService, subtitle: e.target.value })} className={inputStyles} placeholder="Ex: Presença que funciona" />
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className={labelStyles}>Texto do Botão (CTA)</label>
+                                                    <input type="text" value={editingService.cta_text || ''} onChange={(e) => setEditingService({ ...editingService, cta_text: e.target.value })} className={inputStyles} placeholder="Ex: Quero este Plano" />
+                                                </div>
+                                                <div>
+                                                    <label className={labelStyles}>Selo/Badge</label>
+                                                    <input type="text" value={editingService.badge_text || ''} onChange={(e) => setEditingService({ ...editingService, badge_text: e.target.value })} className={inputStyles} placeholder="Ex: Mais Procurado" />
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className={labelStyles}>Info Extra (Verba de Anúncio / Vantagem Combo)</label>
+                                                <input type="text" value={editingService.extra_info || ''} onChange={(e) => setEditingService({ ...editingService, extra_info: e.target.value })} className={inputStyles} placeholder="Ex: Verba sugerida R$ 750/mês" />
+                                            </div>
+
+                                            <label className="flex items-center gap-3 cursor-pointer group">
+                                                <input type="checkbox" checked={editingService.is_highlighted} onChange={(e) => setEditingService({ ...editingService, is_highlighted: e.target.checked })} className="w-5 h-5 rounded-lg accent-brand-blue" />
+                                                <span className="text-sm font-bold text-gray-700 group-hover:text-brand-blue transition-colors">Destacar este card no site</span>
+                                            </label>
                                         </div>
                                     </div>
+
                                     <div className="space-y-6">
                                         <div>
-                                            <label className={labelStyles}>Descrição (O que é?)</label>
-                                            <textarea value={editingService.description} onChange={(e) => setEditingService({ ...editingService, description: e.target.value })} className={inputStyles + " h-24 resize-none"} placeholder="Breve resumo do serviço..." />
+                                            <label className={labelStyles}>Descrição Completa</label>
+                                            <textarea value={editingService.description} onChange={(e) => setEditingService({ ...editingService, description: e.target.value })} className={inputStyles + " h-32 resize-none"} placeholder="Descreva os benefícios do serviço..." />
                                         </div>
                                         <div>
-                                            <label className={labelStyles}>Funcionalidades / Itens Inclusos</label>
+                                            <label className={labelStyles}>Itens Inclusos (Features)</label>
                                             <div className="space-y-2">
                                                 {editingService.features.map((f, i) => (
                                                     <div key={i} className="flex gap-2">
@@ -455,11 +878,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                                         <button type="button" onClick={() => {
                                                             const newF = editingService.features.filter((_, idx) => idx !== i);
                                                             setEditingService({ ...editingService, features: newF });
-                                                        }} className="p-3 text-red-500 hover:bg-red-50 rounded-xl"><X size={16} /></button>
+                                                        }} className="p-3 text-red-500 hover:bg-red-50 rounded-xl transition-colors"><X size={16} /></button>
                                                     </div>
                                                 ))}
-                                                <button type="button" onClick={() => setEditingService({ ...editingService, features: [...editingService.features, ''] })} className="text-xs font-black text-blue-600 hover:text-blue-800 flex items-center gap-1 mt-2">
-                                                    <Plus size={14} /> Adicionar Item
+                                                <button type="button" onClick={() => setEditingService({ ...editingService, features: [...editingService.features, ''] })} className="text-xs font-black text-blue-600 hover:text-blue-800 flex items-center gap-1 mt-2 p-2 hover:bg-blue-50 rounded-lg transition-all w-fit">
+                                                    <Plus size={14} /> Adicionar Benefício
                                                 </button>
                                             </div>
                                         </div>
@@ -467,52 +890,98 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                 </div>
                             </form>
                         ) : (
-                            <div className="space-y-8 animate-fade-in">
-                                <header className="flex justify-between items-center">
-                                    <div>
-                                        <h1 className="text-4xl font-black text-gray-900 tracking-tight">Serviços e Preços</h1>
-                                        <p className="text-gray-500 font-medium">Controle o que é exibido nas tabelas de preços do site.</p>
-                                    </div>
-                                    <Button onClick={() => setEditingService({ name: '', description: '', price: '', category: 'marketing', features: [''], is_active: true, display_order: 0 })} variant="primary" className="px-8 py-4 rounded-2xl flex items-center gap-2 shadow-lg">
-                                        <Plus size={18} /> Novo Pacote
-                                    </Button>
-                                </header>
-
-                                <div className="bg-white rounded-[3rem] border border-gray-100 shadow-sm overflow-hidden">
-                                    <table className="w-full text-left">
-                                        <thead className="bg-gray-50/50 border-b border-gray-50">
-                                            <tr>
-                                                <th className="px-10 py-6 text-xs font-black text-gray-400 uppercase tracking-widest">Serviço/Pacote</th>
-                                                <th className="px-10 py-6 text-xs font-black text-gray-400 uppercase tracking-widest">Categoria</th>
-                                                <th className="px-10 py-6 text-xs font-black text-gray-400 uppercase tracking-widest">Valor</th>
-                                                <th className="px-10 py-6 text-xs font-black text-gray-400 uppercase tracking-widest text-right">Ações</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-gray-50">
-                                            {services.length === 0 && (
-                                                <tr><td colSpan={4} className="px-10 py-16 text-center text-gray-400 font-medium italic">Nenhum serviço cadastrado ainda.</td></tr>
-                                            )}
-                                            {services.map(s => (
-                                                <tr key={s.id} className="hover:bg-gray-50/50 transition-colors">
-                                                    <td className="px-10 py-6 font-black text-gray-900">{s.name}</td>
-                                                    <td className="px-10 py-6">
-                                                        <span className="text-[10px] font-black uppercase tracking-widest bg-blue-50 text-blue-600 px-3 py-1 rounded-full">{s.category}</span>
-                                                    </td>
-                                                    <td className="px-10 py-6 font-bold text-gray-600 italic">{s.price}</td>
-                                                    <td className="px-10 py-6 text-right space-x-3">
-                                                        <button onClick={() => setEditingService(s)} className="p-3 text-blue-600 hover:bg-white hover:shadow-md rounded-xl transition-all"><Save size={18} /></button>
-                                                        <button className="p-3 text-red-300 hover:text-red-500 rounded-xl transition-all"><Trash2 size={18} /></button>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                            <ServicesTab services={services} onEdit={setEditingService} onDelete={handleDeleteService} onSync={handleSyncDefaults} onNew={() => setEditingService({ name: '', category: 'marketing', price: '', description: '', features: [''], display_order: 0, is_active: true, is_highlighted: false, subtitle: '', cta_text: '', badge_text: '', extra_info: '' })} />
                         )}
                     </div>
                 )}
-            </main>
+            </main >
+        </div >
+    );
+};
+
+// Componente auxiliar para a tab de serviços
+const ServicesTab: React.FC<{ services: ServiceData[], onEdit: (s: ServiceData) => void, onDelete: (id: string) => void, onSync: () => void, onNew: () => void }> = ({ services, onEdit, onDelete, onSync, onNew }) => {
+    const [sortKey, setSortKey] = useState<'order' | 'price' | 'name'>('order');
+
+    // Group services
+    const categories: Record<string, string> = {
+        'marketing': 'Marketing & Tráfego',
+        'swot': 'Análise SWOT & Estratégia',
+        'gmb': 'Google Meu Negócio',
+        'sites': 'Sites & Landing Pages',
+        'combos': 'Combos & Pacotes',
+        'consultancy': 'Consultoria Avulsa'
+    };
+
+    const getSortedServices = (list: ServiceData[]) => {
+        return [...list].sort((a, b) => {
+            if (sortKey === 'name') return a.name.localeCompare(b.name);
+            if (sortKey === 'order') return (a.display_order || 0) - (b.display_order || 0);
+            // Simple string price compare isn't perfect but works for now, ideal would be numeric parsing
+            if (sortKey === 'price') return a.price.localeCompare(b.price);
+            return 0;
+        });
+    };
+
+    return (
+        <div className="space-y-8 animate-fade-in">
+            <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 className="text-4xl font-black text-gray-900 tracking-tight">Serviços e Preços</h1>
+                    <p className="text-gray-500 font-medium">Controle o que é exibido nas tabelas de preços do site.</p>
+                </div>
+                <div className="flex gap-4 flex-wrap">
+                    <div className="bg-white border p-1 rounded-xl flex">
+                        <button onClick={() => setSortKey('order')} className={`px-3 py-2 rounded-lg text-xs font-bold ${sortKey === 'order' ? 'bg-gray-100 text-gray-900' : 'text-gray-400'}`}>Ordem</button>
+                        <button onClick={() => setSortKey('name')} className={`px-3 py-2 rounded-lg text-xs font-bold ${sortKey === 'name' ? 'bg-gray-100 text-gray-900' : 'text-gray-400'}`}>Nome</button>
+                    </div>
+                    <Button onClick={onSync} variant="outline" className="px-6 py-4 rounded-2xl flex items-center gap-2 !border-gray-200 !text-gray-600 hover:!bg-gray-50 bg-white">
+                        <Globe size={18} className="text-brand-blue" /> Sincronizar Padrões
+                    </Button>
+                    <Button onClick={onNew} variant="primary" className="px-8 py-4 rounded-2xl flex items-center gap-2 shadow-lg">
+                        <Plus size={18} /> Novo Pacote
+                    </Button>
+                </div>
+            </header>
+
+            {Object.entries(categories).map(([key, label]) => {
+                const categoryServices = getSortedServices(services.filter(s => s.category === key));
+                if (categoryServices.length === 0) return null;
+
+                return (
+                    <div key={key} className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden mb-8">
+                        <div className="px-10 py-6 border-b border-gray-50 bg-gray-50/30 flex items-center justify-between">
+                            <h3 className="font-black text-gray-700 uppercase tracking-widest text-sm">{label}</h3>
+                            <span className="text-[10px] bg-gray-200 px-2 py-1 rounded text-gray-600 font-bold">{categoryServices.length} itens</span>
+                        </div>
+                        <table className="w-full text-left">
+                            <tbody className="divide-y divide-gray-50">
+                                {categoryServices.map(s => (
+                                    <tr key={s.id} className="hover:bg-gray-50/50 transition-colors">
+                                        <td className="px-10 py-6 font-black text-gray-900 w-1/3">
+                                            <div className="flex items-center gap-2">
+                                                {s.name}
+                                                {s.is_highlighted && <Star size={12} className="text-brand-orange fill-brand-orange" />}
+                                            </div>
+                                            {s.subtitle && <p className="text-[10px] text-gray-400 font-normal uppercase mt-1">{s.subtitle}</p>}
+                                        </td>
+                                        <td className="px-10 py-6 w-1/3">
+                                            <p className="font-bold text-gray-600 italic">{s.price}</p>
+                                        </td>
+                                        <td className="px-10 py-6 text-right space-x-3">
+                                            <button onClick={() => onEdit(s)} className="p-3 text-blue-600 hover:bg-white hover:shadow-md rounded-xl transition-all" title="Editar"><Settings size={18} /></button>
+                                            <button onClick={() => s.id && onDelete(s.id)} className="p-3 text-red-300 hover:text-red-500 rounded-xl transition-all" title="Excluir"><Trash2 size={18} /></button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                );
+            })}
+            {services.length === 0 && (
+                <div className="px-10 py-16 text-center text-gray-400 font-medium italic">Nenhum serviço cadastrado ainda.</div>
+            )}
         </div>
     );
 };
