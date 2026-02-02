@@ -110,38 +110,38 @@ const GoogleBusinessProfile: React.FC = () => {
               {
                 title: 'Aparecer no Google e no Maps',
                 description: 'Seu negócio aparece quando o cliente busca por serviços ou produtos na sua região, no Google e no aplicativo Maps.',
-                image: 'https://www.gstatic.com/marketing-cms/assets/images/ads/f6/b4/5c47339f4601a9a10acfd682bedf/11.png=s1000',
-                alt: 'Perfil da Empresa no Google – overview com endereço, horário e contato'
+                image: 'gmb/maps.png',
+                alt: 'Perfil da Empresa no Google – mockup de busca no Maps'
               },
               {
                 title: 'Avaliações e estrelas',
                 description: 'Clientes deixam notas e comentários. Boas avaliações aumentam a confiança e a chance de você ser escolhido.',
-                image: 'https://www.gstatic.com/marketing-cms/assets/images/ads/e0/8e/f68830ae44d2a03790537ee9459a/en-uk-oveview-reviews.png=n-w984-h1000',
-                alt: 'Avaliações e resumo de reviews no Perfil da Empresa no Google'
+                image: 'gmb/reviews.png',
+                alt: 'Avaliações e resumo de reviews com estrelas douradas'
               },
               {
                 title: 'Horário de funcionamento',
                 description: 'Exiba os horários de abertura e fechamento, feriados e horários especiais para o cliente planejar a visita.',
-                image: 'https://www.gstatic.com/marketing-cms/assets/images/ads/f6/b4/5c47339f4601a9a10acfd682bedf/11.png=s1000',
-                alt: 'Horário de funcionamento no Perfil da Empresa no Google'
+                image: 'gmb/hours.png',
+                alt: 'Horário de funcionamento e calendário'
               },
               {
                 title: 'Fotos e publicações',
                 description: 'Galeria de fotos da fachada, interior, equipe e produtos. Posts semanais mantêm o perfil ativo e relevante.',
-                image: 'https://www.gstatic.com/marketing-cms/assets/images/ads/7d/1d/9f09f5d04fa889efb0cefa8b046a/12.png=s1000',
-                alt: 'Aba Fotos do Perfil da Empresa no Google'
+                image: 'gmb/photos.png',
+                alt: 'Galeria dinâmica de fotos e publicações'
               },
               {
                 title: 'Ligar e mensagens',
                 description: 'Botões diretos para ligar ou enviar mensagem pelo WhatsApp. O cliente entra em contato com um toque.',
-                image: 'https://www.gstatic.com/marketing-cms/assets/images/ads/7a/5d/0892cbd7483fbfad8d075ce17c05/10.png=s1000',
-                alt: 'Informações de contato no Perfil da Empresa no Google'
+                image: 'gmb/contact.png',
+                alt: 'Botões de contato e mensagens no smartphone'
               },
               {
                 title: 'Insights e desempenho',
                 description: 'Veja quantas pessoas viram seu perfil, pediram rota, ligaram ou acessaram o site. Dados para decidir melhor.',
-                image: 'https://www.gstatic.com/marketing-cms/assets/images/ads/13/41/c7d4b31f45f0b4cb46efc6af7acc/en-us-know-how-customer-img.png=n-w800-h582',
-                alt: 'Performance e insights do Perfil da Empresa no Google'
+                image: 'gmb/insights.png',
+                alt: 'Gráficos de performance e insights de acessos'
               }
             ].map((item, i) => (
               <div key={i} className="bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-lg hover:shadow-xl transition-all duration-300 group">
