@@ -15,9 +15,9 @@ class LeadService {
    */
   async saveContactLead(data: ContactLead): Promise<boolean> {
     try {
-      console.log('Lead de contato recebido:', data);
+      console.log('Tentando salvar lead de contato:', data);
 
-      const { error } = await supabase
+      const { data: result, error } = await supabase
         .from('leads')
         .insert([{
           type: 'contact',
@@ -26,17 +26,21 @@ class LeadService {
         }]);
 
       if (error) {
-        console.error('Erro ao salvar no Supabase:', error);
-        this.saveToBackup('contact', data); // Fallback para localStorage
+        console.error('ERRO DETALHADO SUPABASE (leads):', error);
+        alert(`Erro ao salvar no Banco de Dados:\nCódigo: ${error.code}\nMensagem: ${error.message}\nDica: Verifique se a tabela 'leads' existe e se o RLS permite INSERT.`);
+        this.saveToBackup('contact', data);
+        return false;
       }
 
+      console.log('Lead salvo com sucesso no Supabase!');
       // Envia notificação por e-mail para o admin
       await this.notifyAdminNewContact(data);
 
       return true;
-    } catch (error) {
-      console.error('Erro ao processar lead de contato:', error);
-      this.saveToBackup('contact', data); // Fallback
+    } catch (error: any) {
+      console.error('ERRO CRÍTICO (saveContactLead):', error);
+      alert(`Erro crítico na conexão:\n${error.message}`);
+      this.saveToBackup('contact', data);
       return false;
     }
   }
@@ -79,7 +83,7 @@ class LeadService {
    */
   async saveBriefingLead(data: any): Promise<boolean> {
     try {
-      console.log('Lead de briefing recebido:', data);
+      console.log('Tentando salvar lead de briefing:', data);
 
       // Pega o usuário atual
       const { data: { user } } = await supabase.auth.getUser();
@@ -96,16 +100,20 @@ class LeadService {
         }]);
 
       if (error) {
-        console.error('Erro ao salvar briefing no Supabase:', error);
-        this.saveToBackup('briefing', data); // Fallback
+        console.error('ERRO DETALHADO SUPABASE (briefing):', error);
+        alert(`Erro ao salvar Briefing:\nCódigo: ${error.code}\nMensagem: ${error.message}\nDica: Verifique se a tabela 'swot_briefings' existe e as permissões RLS.`);
+        this.saveToBackup('briefing', data);
+        return false;
       }
 
+      console.log('Briefing salvo com sucesso no Supabase!');
       // Envia e-mail para o admin via EmailJS
       await this.notifyAdminNewBriefing(data);
 
       return true;
-    } catch (error) {
-      console.error('Erro ao processar lead de briefing:', error);
+    } catch (error: any) {
+      console.error('ERRO CRÍTICO (saveBriefingLead):', error);
+      alert(`Erro crítico na conexão:\n${error.message}`);
       this.saveToBackup('briefing', data);
       return false;
     }
