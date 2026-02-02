@@ -3,12 +3,18 @@ import {
     Settings, FileText, Package, LayoutDashboard,
     Save, Plus, Trash2, Globe, MessageCircle,
     Instagram, Facebook, Youtube, Palette, Power,
-    ArrowLeft, X, Check, Image as ImageIcon
+    ArrowLeft, X, Check, Image as ImageIcon,
+    LogOut, ExternalLink
 } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
 import { adminService, SiteConfig, BlogPost, ServiceData } from '../../services/adminService';
 import Button from '../Button';
 
-export const AdminPanel: React.FC = () => {
+interface AdminPanelProps {
+    onNavigate?: (view: any) => void;
+}
+
+export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
     const [activeTab, setActiveTab] = useState<'dashboard' | 'config' | 'blog' | 'services'>('dashboard');
     const [config, setConfig] = useState<SiteConfig | null>(null);
     const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -25,15 +31,20 @@ export const AdminPanel: React.FC = () => {
 
     const loadData = async () => {
         setLoading(true);
-        const [configData, postsData, servicesData] = await Promise.all([
-            adminService.getSiteConfig(),
-            adminService.getBlogPosts(),
-            adminService.getServices()
-        ]);
-        setConfig(configData);
-        setPosts(postsData);
-        setServices(servicesData);
-        setLoading(false);
+        try {
+            const [configData, postsData, servicesData] = await Promise.all([
+                adminService.getSiteConfig(),
+                adminService.getBlogPosts(),
+                adminService.getServices()
+            ]);
+            setConfig(configData);
+            setPosts(postsData || []);
+            setServices(servicesData || []);
+        } catch (error) {
+            console.error('Erro ao carregar dados:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleSaveConfig = async (e: React.FormEvent) => {
@@ -79,6 +90,17 @@ export const AdminPanel: React.FC = () => {
         setLoading(false);
     };
 
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        if (onNavigate) onNavigate('landing');
+        else window.location.hash = '';
+    };
+
+    const handleBackToSite = () => {
+        if (onNavigate) onNavigate('landing');
+        else window.location.hash = '';
+    };
+
     const inputStyles = "w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm";
     const labelStyles = "text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 mb-1 block";
 
@@ -119,6 +141,21 @@ export const AdminPanel: React.FC = () => {
                         <Package size={18} /> Serviços e Preços
                     </button>
                 </nav>
+
+                <div className="p-4 border-t border-gray-100 space-y-2">
+                    <button
+                        onClick={handleBackToSite}
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-gray-500 hover:bg-gray-50 transition-all"
+                    >
+                        <ExternalLink size={18} /> Voltar para o Site
+                    </button>
+                    <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-red-500 hover:bg-red-50 transition-all"
+                    >
+                        <LogOut size={18} /> Sair
+                    </button>
+                </div>
             </aside>
 
             {/* Main Content */}
@@ -148,99 +185,117 @@ export const AdminPanel: React.FC = () => {
                 )}
 
                 {/* CONFIGURAÇÕES SITE */}
-                {activeTab === 'config' && config && (
+                {activeTab === 'config' && (
                     <form onSubmit={handleSaveConfig} className="space-y-8 animate-fade-in max-w-5xl">
-                        <header className="flex justify-between items-end">
-                            <div>
-                                <h1 className="text-4xl font-black text-gray-900 tracking-tight">Configurações Gerais</h1>
-                                <p className="text-gray-500 font-medium">Altere informações, links e o visual do site.</p>
+                        {loading && (
+                            <div className="bg-blue-50 border border-blue-100 p-6 rounded-3xl text-blue-800 text-sm flex items-center gap-3">
+                                <Settings className="animate-spin" size={20} />
+                                Carregando configurações...
                             </div>
-                            <Button type="submit" loading={loading} variant="primary" className="px-10 py-4 rounded-2xl flex items-center gap-2 shadow-xl shadow-blue-200">
-                                <Save size={18} /> Salvar Alterações
-                            </Button>
-                        </header>
+                        )}
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {/* Contato */}
-                            <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm space-y-8">
-                                <h4 className="font-black text-lg flex items-center gap-3 border-b border-gray-50 pb-6 text-gray-900">
-                                    <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600"><Globe size={20} /></div> Contato Principal
-                                </h4>
-                                <div className="space-y-6">
-                                    <div>
-                                        <label className={labelStyles}>Telefone Exibido</label>
-                                        <input type="text" value={config.phone} onChange={(e) => setConfig({ ...config, phone: e.target.value })} className={inputStyles} />
-                                    </div>
-                                    <div>
-                                        <label className={labelStyles}>WhatsApp (Apenas Números)</label>
-                                        <input type="text" value={config.whatsapp} onChange={(e) => setConfig({ ...config, whatsapp: e.target.value })} className={inputStyles} placeholder="Ex: 5586994144709" />
-                                    </div>
-                                </div>
+                        {!config && !loading && (
+                            <div className="bg-orange-50 border border-orange-100 p-6 rounded-3xl text-orange-800 text-sm flex items-center gap-3">
+                                <Settings size={20} />
+                                Nenhuma configuração encontrada no banco de dados.
                             </div>
+                        )}
 
-                            {/* Redes Sociais */}
-                            <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm space-y-8">
-                                <h4 className="font-black text-lg flex items-center gap-3 border-b border-gray-50 pb-6 text-gray-900">
-                                    <div className="w-10 h-10 bg-pink-50 rounded-xl flex items-center justify-center text-pink-600"><MessageCircle size={20} /></div> Presença Digital
-                                </h4>
-                                <div className="space-y-6">
-                                    <div className="relative">
-                                        <label className={labelStyles}>Instagram URL</label>
-                                        <div className="flex items-center gap-3">
-                                            <Instagram size={20} className="text-pink-600 shrink-0" />
-                                            <input type="text" value={config.instagram_url} onChange={(e) => setConfig({ ...config, instagram_url: e.target.value })} className={inputStyles} />
+                        {config && (
+                            <>
+                                <header className="flex justify-between items-end">
+                                    <div>
+                                        <h1 className="text-4xl font-black text-gray-900 tracking-tight">Configurações Gerais</h1>
+                                        <p className="text-gray-500 font-medium">Altere informações, links e o visual do site.</p>
+                                    </div>
+                                    <Button type="submit" loading={loading} variant="primary" className="px-10 py-4 rounded-2xl flex items-center gap-2 shadow-xl shadow-blue-200">
+                                        <Save size={18} /> Salvar Alterações
+                                    </Button>
+                                </header>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    {/* Contato */}
+                                    <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm space-y-8">
+                                        <h4 className="font-black text-lg flex items-center gap-3 border-b border-gray-50 pb-6 text-gray-900">
+                                            <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600"><Globe size={20} /></div> Contato Principal
+                                        </h4>
+                                        <div className="space-y-6">
+                                            <div>
+                                                <label className={labelStyles}>Telefone Exibido</label>
+                                                <input type="text" value={config.phone} onChange={(e) => setConfig({ ...config, phone: e.target.value })} className={inputStyles} />
+                                            </div>
+                                            <div>
+                                                <label className={labelStyles}>WhatsApp (Apenas Números)</label>
+                                                <input type="text" value={config.whatsapp} onChange={(e) => setConfig({ ...config, whatsapp: e.target.value })} className={inputStyles} placeholder="Ex: 5586994144709" />
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="relative">
-                                        <label className={labelStyles}>Facebook URL</label>
-                                        <div className="flex items-center gap-3">
-                                            <Facebook size={20} className="text-blue-700 shrink-0" />
-                                            <input type="text" value={config.facebook_url} onChange={(e) => setConfig({ ...config, facebook_url: e.target.value })} className={inputStyles} />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            {/* Visual Cores */}
-                            <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm space-y-8">
-                                <h4 className="font-black text-lg flex items-center gap-3 border-b border-gray-50 pb-6 text-gray-900">
-                                    <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center text-orange-600"><Palette size={20} /></div> Identidade Visual
-                                </h4>
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div>
-                                        <label className={labelStyles}>Cor Primária</label>
-                                        <div className="flex items-center gap-3 bg-gray-50 p-2 rounded-xl border border-gray-200">
-                                            <input type="color" value={config.primary_color} onChange={(e) => setConfig({ ...config, primary_color: e.target.value })} className="w-10 h-10 rounded-lg cursor-pointer bg-transparent border-none" />
-                                            <span className="text-xs font-bold text-gray-500">{config.primary_color}</span>
+                                    {/* Redes Sociais */}
+                                    <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm space-y-8">
+                                        <h4 className="font-black text-lg flex items-center gap-3 border-b border-gray-50 pb-6 text-gray-900">
+                                            <div className="w-10 h-10 bg-pink-50 rounded-xl flex items-center justify-center text-pink-600"><MessageCircle size={20} /></div> Presença Digital
+                                        </h4>
+                                        <div className="space-y-6">
+                                            <div className="relative">
+                                                <label className={labelStyles}>Instagram URL</label>
+                                                <div className="flex items-center gap-3">
+                                                    <Instagram size={20} className="text-pink-600 shrink-0" />
+                                                    <input type="text" value={config.instagram_url} onChange={(e) => setConfig({ ...config, instagram_url: e.target.value })} className={inputStyles} />
+                                                </div>
+                                            </div>
+                                            <div className="relative">
+                                                <label className={labelStyles}>Facebook URL</label>
+                                                <div className="flex items-center gap-3">
+                                                    <Facebook size={20} className="text-blue-700 shrink-0" />
+                                                    <input type="text" value={config.facebook_url} onChange={(e) => setConfig({ ...config, facebook_url: e.target.value })} className={inputStyles} />
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div>
-                                        <label className={labelStyles}>Cor Secundária</label>
-                                        <div className="flex items-center gap-3 bg-gray-50 p-2 rounded-xl border border-gray-200">
-                                            <input type="color" value={config.secondary_color} onChange={(e) => setConfig({ ...config, secondary_color: e.target.value })} className="w-10 h-10 rounded-lg cursor-pointer bg-transparent border-none" />
-                                            <span className="text-xs font-bold text-gray-500">{config.secondary_color}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            {/* Ativação */}
-                            <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm space-y-8">
-                                <h4 className="font-black text-lg flex items-center gap-3 border-b border-gray-50 pb-6 text-gray-900">
-                                    <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center text-green-600"><Power size={20} /></div> Módulos do Site
-                                </h4>
-                                <div className="space-y-4">
-                                    <label className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl cursor-pointer hover:bg-gray-100 transition-colors">
-                                        <span className="text-sm font-bold text-gray-900">Ativar Blog</span>
-                                        <input type="checkbox" checked={config.is_blog_active} onChange={(e) => setConfig({ ...config, is_blog_active: e.checked })} className="w-6 h-6 rounded-full accent-blue-600" />
-                                    </label>
-                                    <label className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl cursor-pointer hover:bg-gray-100 transition-colors">
-                                        <span className="text-sm font-bold text-gray-900">Ativar Módulo SWOT</span>
-                                        <input type="checkbox" checked={config.is_swot_active} onChange={(e) => setConfig({ ...config, is_swot_active: e.checked })} className="w-6 h-6 rounded-full accent-blue-600" />
-                                    </label>
+                                    {/* Visual Cores */}
+                                    <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm space-y-8">
+                                        <h4 className="font-black text-lg flex items-center gap-3 border-b border-gray-50 pb-6 text-gray-900">
+                                            <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center text-orange-600"><Palette size={20} /></div> Identidade Visual
+                                        </h4>
+                                        <div className="grid grid-cols-2 gap-6">
+                                            <div>
+                                                <label className={labelStyles}>Cor Primária</label>
+                                                <div className="flex items-center gap-3 bg-gray-50 p-2 rounded-xl border border-gray-200">
+                                                    <input type="color" value={config.primary_color} onChange={(e) => setConfig({ ...config, primary_color: e.target.value })} className="w-10 h-10 rounded-lg cursor-pointer bg-transparent border-none" />
+                                                    <span className="text-xs font-bold text-gray-500">{config.primary_color}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label className={labelStyles}>Cor Secundária</label>
+                                                <div className="flex items-center gap-3 bg-gray-50 p-2 rounded-xl border border-gray-200">
+                                                    <input type="color" value={config.secondary_color} onChange={(e) => setConfig({ ...config, secondary_color: e.target.value })} className="w-10 h-10 rounded-lg cursor-pointer bg-transparent border-none" />
+                                                    <span className="text-xs font-bold text-gray-500">{config.secondary_color}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Ativação */}
+                                    <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm space-y-8">
+                                        <h4 className="font-black text-lg flex items-center gap-3 border-b border-gray-50 pb-6 text-gray-900">
+                                            <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center text-green-600"><Power size={20} /></div> Módulos do Site
+                                        </h4>
+                                        <div className="space-y-4">
+                                            <label className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl cursor-pointer hover:bg-gray-100 transition-colors">
+                                                <span className="text-sm font-bold text-gray-900">Ativar Blog</span>
+                                                <input type="checkbox" checked={config.is_blog_active} onChange={(e) => setConfig({ ...config, is_blog_active: e.target.checked })} className="w-6 h-6 rounded-full accent-blue-600" />
+                                            </label>
+                                            <label className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl cursor-pointer hover:bg-gray-100 transition-colors">
+                                                <span className="text-sm font-bold text-gray-900">Ativar Módulo SWOT</span>
+                                                <input type="checkbox" checked={config.is_swot_active} onChange={(e) => setConfig({ ...config, is_swot_active: e.target.checked })} className="w-6 h-6 rounded-full accent-blue-600" />
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </>
+                        )}
                     </form>
                 )}
 

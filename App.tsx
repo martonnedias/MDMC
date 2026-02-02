@@ -185,7 +185,7 @@ const AppContent: React.FC = () => {
         )}
 
         {currentView === 'admin' && (
-          <AdminPanel />
+          <AdminPanel onNavigate={navigateTo} />
         )}
 
         {currentView === 'blog' && (
