@@ -1,11 +1,12 @@
 import React from 'react';
 import { MessageCircle } from 'lucide-react';
-import { CONTACT_INFO } from '../constants';
+import { useSiteConfig } from '../lib/SiteContext';
 
 const WhatsAppWidget: React.FC = () => {
+  const { config } = useSiteConfig();
   return (
     <a
-      href={CONTACT_INFO.whatsappLink}
+      href={`https://wa.me/${config.whatsapp}`}
       target="_blank"
       rel="noopener noreferrer"
       className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 group focus:outline-none focus:ring-4 focus:ring-green-300"

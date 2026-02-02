@@ -6,6 +6,7 @@ import Logo from './Logo';
 import { FOOTER_CTA, CONTACT_INFO, FORM_VALIDATION_MSGS } from '../constants';
 import { ViewState } from '../App';
 import { leadService } from '../services/leadService';
+import { useSiteConfig } from '../lib/SiteContext';
 
 interface FooterProps {
   onNavigate?: (view: ViewState) => void;
@@ -13,6 +14,7 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) => {
+  const { config } = useSiteConfig();
   const [formState, setFormState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [formData, setFormData] = useState({
     name: '',
@@ -85,10 +87,10 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
                     <div>
                       <p className="text-[10px] opacity-40 font-black uppercase tracking-[0.2em]">WhatsApp Executivo</p>
                       <button
-                        onClick={() => window.open(CONTACT_INFO.whatsappLink, '_blank')}
+                        onClick={() => window.open(`https://wa.me/${config.whatsapp}`, '_blank')}
                         className="font-bold text-white text-2xl tracking-tight hover:text-brand-orange transition-colors"
                       >
-                        {CONTACT_INFO.whatsappFormatted}
+                        {config.phone}
                       </button>
                     </div>
                   </div>
@@ -261,13 +263,13 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
             </ul>
 
             <div className="flex gap-4">
-              <a href={CONTACT_INFO.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all duration-300" aria-label="Instagram">
+              <a href={config.instagram_url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all duration-300" aria-label="Instagram">
                 <Instagram size={18} />
               </a>
-              <a href={CONTACT_INFO.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all duration-300" aria-label="Facebook">
+              <a href={config.facebook_url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all duration-300" aria-label="Facebook">
                 <Facebook size={18} />
               </a>
-              <a href={CONTACT_INFO.youtube} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all duration-300" aria-label="YouTube">
+              <a href={config.youtube_url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all duration-300" aria-label="YouTube">
                 <Youtube size={18} />
               </a>
             </div>

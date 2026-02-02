@@ -29,6 +29,7 @@ import { AuthProvider, useAuth } from './components/Auth/AuthProvider';
 import { AuthPage } from './components/AuthPage';
 
 import CookieConsent from './components/CookieConsent';
+import { SiteProvider } from './lib/SiteContext';
 
 import { AdminPanel } from './components/Admin/AdminPanel';
 
@@ -181,7 +182,9 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <AuthProvider>
-      <AppContent />
+      <SiteProvider>
+        <AppContent />
+      </SiteProvider>
     </AuthProvider>
   );
 };

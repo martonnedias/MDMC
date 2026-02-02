@@ -4,6 +4,7 @@ import { Menu, X, ChevronDown, Target, BarChart3, ArrowRight, MapPin, Megaphone,
 import Button from './Button';
 import Logo from './Logo';
 import { ViewState } from '../App';
+import { useSiteConfig } from '../lib/SiteContext';
 
 interface HeaderProps {
   currentView?: ViewState;
@@ -11,6 +12,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) => {
+  const { config } = useSiteConfig();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesMenuOpen, setServicesMenuOpen] = useState(false);
