@@ -130,53 +130,24 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
 
                         {/* Right - Mockup/Visual */}
                         <div className="relative">
-                            <div className="bg-gradient-to-br from-[#0C3452] to-[#1a5a8a] rounded-2xl shadow-2xl p-8 transform hover:scale-105 transition-transform duration-500">
-                                <div className="bg-white rounded-lg p-6 space-y-4">
-                                    {/* Simulated Dashboard */}
-                                    <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-                                        <h3 className="font-bold text-[#0C3452]">Painel de Atendimento</h3>
-                                        <div className="flex gap-2">
-                                            <div className="w-3 h-3 bg-[#FF7A2F] rounded-full animate-pulse"></div>
-                                            <span className="text-xs text-gray-500">12 ativos</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        {[1, 2, 3].map((i) => (
-                                            <div key={i} className="flex items-center gap-3 p-3 bg-[#F5F7FA] rounded-lg hover:bg-[#E2ECF7] transition-colors">
-                                                <div className="w-10 h-10 bg-gradient-to-br from-[#FF7A2F] to-[#FF9A5A] rounded-full"></div>
-                                                <div className="flex-grow">
-                                                    <div className="h-2 bg-gray-300 rounded w-3/4 mb-2"></div>
-                                                    <div className="h-2 bg-gray-200 rounded w-1/2"></div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    <div className="grid grid-cols-3 gap-4 pt-4">
-                                        <div className="text-center p-3 bg-[#E2ECF7] rounded-lg">
-                                            <p className="text-2xl font-bold text-[#0C3452]">142</p>
-                                            <p className="text-xs text-gray-600">Leads</p>
-                                        </div>
-                                        <div className="text-center p-3 bg-[#E2ECF7] rounded-lg">
-                                            <p className="text-2xl font-bold text-[#FF7A2F]">68%</p>
-                                            <p className="text-xs text-gray-600">Conversão</p>
-                                        </div>
-                                        <div className="text-center p-3 bg-[#E2ECF7] rounded-lg">
-                                            <p className="text-2xl font-bold text-[#0C3452]">R$ 45k</p>
-                                            <p className="text-xs text-gray-600">Receita</p>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div className="relative z-10 transform hover:scale-105 transition-transform duration-500">
+                                <img
+                                    src="/MDMC/images/md-converte/md_converte_dashboard.png"
+                                    alt="Painel MD Converte"
+                                    className="rounded-2xl shadow-2xl border-4 border-white/10"
+                                />
                             </div>
 
                             {/* Floating Elements */}
-                            <div className="absolute -top-6 -right-6 bg-white p-4 rounded-xl shadow-xl animate-bounce">
+                            <div className="absolute -top-6 -right-6 bg-white p-4 rounded-xl shadow-xl animate-bounce z-20">
                                 <MessageSquare className="w-8 h-8 text-[#FF7A2F]" />
                             </div>
-                            <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-xl animate-pulse">
+                            <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-xl animate-pulse z-20">
                                 <TrendingUp className="w-8 h-8 text-[#0C3452]" />
                             </div>
+
+                            {/* Decorative Blur */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-[#FF7A2F]/20 to-[#0C3452]/20 blur-3xl -z-10"></div>
                         </div>
                     </div>
                 </div>
@@ -408,28 +379,14 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                     {/* Feature 3: Automation */}
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         <div className="order-2 lg:order-1">
-                            <div className="bg-gradient-to-br from-[#0C3452] to-[#1a5a8a] rounded-2xl p-8 shadow-2xl">
-                                <div className="bg-white rounded-xl p-6 space-y-4">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <Zap className="w-6 h-6 text-[#FF7A2F]" />
-                                        <h4 className="font-bold text-[#0C3452]">Fluxo Automático</h4>
-                                    </div>
-                                    {[
-                                        { trigger: 'Novo lead', action: 'Enviar boas-vindas', time: '0 min' },
-                                        { trigger: 'Sem resposta', action: 'Lembrete automático', time: '24h' },
-                                        { trigger: 'Lead avançou', action: 'Enviar proposta', time: '0 min' }
-                                    ].map((flow, index) => (
-                                        <div key={index} className="bg-[#F5F7FA] p-4 rounded-lg space-y-2">
-                                            <div className="flex items-center justify-between">
-                                                <span className="text-sm font-semibold text-[#0C3452]">{flow.trigger}</span>
-                                                <span className="text-xs bg-[#FF7A2F] text-white px-2 py-1 rounded-full">{flow.time}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-sm text-[#2B2B2B]">
-                                                <ArrowRight className="w-4 h-4 text-[#FF7A2F]" />
-                                                {flow.action}
-                                            </div>
-                                        </div>
-                                    ))}
+                            <div className="relative transform hover:scale-105 transition-transform duration-500">
+                                <img
+                                    src="/MDMC/images/md-converte/md_converte_automation.png"
+                                    alt="Automação MD Converte"
+                                    className="rounded-2xl shadow-2xl"
+                                />
+                                <div className="absolute -bottom-4 -right-4 bg-white p-4 rounded-xl shadow-lg animate-pulse">
+                                    <Zap className="w-8 h-8 text-[#FF7A2F]" />
                                 </div>
                             </div>
                         </div>
@@ -471,47 +428,14 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                 ))}
                             </ul>
                         </div>
-                        <div>
-                            <div className="bg-gradient-to-br from-[#FF7A2F] to-[#FF9A5A] rounded-2xl p-8 shadow-2xl">
-                                <div className="bg-white rounded-xl p-6">
-                                    <h4 className="font-bold text-[#0C3452] mb-4 flex items-center gap-2">
-                                        <PieChart className="w-5 h-5" />
-                                        Relatório de Conversão
-                                    </h4>
-                                    <div className="space-y-4">
-                                        <div className="grid grid-cols-3 gap-4">
-                                            <div className="text-center p-4 bg-[#E2ECF7] rounded-lg">
-                                                <p className="text-3xl font-bold text-[#0C3452]">234</p>
-                                                <p className="text-xs text-gray-600 mt-1">Leads Total</p>
-                                            </div>
-                                            <div className="text-center p-4 bg-[#E2ECF7] rounded-lg">
-                                                <p className="text-3xl font-bold text-[#FF7A2F]">72%</p>
-                                                <p className="text-xs text-gray-600 mt-1">Taxa Conv.</p>
-                                            </div>
-                                            <div className="text-center p-4 bg-[#E2ECF7] rounded-lg">
-                                                <p className="text-3xl font-bold text-[#0C3452]">R$ 89k</p>
-                                                <p className="text-xs text-gray-600 mt-1">Receita</p>
-                                            </div>
-                                        </div>
-                                        <div className="space-y-2">
-                                            {[
-                                                { name: 'WhatsApp', value: 45, color: 'bg-green-500' },
-                                                { name: 'Instagram', value: 30, color: 'bg-pink-500' },
-                                                { name: 'Facebook', value: 25, color: 'bg-blue-500' }
-                                            ].map((channel, index) => (
-                                                <div key={index}>
-                                                    <div className="flex justify-between text-sm mb-1">
-                                                        <span className="text-[#0C3452] font-medium">{channel.name}</span>
-                                                        <span className="text-[#2B2B2B]">{channel.value}%</span>
-                                                    </div>
-                                                    <div className="w-full bg-gray-200 rounded-full h-2">
-                                                        <div className={`${channel.color} h-2 rounded-full`} style={{ width: `${channel.value}%` }}></div>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
+                        <div className="relative transform hover:scale-105 transition-transform duration-500">
+                            <img
+                                src="/MDMC/images/md-converte/md_converte_reports.png"
+                                alt="Relatórios MD Converte"
+                                className="rounded-2xl shadow-2xl"
+                            />
+                            <div className="absolute -top-4 -right-4 bg-white p-4 rounded-xl shadow-lg animate-bounce">
+                                <BarChart3 className="w-8 h-8 text-[#0C3452]" />
                             </div>
                         </div>
                     </div>
