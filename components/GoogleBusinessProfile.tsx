@@ -98,6 +98,71 @@ const GoogleBusinessProfile: React.FC = () => {
         </div>
       </section>
 
+      {/* Funcionalidades da ferramenta - imagens ilustrativas */}
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <SectionTitle
+            title="Funcionalidades do Google Meu Negócio"
+            subtitle="Recursos que ajudam seu negócio a aparecer e converter nas buscas locais."
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
+            {[
+              {
+                title: 'Aparecer no Google e no Maps',
+                description: 'Seu negócio aparece quando o cliente busca por serviços ou produtos na sua região, no Google e no aplicativo Maps.',
+                image: 'https://www.gstatic.com/marketing-cms/assets/images/ads/f6/b4/5c47339f4601a9a10acfd682bedf/11.png=s1000',
+                alt: 'Perfil da Empresa no Google – overview com endereço, horário e contato'
+              },
+              {
+                title: 'Avaliações e estrelas',
+                description: 'Clientes deixam notas e comentários. Boas avaliações aumentam a confiança e a chance de você ser escolhido.',
+                image: 'https://www.gstatic.com/marketing-cms/assets/images/ads/e0/8e/f68830ae44d2a03790537ee9459a/en-uk-oveview-reviews.png=n-w984-h1000',
+                alt: 'Avaliações e resumo de reviews no Perfil da Empresa no Google'
+              },
+              {
+                title: 'Horário de funcionamento',
+                description: 'Exiba os horários de abertura e fechamento, feriados e horários especiais para o cliente planejar a visita.',
+                image: 'https://www.gstatic.com/marketing-cms/assets/images/ads/f6/b4/5c47339f4601a9a10acfd682bedf/11.png=s1000',
+                alt: 'Horário de funcionamento no Perfil da Empresa no Google'
+              },
+              {
+                title: 'Fotos e publicações',
+                description: 'Galeria de fotos da fachada, interior, equipe e produtos. Posts semanais mantêm o perfil ativo e relevante.',
+                image: 'https://www.gstatic.com/marketing-cms/assets/images/ads/7d/1d/9f09f5d04fa889efb0cefa8b046a/12.png=s1000',
+                alt: 'Aba Fotos do Perfil da Empresa no Google'
+              },
+              {
+                title: 'Ligar e mensagens',
+                description: 'Botões diretos para ligar ou enviar mensagem pelo WhatsApp. O cliente entra em contato com um toque.',
+                image: 'https://www.gstatic.com/marketing-cms/assets/images/ads/7a/5d/0892cbd7483fbfad8d075ce17c05/10.png=s1000',
+                alt: 'Informações de contato no Perfil da Empresa no Google'
+              },
+              {
+                title: 'Insights e desempenho',
+                description: 'Veja quantas pessoas viram seu perfil, pediram rota, ligaram ou acessaram o site. Dados para decidir melhor.',
+                image: 'https://www.gstatic.com/marketing-cms/assets/images/ads/13/41/c7d4b31f45f0b4cb46efc6af7acc/en-us-know-how-customer-img.png=n-w800-h582',
+                alt: 'Performance e insights do Perfil da Empresa no Google'
+              }
+            ].map((item, i) => (
+              <div key={i} className="bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-lg hover:shadow-xl transition-all duration-300 group">
+                <div className="aspect-video overflow-hidden bg-gray-100">
+                  <img
+                    src={item.image}
+                    alt={item.alt}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="p-6 md:p-8">
+                  <h3 className="font-heading font-bold text-gray-900 text-lg mb-3">{item.title}</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">{item.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Info Checklist Section */}
       <section className="py-24 bg-gray-50">
         <div className="container mx-auto px-4 md:px-6">
