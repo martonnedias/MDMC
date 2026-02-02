@@ -54,6 +54,7 @@ class LeadService {
         .from('swot_briefings')
         .insert([{
           user_id: user?.id || null,
+          type: data.type || 'SWOT_ANALYSIS',
           data: data,
           plan: data.plan || null,
           created_at: new Date().toISOString()

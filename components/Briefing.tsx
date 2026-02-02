@@ -217,7 +217,7 @@ const Briefing: React.FC = () => {
     if (!validateStep(currentStep)) return;
 
     setLoading(true);
-    const success = await leadService.saveBriefingLead(formData);
+    const success = await leadService.saveBriefingLead({ ...formData, type: 'MARKETING_DIAGNOSIS' });
     if (success) {
       setShowReport(true);
     } else {
