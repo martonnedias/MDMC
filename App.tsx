@@ -47,7 +47,24 @@ const AppContent: React.FC = () => {
     setCurrentView(view);
     setViewParams(params);
     window.scrollTo(0, 0);
+    // Atualiza a hash para permitir navegação direta
+    if (view === 'admin') window.location.hash = 'admin';
+    else if (view === 'blog') window.location.hash = 'blog';
+    else window.location.hash = '';
   };
+
+  // Monitora a Hash da URL para permitir acesso direto (ex: /#admin)
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash === 'admin') setCurrentView('admin');
+      if (hash === 'blog') setCurrentView('blog');
+    };
+
+    handleHashChange(); // Executa ao carregar
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   // SEO: atualiza document.title por página
   useEffect(() => {

@@ -281,6 +281,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
           <div className="flex gap-8">
             <a href="#" onClick={(e) => handleLinkClick(e, 'terms')} className="hover:text-white transition-colors">Termos</a>
             <a href="#" onClick={(e) => handleLinkClick(e, 'privacy')} className="hover:text-white transition-colors">Privacidade</a>
+            <a href="#admin" onClick={(e) => handleLinkClick(e, 'admin')} className="hover:text-white transition-colors opacity-30 hover:opacity-100">Painel</a>
           </div>
         </div>
       </div>
