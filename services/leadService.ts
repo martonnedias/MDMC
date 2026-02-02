@@ -28,13 +28,48 @@ class LeadService {
       if (error) {
         console.error('Erro ao salvar no Supabase:', error);
         this.saveToBackup('contact', data); // Fallback para localStorage
-        return false;
       }
+
+      // Envia notificação por e-mail para o admin
+      await this.notifyAdminNewContact(data);
 
       return true;
     } catch (error) {
       console.error('Erro ao processar lead de contato:', error);
       this.saveToBackup('contact', data); // Fallback
+      return false;
+    }
+  }
+
+  /**
+   * Notifica o administrador sobre um novo contato do rodapé
+   */
+  async notifyAdminNewContact(data: ContactLead): Promise<boolean> {
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID; // Usando o mesmo template ou um específico
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+    if (!serviceId || !templateId || !publicKey) {
+      console.warn('[LeadService] EmailJS não configurado para contatos.');
+      return true;
+    }
+
+    try {
+      const templateParams = {
+        to_email: 'martonnedias@gmail.com',
+        from_name: data.name,
+        user_email: data.email,
+        user_phone: data.phone,
+        interest: data.interest,
+        company_size: data.companySize,
+        message: `Novo contato via Rodapé!\n\nInteresse: ${data.interest}\nTamanho da Empresa: ${data.companySize}`
+      };
+
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      console.log('[LeadService] E-mail de contato enviado para ADMIN!');
+      return true;
+    } catch (e) {
+      console.error('[LeadService] Erro ao enviar e-mail de contato:', e);
       return false;
     }
   }
