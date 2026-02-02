@@ -1,9 +1,26 @@
 import React from 'react';
 import { COMBOS_CONTENT } from '../constants';
+import { adminService } from '../services/adminService';
 import SectionTitle from './SectionTitle';
 import { Plus } from 'lucide-react';
 
 const Combos: React.FC = () => {
+  const [displayCombos, setDisplayCombos] = React.useState<any[]>(COMBOS_CONTENT);
+
+  React.useEffect(() => {
+    const fetchCombos = async () => {
+      const data = await adminService.getServices();
+      const comboPlans = data.filter(s => s.category === 'combos');
+      if (comboPlans.length > 0) {
+        setDisplayCombos(comboPlans.map(s => ({
+          name: s.name,
+          includes: s.description,
+          advantage: s.price
+        })));
+      }
+    };
+    fetchCombos();
+  }, []);
   return (
     <section className="py-12 lg:py-20 bg-blue-50">
       <div className="container mx-auto px-4 md:px-6">
@@ -14,7 +31,7 @@ const Combos: React.FC = () => {
 
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {COMBOS_CONTENT.map((combo, index) => (
+            {displayCombos.map((combo, index) => (
               <div key={index} className="bg-white rounded-xl shadow-md overflow-hidden border border-blue-100 hover:shadow-lg transition-shadow">
                 <div className="bg-brand-blue p-4 text-center">
                   <h3 className="text-white font-heading font-bold text-lg">{combo.name}</h3>
