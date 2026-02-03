@@ -59,6 +59,29 @@ export interface BlogPost {
     views?: number;
 }
 
+export interface LeadData {
+    id: string;
+    type: string;
+    data: any;
+    created_at: string;
+}
+
+export interface SwotBriefingData {
+    id: string;
+    user_id: string | null;
+    type: string;
+    data: any;
+    plan: string | null;
+    created_at: string;
+}
+
+export interface DashboardStats {
+    totalLeads: number;
+    totalBriefings: number;
+    totalPosts: number;
+    activeServices: number;
+}
+
 export interface BlogComment {
     id?: string;
     post_id: string;
@@ -106,13 +129,69 @@ class AdminService {
         return !error;
     }
 
-    async getBlogPosts(): Promise<BlogPost[]> {
-        const { data, error } = await supabase
+    async getBlogPosts(includeDrafts: boolean = true): Promise<BlogPost[]> {
+        let query = supabase
             .from('blog_posts')
+            .select('*');
+
+        if (!includeDrafts) {
+            query = query.eq('status', 'published');
+        }
+
+        const { data, error } = await query.order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Erro ao buscar posts:', error);
+            return [];
+        }
+        return data || [];
+    }
+
+    async getLeads(): Promise<LeadData[]> {
+        const { data, error } = await supabase
+            .from('leads')
             .select('*')
             .order('created_at', { ascending: false });
 
+        if (error) {
+            console.error('Erro ao buscar leads:', error);
+            return [];
+        }
         return data || [];
+    }
+
+    async getBriefings(): Promise<SwotBriefingData[]> {
+        const { data, error } = await supabase
+            .from('swot_briefings')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Erro ao buscar briefings:', error);
+            return [];
+        }
+        return data || [];
+    }
+
+    async getDashboardStats(): Promise<DashboardStats> {
+        try {
+            const [leads, briefings, posts, services] = await Promise.all([
+                supabase.from('leads').select('id', { count: 'exact', head: true }),
+                supabase.from('swot_briefings').select('id', { count: 'exact', head: true }),
+                supabase.from('blog_posts').select('id', { count: 'exact', head: true }),
+                supabase.from('services_data').select('id', { count: 'exact', head: true })
+            ]);
+
+            return {
+                totalLeads: leads.count || 0,
+                totalBriefings: briefings.count || 0,
+                totalPosts: posts.count || 0,
+                activeServices: services.count || 0
+            };
+        } catch (error) {
+            console.error('Erro ao buscar estatísticas do dashboard:', error);
+            return { totalLeads: 0, totalBriefings: 0, totalPosts: 0, activeServices: 0 };
+        }
     }
 
     async saveBlogPost(post: BlogPost): Promise<boolean> {

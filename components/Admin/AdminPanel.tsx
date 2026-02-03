@@ -4,7 +4,7 @@ import {
     Save, Plus, Trash2, Globe, MessageCircle,
     Instagram, Facebook, Youtube, Palette, Power,
     ArrowLeft, X, Check, Image as ImageIcon,
-    LogOut, ExternalLink, Star, Sparkles, Upload, Eye
+    LogOut, ExternalLink, Star, Sparkles, Upload, Eye, Users, Search
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { adminService, SiteConfig, BlogPost, ServiceData } from '../../services/adminService';
@@ -18,10 +18,13 @@ interface AdminPanelProps {
 }
 
 export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
-    const [activeTab, setActiveTab] = useState<'dashboard' | 'config' | 'blog' | 'services'>('dashboard');
+    const [activeTab, setActiveTab] = useState<'dashboard' | 'config' | 'blog' | 'services' | 'leads'>('dashboard');
     const [config, setConfig] = useState<SiteConfig | null>(null);
     const [posts, setPosts] = useState<BlogPost[]>([]);
     const [services, setServices] = useState<ServiceData[]>([]);
+    const [leads, setLeads] = useState<any[]>([]);
+    const [briefings, setBriefings] = useState<any[]>([]);
+    const [stats, setStats] = useState<any>(null);
     const [loading, setLoading] = useState(false);
 
     // Editor States
@@ -35,14 +38,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
     const loadData = async () => {
         setLoading(true);
         try {
-            const [configData, postsData, servicesData] = await Promise.all([
+            const [configData, postsData, servicesData, leadsData, briefingsData, statsData] = await Promise.all([
                 adminService.getSiteConfig(),
-                adminService.getBlogPosts(),
-                adminService.getServices()
+                adminService.getBlogPosts(true), // Admin vê rascunhos
+                adminService.getServices(),
+                adminService.getLeads(),
+                adminService.getBriefings(),
+                adminService.getDashboardStats()
             ]);
             setConfig(configData);
             setPosts(postsData || []);
             setServices(servicesData || []);
+            setLeads(leadsData || []);
+            setBriefings(briefingsData || []);
+            setStats(statsData);
         } catch (error) {
             console.error('Erro ao carregar dados:', error);
         } finally {
@@ -243,6 +252,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                     >
                         <Package size={18} /> Serviços e Preços
                     </button>
+                    <button
+                        onClick={() => { setActiveTab('leads'); setEditingPost(null); setEditingService(null); }}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'leads' ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' : 'text-gray-500 hover:bg-gray-50'}`}
+                    >
+                        <Users size={18} /> Leads e Briefings
+                    </button>
                 </nav>
 
                 <div className="p-4 border-t border-gray-100 space-y-2">
@@ -270,18 +285,63 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                             <h1 className="text-4xl font-black text-gray-900 tracking-tight">Painel de Controle</h1>
                             <p className="text-gray-500 font-medium">Gestão estratégica da MD Solution.</p>
                         </header>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-transform hover:scale-[1.02]">
                                 <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Total de Leads</p>
-                                <h3 className="text-4xl font-black text-gray-900 tracking-tighter">--</h3>
+                                <h3 className="text-4xl font-black text-gray-900 tracking-tighter">{stats?.totalLeads || 0}</h3>
+                            </div>
+                            <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-transform hover:scale-[1.02]">
+                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Briefings SWOT</p>
+                                <h3 className="text-4xl font-black text-gray-900 tracking-tighter">{stats?.totalBriefings || 0}</h3>
                             </div>
                             <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-transform hover:scale-[1.02]">
                                 <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Posts no Blog</p>
-                                <h3 className="text-4xl font-black text-gray-900 tracking-tighter">{posts.length}</h3>
+                                <h3 className="text-4xl font-black text-gray-900 tracking-tighter">{stats?.totalPosts || 0}</h3>
                             </div>
                             <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-transform hover:scale-[1.02]">
                                 <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Serviços Ativos</p>
-                                <h3 className="text-4xl font-black text-gray-900 tracking-tighter">{services.length}</h3>
+                                <h3 className="text-4xl font-black text-gray-900 tracking-tighter">{stats?.activeServices || 0}</h3>
+                            </div>
+                        </div>
+
+                        {/* Recent Activity Mini Tables */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
+                            <div className="bg-white p-8 rounded-[3rem] border border-gray-100 shadow-sm">
+                                <h4 className="font-black text-lg mb-6 flex items-center justify-between">
+                                    <span>Últimos Leads</span>
+                                    <button onClick={() => setActiveTab('leads')} className="text-xs text-blue-600 hover:underline">Ver todos</button>
+                                </h4>
+                                <div className="space-y-4">
+                                    {leads.slice(0, 5).map(lead => (
+                                        <div key={lead.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+                                            <div>
+                                                <p className="font-bold text-sm text-gray-900">{lead.data?.name || 'Lead sem nome'}</p>
+                                                <p className="text-xs text-gray-500">{lead.data?.email || '-'}</p>
+                                            </div>
+                                            <span className="text-[10px] bg-blue-100 text-blue-700 font-bold px-2 py-1 rounded-full uppercase">{lead.type}</span>
+                                        </div>
+                                    ))}
+                                    {leads.length === 0 && <p className="text-gray-400 text-center py-4">Nenhum lead encontrado.</p>}
+                                </div>
+                            </div>
+
+                            <div className="bg-white p-8 rounded-[3rem] border border-gray-100 shadow-sm">
+                                <h4 className="font-black text-lg mb-6 flex items-center justify-between">
+                                    <span>Últimos Briefings</span>
+                                    <button onClick={() => setActiveTab('leads')} className="text-xs text-blue-600 hover:underline">Ver todos</button>
+                                </h4>
+                                <div className="space-y-4">
+                                    {briefings.slice(0, 5).map(briefing => (
+                                        <div key={briefing.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+                                            <div>
+                                                <p className="font-bold text-sm text-gray-900">{briefing.data?.companyName || briefing.data?.company_name || 'Empresa'}</p>
+                                                <p className="text-xs text-gray-500">{briefing.data?.responsibleName || briefing.data?.name || '-'}</p>
+                                            </div>
+                                            <span className="text-[10px] bg-orange-100 text-orange-700 font-bold px-2 py-1 rounded-full uppercase">{briefing.plan || 'SWOT'}</span>
+                                        </div>
+                                    ))}
+                                    {briefings.length === 0 && <p className="text-gray-400 text-center py-4">Nenhum briefing encontrado.</p>}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -674,20 +734,29 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                     <div className="space-y-6">
                                         <div>
                                             <label className={labelStyles}>Título do Post</label>
-                                            <input type="text" value={editingPost.title} onChange={(e) => setEditingPost({ ...editingPost, title: e.target.value, slug: e.target.value.toLowerCase().replace(/ /g, '-') })} className={inputStyles} placeholder="Ex: Por que sua empresa não vende?" required />
+                                            <input type="text" value={editingPost.title} onChange={(e) => setEditingPost({ ...editingPost, title: e.target.value, slug: e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') })} className={inputStyles} placeholder="Ex: Por que sua empresa não vende?" required />
                                         </div>
                                         <div>
                                             <label className={labelStyles}>URL Amigável (Slug)</label>
                                             <input type="text" value={editingPost.slug} onChange={(e) => setEditingPost({ ...editingPost, slug: e.target.value })} className={inputStyles} />
                                         </div>
-                                        <div>
-                                            <label className={labelStyles}>Categoria</label>
-                                            <select value={editingPost.category} onChange={(e) => setEditingPost({ ...editingPost, category: e.target.value })} className={inputStyles}>
-                                                <option value="Marketing">Marketing</option>
-                                                <option value="Estratégia">Estratégia</option>
-                                                <option value="Vendas">Vendas</option>
-                                                <option value="Gestão">Gestão</option>
-                                            </select>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className={labelStyles}>Categoria</label>
+                                                <select value={editingPost.category} onChange={(e) => setEditingPost({ ...editingPost, category: e.target.value })} className={inputStyles}>
+                                                    <option value="Marketing">Marketing</option>
+                                                    <option value="Estratégia">Estratégia</option>
+                                                    <option value="Vendas">Vendas</option>
+                                                    <option value="Gestão">Gestão</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className={labelStyles}>Status</label>
+                                                <select value={editingPost.status} onChange={(e) => setEditingPost({ ...editingPost, status: e.target.value as any })} className={inputStyles}>
+                                                    <option value="published">Publicado</option>
+                                                    <option value="draft">Rascunho</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="space-y-6">
@@ -695,7 +764,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                             <label className={labelStyles}>Imagem de Capa (URL / Upload)</label>
                                             <div className="flex gap-4 items-center">
                                                 <div className="relative flex-1">
-                                                    <input type="text" value={editingPost.featured_image} onChange={(e) => setEditingPost({ ...editingPost, featured_image: e.target.value })} className={inputStyles + " pr-10"} placeholder="https://..." />
+                                                    <input type="text" value={editingPost.featured_image || ''} onChange={(e) => setEditingPost({ ...editingPost, featured_image: e.target.value })} className={inputStyles + " pr-10"} placeholder="https://..." />
                                                     <button
                                                         type="button"
                                                         onClick={() => {
@@ -712,13 +781,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                                             input.click();
                                                         }}
                                                         className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-700"
-                                                        title="Carregar do computador"
                                                     >
                                                         <Upload size={18} />
                                                     </button>
                                                 </div>
                                                 <div className="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center shrink-0 border border-gray-200 overflow-hidden shadow-sm">
-                                                    {editingPost.featured_image ? <img src={editingPost.featured_image} className="w-full h-full object-cover" /> : <ImageIcon className="text-gray-300" />}
+                                                    {editingPost.featured_image ? <img src={editingPost.featured_image} className="w-full h-full object-cover" alt="" /> : <ImageIcon className="text-gray-300" />}
                                                 </div>
                                             </div>
                                         </div>
@@ -734,34 +802,41 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                     <RichTextEditor
                                         value={editingPost.content}
                                         onChange={(val) => setEditingPost({ ...editingPost, content: val })}
-                                        placeholder="Escreva seu artigo aqui... Use a barra de ferramentas acima para formatar."
+                                        placeholder="Escreva seu artigo aqui..."
                                     />
-                                    <p className="text-[10px] text-gray-400 mt-2 italic">* O editor insere tags HTML automaticamente para garantir a formatação correta no site.</p>
                                 </div>
                             </form>
                         ) : (
                             <div className="space-y-8 animate-fade-in">
-                                <header className="flex justify-between items-center">
+                                <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                                     <div>
                                         <h1 className="text-4xl font-black text-gray-900 tracking-tight">Blog</h1>
                                         <p className="text-gray-500 font-medium">Crie autoridade e atraia clientes com conteúdo.</p>
                                     </div>
-                                    <Button onClick={() => setEditingPost({ title: '', slug: '', content: '', excerpt: '', featured_image: '', category: 'Marketing', status: 'published' })} variant="primary" className="px-8 py-4 rounded-2xl flex items-center gap-2 shadow-lg">
-                                        <Plus size={18} /> Novo Post
-                                    </Button>
+                                    <div className="flex gap-4 w-full md:w-auto">
+                                        <div className="relative flex-1 md:w-64">
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                                            <input
+                                                type="text"
+                                                placeholder="Buscar posts..."
+                                                className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-2xl text-sm focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
+                                                onChange={(e) => {
+                                                    const term = e.target.value.toLowerCase();
+                                                    // Aqui poderíamos filtrar o estado local 'posts'
+                                                }}
+                                            />
+                                        </div>
+                                        <Button onClick={() => setEditingPost({ title: '', slug: '', content: '', excerpt: '', featured_image: '', category: 'Marketing', status: 'published' })} variant="primary" className="px-8 py-3 rounded-2xl flex items-center gap-2 shadow-lg whitespace-nowrap">
+                                            <Plus size={18} /> Novo Post
+                                        </Button>
+                                    </div>
                                 </header>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {posts.length === 0 && (
-                                        <div className="col-span-full py-20 text-center bg-white rounded-[3rem] border border-gray-100 shadow-inner">
-                                            <ImageIcon size={48} className="mx-auto text-gray-200 mb-4" />
-                                            <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">Nenhum post hoje.</p>
-                                        </div>
-                                    )}
                                     {posts.map(post => (
-                                        <div key={post.id} className="bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 group">
+                                        <div key={post.id} className="bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all group">
                                             <div className="h-40 overflow-hidden relative">
-                                                <img src={post.featured_image || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80'} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                                <img src={post.featured_image || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80'} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="" />
                                                 <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${post.status === 'published' ? 'bg-green-500 text-white' : 'bg-gray-400 text-white'}`}>
                                                     {post.status}
                                                 </div>
@@ -771,14 +846,21 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                                 <p className="text-xs text-gray-400 mb-6">{new Date(post.created_at || '').toLocaleDateString('pt-BR')}</p>
                                                 <div className="flex justify-between items-center border-t border-gray-50 pt-6">
                                                     <div className="flex gap-4">
-                                                        <button onClick={() => setEditingPost(post)} className="text-blue-600 font-bold text-xs uppercase tracking-widest flex items-center gap-1 hover:text-blue-700">Editar <Check size={14} /></button>
-                                                        <button onClick={() => post.slug && onNavigate && onNavigate('blog-post', { slug: post.slug })} className="text-purple-600 font-bold text-xs uppercase tracking-widest flex items-center gap-1 hover:text-purple-700">Visualizar <Eye size={14} /></button>
+                                                        <button onClick={() => setEditingPost(post)} className="text-blue-600 font-bold text-[10px] uppercase tracking-widest flex items-center gap-1 hover:text-blue-700 transition-colors">
+                                                            <Settings size={14} /> Editar
+                                                        </button>
+                                                        <button onClick={() => post.slug && onNavigate && onNavigate('blog-post', { slug: post.slug })} className="text-purple-600 font-bold text-[10px] uppercase tracking-widest flex items-center gap-1 hover:text-purple-700 transition-colors">
+                                                            <Eye size={14} /> Ver
+                                                        </button>
                                                     </div>
-                                                    <button onClick={() => post.id && handleDeletePost(post.id)} className="text-red-400 font-bold text-xs uppercase tracking-widest flex items-center gap-1 hover:text-red-600">Excluir <X size={14} /></button>
+                                                    <button onClick={() => post.id && handleDeletePost(post.id)} className="text-red-300 font-bold text-[10px] uppercase tracking-widest flex items-center gap-1 hover:text-red-500 transition-colors">
+                                                        <Trash2 size={14} /> Excluir
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
                                     ))}
+                                    {posts.length === 0 && <div className="col-span-full py-20 text-center text-gray-400 italic">Nenhum post encontrado.</div>}
                                 </div>
                             </div>
                         )}
@@ -802,7 +884,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div className="space-y-6">
                                         <div>
-                                            <label className={labelStyles}>Nome do Pacote/Serviço</label>
+                                            <label className={labelStyles}>Nome do Serviço/Pacote</label>
                                             <input type="text" value={editingService.name} onChange={(e) => setEditingService({ ...editingService, name: e.target.value })} className={inputStyles} placeholder="Ex: Pacote Essencial" required />
                                         </div>
                                         <div>
@@ -849,13 +931,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                             </div>
 
                                             <div>
-                                                <label className={labelStyles}>Info Extra (Verba de Anúncio / Vantagem Combo)</label>
+                                                <label className={labelStyles}>Info Extra (Verba / Vantagem)</label>
                                                 <input type="text" value={editingService.extra_info || ''} onChange={(e) => setEditingService({ ...editingService, extra_info: e.target.value })} className={inputStyles} placeholder="Ex: Verba sugerida R$ 750/mês" />
                                             </div>
 
                                             <label className="flex items-center gap-3 cursor-pointer group">
-                                                <input type="checkbox" checked={editingService.is_highlighted} onChange={(e) => setEditingService({ ...editingService, is_highlighted: e.target.checked })} className="w-5 h-5 rounded-lg accent-brand-blue" />
-                                                <span className="text-sm font-bold text-gray-700 group-hover:text-brand-blue transition-colors">Destacar este card no site</span>
+                                                <input type="checkbox" checked={editingService.is_highlighted} onChange={(e) => setEditingService({ ...editingService, is_highlighted: e.target.checked })} className="w-5 h-5 rounded-lg accent-blue-600" />
+                                                <span className="text-sm font-bold text-gray-700 group-hover:text-blue-600 transition-colors">Destacar este card no site</span>
                                             </label>
                                         </div>
                                     </div>
@@ -865,24 +947,41 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                             <label className={labelStyles}>Descrição Completa</label>
                                             <textarea value={editingService.description} onChange={(e) => setEditingService({ ...editingService, description: e.target.value })} className={inputStyles + " h-32 resize-none"} placeholder="Descreva os benefícios do serviço..." />
                                         </div>
+
                                         <div>
-                                            <label className={labelStyles}>Itens Inclusos (Features)</label>
-                                            <div className="space-y-2">
-                                                {editingService.features.map((f, i) => (
-                                                    <div key={i} className="flex gap-2">
-                                                        <input type="text" value={f} onChange={(e) => {
-                                                            const newF = [...editingService.features];
-                                                            newF[i] = e.target.value;
-                                                            setEditingService({ ...editingService, features: newF });
-                                                        }} className={inputStyles} />
-                                                        <button type="button" onClick={() => {
-                                                            const newF = editingService.features.filter((_, idx) => idx !== i);
-                                                            setEditingService({ ...editingService, features: newF });
-                                                        }} className="p-3 text-red-500 hover:bg-red-50 rounded-xl transition-colors"><X size={16} /></button>
+                                            <label className={labelStyles}>Componentes do Pacote (Features)</label>
+                                            <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                                                {editingService.features.map((feature, index) => (
+                                                    <div key={index} className="flex gap-2">
+                                                        <input
+                                                            type="text"
+                                                            value={feature}
+                                                            onChange={(e) => {
+                                                                const newFeatures = [...editingService.features];
+                                                                newFeatures[index] = e.target.value;
+                                                                setEditingService({ ...editingService, features: newFeatures });
+                                                            }}
+                                                            className={inputStyles}
+                                                            placeholder="Ex: Gestão de 3 redes sociais"
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                const newFeatures = editingService.features.filter((_, i) => i !== index);
+                                                                setEditingService({ ...editingService, features: newFeatures });
+                                                            }}
+                                                            className="p-2 text-red-400 hover:text-red-600 transition-colors"
+                                                        >
+                                                            <Trash2 size={18} />
+                                                        </button>
                                                     </div>
                                                 ))}
-                                                <button type="button" onClick={() => setEditingService({ ...editingService, features: [...editingService.features, ''] })} className="text-xs font-black text-blue-600 hover:text-blue-800 flex items-center gap-1 mt-2 p-2 hover:bg-blue-50 rounded-lg transition-all w-fit">
-                                                    <Plus size={14} /> Adicionar Benefício
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setEditingService({ ...editingService, features: [...editingService.features, ''] })}
+                                                    className="w-full py-3 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 font-bold text-xs hover:border-blue-400 hover:text-blue-400 transition-all flex items-center justify-center gap-2"
+                                                >
+                                                    <Plus size={14} /> Adicionar Componente
                                                 </button>
                                             </div>
                                         </div>
@@ -894,8 +993,56 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                         )}
                     </div>
                 )}
-            </main >
-        </div >
+
+                {/* LEADS E BRIEFINGS */}
+                {activeTab === 'leads' && (
+                    <div className="space-y-8 animate-fade-in">
+                        <header>
+                            <h1 className="text-4xl font-black text-gray-900 tracking-tight">Leads e Briefings</h1>
+                            <p className="text-gray-500 font-medium">Controle de contatos recebidos.</p>
+                        </header>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div className="bg-white p-8 rounded-[3rem] border border-gray-100 shadow-sm">
+                                <h3 className="font-black text-xl mb-6 flex items-center gap-2">
+                                    <MessageCircle className="text-blue-600" /> Contatos do Rodapé
+                                </h3>
+                                <div className="space-y-4">
+                                    {leads.map(lead => (
+                                        <div key={lead.id} className="p-6 bg-gray-50 rounded-[2rem] border border-gray-100">
+                                            <div className="flex justify-between items-start mb-2">
+                                                <h4 className="font-bold text-gray-900">{lead.data?.name || 'Cliente'}</h4>
+                                                <span className="text-[10px] text-gray-400">{new Date(lead.created_at).toLocaleDateString('pt-BR')}</span>
+                                            </div>
+                                            <p className="text-sm text-gray-600">{lead.data?.email} | {lead.data?.phone}</p>
+                                        </div>
+                                    ))}
+                                    {leads.length === 0 && <p className="text-gray-400 text-center py-8 italic">Nenhum lead.</p>}
+                                </div>
+                            </div>
+
+                            <div className="bg-white p-8 rounded-[3rem] border border-gray-100 shadow-sm">
+                                <h3 className="font-black text-xl mb-6 flex items-center gap-2">
+                                    <FileText className="text-orange-600" /> Briefings SWOT
+                                </h3>
+                                <div className="space-y-4">
+                                    {briefings.map(briefing => (
+                                        <div key={briefing.id} className="p-6 bg-gray-50 rounded-[2rem] border border-gray-100">
+                                            <div className="flex justify-between items-start mb-2">
+                                                <h4 className="font-bold text-gray-900">{briefing.data?.companyName || 'Empresa'}</h4>
+                                                <span className="text-[10px] text-gray-400">{new Date(briefing.created_at).toLocaleDateString('pt-BR')}</span>
+                                            </div>
+                                            <p className="text-sm text-gray-600">{briefing.data?.email}</p>
+                                        </div>
+                                    ))}
+                                    {briefings.length === 0 && <p className="text-gray-400 text-center py-8 italic">Nenhum briefing.</p>}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </main>
+        </div>
     );
 };
 
