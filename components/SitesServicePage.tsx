@@ -27,8 +27,8 @@ const SitesServicePage: React.FC = () => {
   return (
     <div className="pt-0 pb-12 lg:pb-24 font-sans">
       {/* Hero */}
-      <section className="pt-40 md:pt-48 lg:pt-56 pb-12 lg:pb-32 bg-gray-50 overflow-hidden">
-        <div className="container mx-auto px-4 md:px-6">
+      <section className="pt-8 lg:pt-12 pb-12 lg:pb-32 bg-gray-50 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <div className="inline-flex items-center gap-2 bg-blue-100 text-brand-blue px-4 py-2 rounded-full mb-6 font-bold text-xs uppercase tracking-widest">
@@ -69,7 +69,7 @@ const SitesServicePage: React.FC = () => {
 
       {/* Differentials */}
       <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <SectionTitle
             title="O que um site da MD Solution tem de diferente?"
             subtitle="Construímos pensando no algoritmo do Google e na experiência do seu cliente."
@@ -95,7 +95,7 @@ const SitesServicePage: React.FC = () => {
 
       {/* Simple Checklist */}
       <section className="py-24 bg-brand-darkBlue text-white">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-12 text-center">Tudo o que está incluso:</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -121,7 +121,7 @@ const SitesServicePage: React.FC = () => {
 
       {/* Final CTA */}
       <section className="py-24">
-        <div className="container mx-auto px-4 text-center">
+        <div className="max-w-7xl mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-5xl font-heading font-bold text-gray-900 mb-8">Sua empresa na primeira prateleira.</h2>
           <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">Um site profissional é o primeiro passo para parar de ser visto como um amador e começar a ser visto como uma autoridade.</p>
           <Button onClick={scrollToContact} variant="primary" className="px-12 py-5 text-lg">

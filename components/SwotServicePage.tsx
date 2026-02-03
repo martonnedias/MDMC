@@ -15,8 +15,8 @@ const SwotServicePage: React.FC<SwotServicePageProps> = ({ onSelectPlan }) => {
   return (
     <div className="pt-0 pb-12 lg:pb-24 font-sans">
       {/* Hero */}
-      <section className="relative pt-40 md:pt-48 lg:pt-56 pb-12 lg:pb-32 overflow-hidden bg-gradient-to-br from-brand-darkBlue to-blue-900 text-white">
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
+      <section className="relative pt-8 lg:pt-12 pb-12 lg:pb-32 overflow-hidden bg-gradient-to-br from-brand-darkBlue to-blue-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full mb-6 font-bold text-xs uppercase tracking-widest border border-white/10">
               <ShieldCheck size={14} className="text-brand-orange" /> Auditoria Empresarial
@@ -42,7 +42,7 @@ const SwotServicePage: React.FC<SwotServicePageProps> = ({ onSelectPlan }) => {
 
       {/* Concept */}
       <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-3xl md:text-4xl font-heading font-bold text-gray-900 mb-6">O que é a Análise SWOT Audit?</h2>

@@ -42,8 +42,8 @@ const AdsServicePage: React.FC = () => {
   return (
     <div className="pt-0 pb-0 font-sans">
       {/* Hero */}
-      <section className="relative pt-40 md:pt-48 lg:pt-56 pb-12 lg:pb-32 overflow-hidden bg-gradient-to-br from-brand-darkBlue via-brand-navy to-brand-darkBlue text-white">
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
+      <section className="relative pt-8 lg:pt-12 pb-12 lg:pb-32 overflow-hidden bg-gradient-to-br from-brand-darkBlue via-brand-navy to-brand-darkBlue text-white">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full mb-6 font-bold text-xs uppercase tracking-widest border border-white/10 backdrop-blur-md">
               <Megaphone size={14} className="text-brand-orange animate-pulse" /> Performance & Vendas
@@ -69,7 +69,7 @@ const AdsServicePage: React.FC = () => {
 
       {/* Benefits */}
       <section className="py-24 bg-brand-blueLight/30">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <SectionTitle
             title="Como nossa gestão acelera seu caixa"
             subtitle="Não focamos em curtidas. Focamos em cliques que viram orçamentos no seu WhatsApp."
@@ -94,7 +94,7 @@ const AdsServicePage: React.FC = () => {
 
       {/* Pricing / Plans */}
       <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <SectionTitle
             title="Planos de Gestão de Anúncios"
             subtitle="Escolha o fôlego que seu negócio precisa hoje."
@@ -154,7 +154,7 @@ const AdsServicePage: React.FC = () => {
 
       {/* CTA Final */}
       <section className="py-24 bg-brand-blueLight/30">
-        <div className="container mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-4">
           <div className="bg-gradient-to-br from-brand-orange to-brand-orangeHover p-12 lg:p-20 rounded-[4rem] text-center text-white shadow-2xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl group-hover:scale-125 transition-transform duration-1000"></div>
             <h2 className="text-3xl md:text-5xl font-heading font-bold mb-6 relative z-10">Pronto para dominar seu mercado local?</h2>

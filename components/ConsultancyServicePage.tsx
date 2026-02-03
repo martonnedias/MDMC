@@ -31,9 +31,9 @@ const ConsultancyServicePage: React.FC = () => {
   return (
     <div className="pt-0 pb-12 lg:pb-24 font-sans focus:outline-none">
       {/* Hero */}
-      <section className="pt-40 md:pt-48 lg:pt-56 pb-12 lg:pb-32 bg-brand-darkBlue text-white overflow-hidden relative">
+      <section className="pt-8 lg:pt-12 pb-12 lg:pb-32 bg-brand-darkBlue text-white overflow-hidden relative">
         <div className="absolute top-0 left-0 w-full h-full bg-[url(&quot;data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E&quot;)] opacity-40"></div>
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <div className="inline-flex items-center gap-2 bg-brand-blue px-4 py-2 rounded-full mb-6 border border-blue-400">
@@ -77,7 +77,7 @@ const ConsultancyServicePage: React.FC = () => {
 
       {/* Scope */}
       <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <SectionTitle
             title="O que vamos construir juntos"
             subtitle="Uma imersão completa na sua operação comercial para tirar os gargalos que impedem você de escalar."
@@ -95,7 +95,7 @@ const ConsultancyServicePage: React.FC = () => {
 
       {/* Benefits / Methodology */}
       <section className="py-24 bg-gray-50">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="max-w-5xl mx-auto flex flex-col lg:flex-row gap-12 items-center">
             <div className="lg:w-1/2">
               <h3 className="text-3xl font-heading font-bold text-gray-900 mb-6">Por que contratar a Consultoria?</h3>
@@ -137,7 +137,7 @@ const ConsultancyServicePage: React.FC = () => {
 
       {/* Final CTA */}
       <section className="py-24">
-        <div className="container mx-auto px-4 text-center">
+        <div className="max-w-7xl mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-5xl font-heading font-bold text-gray-900 mb-6">Acelere seu faturamento real.</h2>
           <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">Vendas é uma ciência. Vamos aplicar os métodos mais modernos do mercado na sua realidade.</p>
           <Button onClick={scrollToContact} variant="primary" className="px-12 py-5 text-lg">

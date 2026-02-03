@@ -35,8 +35,8 @@ const MarketingDiagnosisPage: React.FC<MarketingDiagnosisPageProps> = ({ onStart
   return (
     <div className="pt-0 pb-12 lg:pb-24 font-sans">
       {/* Hero with Lead Gate */}
-      <section className="pt-40 md:pt-48 lg:pt-56 pb-12 lg:pb-32 bg-gray-50 overflow-hidden">
-        <div className="container mx-auto px-4 md:px-6">
+      <section className="pt-8 lg:pt-12 pb-12 lg:pb-32 bg-gray-50 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <div className="inline-flex items-center gap-2 bg-blue-100 text-brand-blue px-4 py-2 rounded-full mb-6 font-bold text-xs uppercase tracking-widest border border-blue-200">
@@ -122,7 +122,7 @@ const MarketingDiagnosisPage: React.FC<MarketingDiagnosisPageProps> = ({ onStart
 
       {/* Why it works */}
       <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <SectionTitle
             title="O que analisamos no seu Diagnóstico?"
             subtitle="Nosso sistema de inteligência audita os pilares que geram faturamento no digital."
@@ -150,7 +150,7 @@ const MarketingDiagnosisPage: React.FC<MarketingDiagnosisPageProps> = ({ onStart
 
       {/* How it works Step by Step */}
       <section className="py-24 bg-brand-darkBlue text-white">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-16 text-center">Como funciona o processo</h2>
             <div className="space-y-12">
@@ -175,7 +175,7 @@ const MarketingDiagnosisPage: React.FC<MarketingDiagnosisPageProps> = ({ onStart
 
       {/* Final CTA */}
       <section className="py-24 text-center">
-        <div className="container mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-5xl font-heading font-bold mb-6">Pare de adivinhar. Comece a medir.</h2>
           <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">Mais de 100 empresas já utilizaram nosso diagnóstico para redefinir suas estratégias de marketing digital.</p>
           <Button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} variant="primary" className="px-12 py-5 text-lg" withIcon>

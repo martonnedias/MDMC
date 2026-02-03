@@ -21,7 +21,7 @@ const Hero: React.FC<HeroProps> = ({ onStartBriefing, onStartSwot }) => {
   const ctaText = config.content?.hero_cta || HERO_CONTENT.cta;
 
   return (
-    <section className="relative pt-32 lg:pt-48 pb-20 lg:pb-32 overflow-hidden text-white">
+    <section className="relative pt-8 lg:pt-12 pb-20 lg:pb-32 overflow-hidden text-white">
       {/* Background Elements - Always Blue Gradient for Hero Identity */}
       <div
         className="absolute inset-0 z-0 pointer-events-none"
@@ -30,7 +30,7 @@ const Hero: React.FC<HeroProps> = ({ onStartBriefing, onStartSwot }) => {
         }}
       ></div>
 
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
 
           {/* Left Column: Text and Buttons */}

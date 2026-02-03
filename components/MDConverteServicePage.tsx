@@ -63,7 +63,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
         <div className="min-h-screen bg-gradient-to-b from-[#F5F7FA] to-white">
 
             {/* HERO SECTION */}
-            <section className="relative pt-24 lg:pt-32 pb-20 lg:pb-32 px-4 overflow-hidden">
+            <section className="relative pt-8 lg:pt-12 pb-20 lg:pb-32 px-4 overflow-hidden">
                 {/* Background Pattern */}
                 <div className="absolute inset-0 opacity-5">
                     <div className="absolute top-20 left-10 w-72 h-72 bg-[#FF7A2F] rounded-full blur-3xl"></div>

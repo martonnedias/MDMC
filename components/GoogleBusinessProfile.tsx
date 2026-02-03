@@ -43,8 +43,8 @@ const GoogleBusinessProfile: React.FC = () => {
   return (
     <div className="pt-0 pb-12 lg:pb-24 font-sans bg-white min-h-screen">
       {/* Hero Section */}
-      <section className="relative pt-40 md:pt-48 lg:pt-56 pb-12 lg:pb-32 overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-50/30">
-        <div className="container mx-auto px-4 md:px-6">
+      <section className="relative pt-8 lg:pt-12 pb-12 lg:pb-32 overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-50/30">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="z-10 animate-fade-in">
               <div className="inline-flex items-center gap-2 bg-blue-100 text-brand-blue px-4 py-2 rounded-full mb-6 font-bold text-xs uppercase tracking-widest border border-blue-200">
@@ -106,7 +106,7 @@ const GoogleBusinessProfile: React.FC = () => {
 
       {/* Importance Section */}
       <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <SectionTitle
             title={GMB_CONTENT.importance.title}
             subtitle={GMB_CONTENT.importance.description}
@@ -126,7 +126,7 @@ const GoogleBusinessProfile: React.FC = () => {
 
       {/* Funcionalidades da ferramenta - imagens ilustrativas */}
       <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <SectionTitle
             title="Funcionalidades do Google Meu Negócio"
             subtitle="Recursos que ajudam seu negócio a aparecer e converter nas buscas locais."
@@ -191,7 +191,7 @@ const GoogleBusinessProfile: React.FC = () => {
 
       {/* Info Checklist Section */}
       <section className="py-24 bg-gray-50">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="max-w-5xl mx-auto bg-white rounded-[3rem] shadow-xl overflow-hidden border border-gray-100 flex flex-col lg:flex-row">
             <div className="lg:w-1/2 p-10 md:p-16 bg-brand-darkBlue text-white flex flex-col justify-center">
               <Sparkles className="text-brand-orange mb-6" size={40} />
@@ -220,7 +220,7 @@ const GoogleBusinessProfile: React.FC = () => {
 
       {/* Process Step-by-Step */}
       <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <SectionTitle
             title={GMB_CONTENT.process.title}
             subtitle="Simplificamos tudo para você não se preocupar com nada técnico."
@@ -243,7 +243,7 @@ const GoogleBusinessProfile: React.FC = () => {
       {/* Results & Case */}
       <section className="py-24 bg-brand-darkBlue text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-blue/20 rounded-full -mr-48 -mt-48 blur-3xl"></div>
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-3xl md:text-4xl font-heading font-bold mb-10">{GMB_CONTENT.results.title}</h2>
@@ -275,7 +275,7 @@ const GoogleBusinessProfile: React.FC = () => {
 
       {/* Packages Section */}
       <section className="py-24 bg-gray-50">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <SectionTitle
             title="Escolha sua estratégia de visibilidade"
             subtitle="Temos a solução ideal para o seu momento."
@@ -308,7 +308,7 @@ const GoogleBusinessProfile: React.FC = () => {
 
       {/* FAQ Specific */}
       <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <SectionTitle title="Dúvidas sobre o Google Meu Negócio" />
           <div className="max-w-3xl mx-auto space-y-4 mt-16">
             {GMB_CONTENT.faqs.map((faq, i) => (
@@ -325,7 +325,7 @@ const GoogleBusinessProfile: React.FC = () => {
 
       {/* Final CTA */}
       <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="max-w-5xl mx-auto bg-gradient-to-br from-brand-blue to-brand-darkBlue p-12 md:p-20 rounded-[4rem] text-white text-center relative overflow-hidden shadow-2xl">
             <div className="absolute top-0 left-0 w-full h-full bg-[url(&quot;data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E&quot;)] opacity-40"></div>
             <div className="relative z-10">

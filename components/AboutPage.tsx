@@ -14,9 +14,9 @@ const AboutPage: React.FC = () => {
   return (
     <div className="pt-0 font-sans">
       {/* Manifesto Hero */}
-      <section className="pt-40 md:pt-48 lg:pt-56 pb-12 lg:pb-32 bg-brand-darkBlue text-white relative overflow-hidden">
+      <section className="pt-8 lg:pt-12 pb-12 lg:pb-32 bg-brand-darkBlue text-white relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[url(&quot;data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E&quot;)] opacity-40"></div>
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="max-w-4xl animate-fade-in">
               <div className="inline-flex items-center gap-2 bg-brand-orange/20 text-brand-orange px-4 py-1.5 rounded-full mb-8 font-black text-[10px] uppercase tracking-widest border border-brand-orange/30 shadow-lg">
@@ -52,7 +52,7 @@ const AboutPage: React.FC = () => {
 
       {/* Visão, Missão e Valores */}
       <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="bg-gray-50 p-10 rounded-[2.5rem] border border-gray-100 flex flex-col items-start gap-6 hover:shadow-xl transition-all duration-500">
               <div className="w-14 h-14 bg-brand-blue text-white rounded-2xl flex items-center justify-center shadow-lg"><Target size={28} /></div>
@@ -81,7 +81,7 @@ const AboutPage: React.FC = () => {
 
       {/* Os 4 Pilares da Transparência Radical */}
       <section className="py-24 bg-gray-50/50">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <SectionTitle
             title="A Transparência como Fundação"
             subtitle="Na MD Solution, a honestidade não é um diferencial, é o pré-requisito."
@@ -128,7 +128,7 @@ const AboutPage: React.FC = () => {
 
       {/* Seção Compromisso */}
       <section className="py-24">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="max-w-5xl mx-auto flex flex-col lg:flex-row items-center gap-16">
             <div className="lg:w-1/2 relative">
               <div className="absolute -inset-4 bg-brand-blue/5 rounded-[4rem] -rotate-3 blur-2xl"></div>
@@ -167,7 +167,7 @@ const AboutPage: React.FC = () => {
       {/* Selo de Integridade */}
       <section className="py-24 bg-brand-darkBlue text-white text-center relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[url(&quot;data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E&quot;)] opacity-40"></div>
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto">
             <ShieldCheck size={64} className="text-brand-orange mx-auto mb-8 animate-pulse" />
             <h2 className="text-3xl md:text-5xl font-heading font-bold mb-6">Compromisso MD Solution</h2>
