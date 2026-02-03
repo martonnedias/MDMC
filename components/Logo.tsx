@@ -12,9 +12,9 @@ const Logo: React.FC<LogoProps> = ({ className = '', size = 'md', variant = 'dar
   const { config } = useSiteConfig();
   // Configuração de alturas máximas (max-height) conforme especificado pelo usuário
   const heights = {
-    sm: 'max-h-[50px] w-auto h-auto',  // Scrolled Header
-    md: 'max-h-[70px] w-auto h-auto',  // Static Header
-    lg: 'max-h-[90px] w-auto h-auto'   // Footer
+    sm: 'max-h-[100px] max-w-[100px] w-auto h-auto',  // Scrolled Header
+    md: 'max-h-[100px] max-w-[100px] w-auto h-auto',  // Static Header
+    lg: 'max-h-[120px] max-w-[120px] w-auto h-auto'   // Footer
   };
 
   // Seleção automática do arquivo de imagem com base na variante

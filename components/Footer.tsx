@@ -232,6 +232,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
           <div>
             <h4 className="font-heading font-bold text-sm mb-8 text-white uppercase tracking-[0.2em] opacity-50">Soluções</h4>
             <ul className="space-y-4 text-gray-400 text-sm font-medium">
+              <li><a href="#" onClick={(e) => handleLinkClick(e, 'md-converte')} className="hover:text-brand-blue transition-colors">MD Converte</a></li>
               <li><a href="#" onClick={(e) => handleLinkClick(e, 'gmb')} className="hover:text-brand-blue transition-colors">Google Meu Negócio</a></li>
               <li><a href="#" onClick={(e) => handleLinkClick(e, 'ads')} className="hover:text-brand-blue transition-colors">Tráfego Pago (Anúncios)</a></li>
               <li><a href="#" onClick={(e) => handleLinkClick(e, 'sites')} className="hover:text-brand-blue transition-colors">Sites & Landing Pages</a></li>
