@@ -135,7 +135,11 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
   const isDarkPage = ['landing', 'ads', 'consultancy', 'about', 'swot-service', 'blog-post'].includes(currentView);
 
   // Dynamic classes based on background state (altura fixa em todas as páginas)
-  const headerBgClass = 'bg-white/90 shadow-[0_10px_30px_rgba(0,0,0,0.1)]';
+  const headerBgClass = isSolid
+    ? 'bg-white/95 shadow-[0_10px_30px_rgba(0,0,0,0.1)]'
+    : currentView === 'landing'
+      ? 'bg-transparent shadow-[0_10px_40px_rgba(0,0,0,0.4)]'
+      : 'bg-white/95 shadow-[0_10px_30px_rgba(0,0,0,0.1)]';
 
   // When solid (scrolled), we always use darkBlue text on white background.
   // When transparent, we use white on dark pages and darkBlue on light pages.

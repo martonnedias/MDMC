@@ -138,7 +138,7 @@ const AppContent: React.FC = () => {
     <div className="font-sans antialiased text-gray-900 bg-white min-h-screen flex flex-col w-full overflow-x-hidden">
       {currentView !== 'admin' && <Header currentView={currentView} onNavigate={navigateTo} />}
 
-      <main id="main-content" role="main" aria-label="Conteúdo principal" className="flex-grow pt-24 lg:pt-32">
+      <main id="main-content" role="main" aria-label="Conteúdo principal" className={`flex-grow ${currentView !== 'landing' ? 'pt-24 lg:pt-32' : 'pt-0'}`}>
         {currentView === 'landing' && (
           <>
             <Hero
