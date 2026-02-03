@@ -92,8 +92,14 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 root.style.setProperty('--bg-card', config.theme.colors.card_background || '#f9fafb');
                 root.style.setProperty('--bg-header', config.theme.colors.header_background || '#ffffff');
                 root.style.setProperty('--bg-footer', config.theme.colors.footer_background || '#112240');
+                root.style.setProperty('--bg-top', config.theme.colors.top_background || config.theme.colors.background || '#ffffff');
+                root.style.setProperty('--bg-mid', config.theme.colors.mid_background || config.theme.colors.background || '#ffffff');
+
                 root.style.setProperty('--text-primary', config.theme.colors.text_primary || '#111827');
                 root.style.setProperty('--text-secondary', config.theme.colors.text_secondary || '#6b7280');
+                root.style.setProperty('--color-title', config.theme.colors.title_color || config.theme.colors.text_primary || '#111827');
+                root.style.setProperty('--color-subtitle', config.theme.colors.subtitle_color || config.theme.colors.text_secondary || '#6b7280');
+                root.style.setProperty('--color-content', config.theme.colors.content_color || config.theme.colors.text_primary || '#111827');
             }
 
             // Tipografia (se necessário carregar fontes externas, seria aqui ou no HTML)
@@ -104,8 +110,19 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 root.style.setProperty('--font-sans', fontFamily);
                 root.style.setProperty('--font-heading', headingFont);
 
+                if (config.theme.typography.base_font_size) root.style.setProperty('--font-size-base', config.theme.typography.base_font_size);
+                if (config.theme.typography.heading_font_size) root.style.setProperty('--font-size-heading', config.theme.typography.heading_font_size);
+                if (config.theme.typography.subtitle_font_size) root.style.setProperty('--font-size-subtitle', config.theme.typography.subtitle_font_size);
+
                 // Carregar fonte dinamicamente do Google Fonts se não for padrão
-                if (fontFamily !== 'Inter' || headingFont !== 'Poppins') {
+                const sectionFonts = Object.values(config.content?.sections || {})
+                    .map((s: any) => s.font_family)
+                    .filter(f => f && !['Inter', 'Poppins', 'sans-serif'].includes(f));
+
+                const allFonts = Array.from(new Set([fontFamily, headingFont, ...sectionFonts]))
+                    .filter(f => f && !['Inter', 'Poppins', 'sans-serif'].includes(f));
+
+                if (allFonts.length > 0) {
                     const linkId = 'dynamic-fonts';
                     let link = document.getElementById(linkId) as HTMLLinkElement;
 
@@ -116,11 +133,8 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         document.head.appendChild(link);
                     }
 
-                    const fonts = [fontFamily, headingFont].filter(f => !['Inter', 'Poppins', 'sans-serif'].includes(f));
-                    if (fonts.length > 0) {
-                        const query = fonts.map(f => `family=${f.replace(/ /g, '+')}:wght@300;400;500;600;700`).join('&');
-                        link.href = `https://fonts.googleapis.com/css2?${query}&display=swap`;
-                    }
+                    const query = allFonts.map(f => `family=${f.replace(/ /g, '+')}:wght@300;400;500;600;700;800;900`).join('&');
+                    link.href = `https://fonts.googleapis.com/css2?${query}&display=swap`;
                 }
             }
 

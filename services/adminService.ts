@@ -8,8 +8,13 @@ export interface SiteConfig {
     instagram_url: string;
     facebook_url: string;
     youtube_url: string;
+    tiktok_url?: string;
+    telegram_url?: string;
+    linkedin_url?: string;
+    email?: string;
     primary_color: string;
     secondary_color: string;
+    slogan?: string;
     is_blog_active: boolean;
     is_swot_active: boolean;
     logo_url?: string;
@@ -19,12 +24,21 @@ export interface SiteConfig {
             card_background: string;
             header_background: string;
             footer_background: string;
+            top_background?: string;
+            mid_background?: string;
             text_primary: string;
             text_secondary: string;
+            title_color?: string;
+            subtitle_color?: string;
+            content_color?: string;
+            accent_color?: string;
         };
         typography?: {
             font_family: string;
             heading_font: string;
+            base_font_size?: string;
+            heading_font_size?: string;
+            subtitle_font_size?: string;
         };
         border_radius?: string;
     };
@@ -32,13 +46,31 @@ export interface SiteConfig {
         hero_title?: string;
         hero_subtitle?: string;
         hero_cta?: string;
+        hero_image?: string;
+        hero_background_color?: string;
+        hero_title_color?: string;
+        footer_text?: string;
         sections?: {
             [key: string]: {
                 title?: string;
                 subtitle?: string;
+                description?: string;
                 background_color?: string;
                 text_color?: string;
+                title_color?: string;
+                subtitle_color?: string;
                 button_text?: string;
+                button_link?: string;
+                image_url?: string;
+                is_active?: boolean;
+                price?: string;
+                package_info?: string;
+                font_family?: string;
+                font_size_title?: string;
+                font_size_subtitle?: string;
+                button_redirect?: string;
+                show_social_icons?: boolean;
+                show_share_menu?: boolean;
             }
         }
     };

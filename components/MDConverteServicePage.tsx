@@ -29,10 +29,13 @@ import {
     PieChart
 } from 'lucide-react';
 import Button from './Button';
+import { useSiteConfig } from '../lib/SiteContext';
 
 interface MDConverteServicePageProps { }
 
 const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
+    const { config } = useSiteConfig();
+    const section = config.content?.sections?.['md-converte'];
     const [openFaq, setOpenFaq] = useState<number | null>(null);
     const [formData, setFormData] = useState({
         name: '',
@@ -49,7 +52,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
         e.preventDefault();
         // Redireciona para WhatsApp com os dados
         const message = `Olá! Quero conhecer o MD Converte%0A%0ANome: ${formData.name}%0AEmail: ${formData.email}%0ATelefone: ${formData.phone}%0ATipo de Negócio: ${formData.businessType}`;
-        window.open(`https://wa.me/5511999999999?text=${message}`, '_blank');
+        window.open(`https://wa.me/${config.whatsapp?.replace(/\D/g, '') || '5511999999999'}?text=${message}`, '_blank');
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -60,10 +63,10 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-[#F5F7FA] to-white">
+        <div className="min-h-screen bg-gradient-to-b from-[#F5F7FA] to-white font-sans">
 
             {/* HERO SECTION */}
-            <section className="relative pt-8 lg:pt-12 pb-20 lg:pb-32 px-4 overflow-hidden">
+            <section className="relative pt-20 lg:pt-32 pb-20 lg:pb-32 px-4 overflow-hidden bg-top" style={{ backgroundColor: section?.background_color }}>
                 {/* Background Pattern */}
                 <div className="absolute inset-0 opacity-5">
                     <div className="absolute top-20 left-10 w-72 h-72 bg-[#FF7A2F] rounded-full blur-3xl"></div>
@@ -80,13 +83,12 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                 </span>
                             </div>
 
-                            <h1 className="text-4xl lg:text-6xl font-bold text-[#0C3452] leading-tight">
-                                MD Converte: centralize seus atendimentos e
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7A2F] to-[#FF9A5A]"> converta mais vendas</span>, todo dia
+                            <h1 className="text-4xl lg:text-6xl font-black leading-tight" style={{ color: section?.title_color || 'var(--color-title)' }}>
+                                {section?.title || 'MD Converte: centralize seus atendimentos e converta mais vendas, todo dia'}
                             </h1>
 
-                            <p className="text-xl text-[#2B2B2B] leading-relaxed">
-                                Uma plataforma completa de atendimento, CRM e automação que organiza o caos de conversas, acompanha seus leads e mostra exatamente onde você está perdendo ou ganhando dinheiro.
+                            <p className="text-xl text-subtitle leading-relaxed">
+                                {section?.subtitle || section?.description || 'Uma plataforma completa de atendimento, CRM e automação que organiza o caos de conversas, acompanha seus leads e mostra exatamente onde você está perdendo ou ganhando dinheiro.'}
                             </p>
 
                             {/* Benefits */}
@@ -99,7 +101,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                 ].map((benefit, index) => (
                                     <div key={index} className="flex items-start gap-3 group">
                                         <CheckCircle2 className="w-6 h-6 text-[#FF7A2F] flex-shrink-0 mt-1 group-hover:scale-110 transition-transform" />
-                                        <p className="text-[#2B2B2B] text-lg">{benefit}</p>
+                                        <p className="text-content text-lg">{benefit}</p>
                                     </div>
                                 ))}
                             </div>
@@ -120,7 +122,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                     <Button
                                         variant="outline"
                                         size="large"
-                                        className="w-full sm:w-auto border-2 border-[#0C3452] text-[#0C3452] hover:bg-[#0C3452] hover:text-white transition-all duration-300"
+                                        className="w-full sm:w-auto border-2 border-brand-blue text-brand-blue hover:bg-brand-blue hover:text-white transition-all duration-300"
                                     >
                                         Ver o sistema funcionando
                                     </Button>
@@ -132,7 +134,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                         <div className="relative">
                             <div className="relative z-10 transform hover:scale-105 transition-transform duration-500">
                                 <img
-                                    src="/images/md-converte/md_converte_dashboard.png"
+                                    src={section?.image_url || "/images/md-converte/md_converte_dashboard.png"}
                                     alt="Painel MD Converte"
                                     className="rounded-2xl shadow-2xl border-4 border-white/10"
                                 />
@@ -143,24 +145,24 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                 <MessageSquare className="w-8 h-8 text-[#FF7A2F]" />
                             </div>
                             <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-xl animate-pulse z-20">
-                                <TrendingUp className="w-8 h-8 text-[#0C3452]" />
+                                <TrendingUp className="w-8 h-8 text-brand-blue" />
                             </div>
 
                             {/* Decorative Blur */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-[#FF7A2F]/20 to-[#0C3452]/20 blur-3xl -z-10"></div>
+                            <div className="absolute inset-0 bg-gradient-to-br from-[#FF7A2F]/20 to-brand-blue/20 blur-3xl -z-10"></div>
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* PROBLEM SECTION */}
-            <section className="py-20 lg:py-24 px-4 bg-gradient-to-b from-white to-[#F5F7FA]">
+            <section className="py-20 lg:py-24 px-4 bg-mid">
                 <div className="max-w-6xl mx-auto">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl lg:text-5xl font-bold text-[#0C3452] mb-6">
+                        <h2 className="text-3xl lg:text-5xl font-black text-title mb-6">
                             Você está perdendo vendas porque seu atendimento está espalhado?
                         </h2>
-                        <p className="text-xl text-[#2B2B2B] max-w-4xl mx-auto leading-relaxed">
+                        <p className="text-xl text-subtitle max-w-4xl mx-auto leading-relaxed">
                             Hoje o cliente fala no WhatsApp, inbox, e-mail, comentário… e você não consegue acompanhar tudo. Atendimento se perde, ninguém sabe quem respondeu o quê, não existe histórico, nem controle de follow-up. No fim, não é falta de lead: é falta de organização e processo.
                         </p>
                     </div>
@@ -190,13 +192,13 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                         ].map((pain, index) => (
                             <div
                                 key={index}
-                                className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 group border border-gray-100 hover:border-[#FF7A2F]"
+                                className="bg-card p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 group border border-gray-100 hover:border-[#FF7A2F]"
                             >
                                 <div className="w-16 h-16 bg-gradient-to-br from-[#FF7A2F]/10 to-[#FF9A5A]/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                                     <pain.icon className="w-8 h-8 text-[#FF7A2F]" />
                                 </div>
-                                <h3 className="text-xl font-bold text-[#0C3452] mb-3">{pain.title}</h3>
-                                <p className="text-[#2B2B2B]">{pain.description}</p>
+                                <h3 className="text-xl font-bold text-title mb-3">{pain.title}</h3>
+                                <p className="text-content">{pain.description}</p>
                             </div>
                         ))}
                     </div>
@@ -207,11 +209,11 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
             <section className="py-20 lg:py-24 px-4 bg-white">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl lg:text-5xl font-bold text-[#0C3452] mb-6">
+                        <h2 className="text-3xl lg:text-5xl font-black text-title mb-6">
                             MD Converte: a central de atendimento, vendas e automação do seu negócio
                         </h2>
-                        <p className="text-xl text-[#2B2B2B] max-w-4xl mx-auto leading-relaxed">
-                            O MD Converte conecta seus canais de atendimento, organiza seus leads em um CRM fácil de usar e automatiza o que você não precisa fazer na mão. Assim, você e seu time atendem melhor, mais rápido e com muito mais chance de converter.
+                        <p className="text-xl text-subtitle max-w-4xl mx-auto leading-relaxed">
+                            O MD Converte conecta seus canais de atendimento, organiza seus leads em um CRM fácil de usar e automatize o que você não precisa fazer na mão. Assim, você e seu time atendem melhor, mais rápido e com muito mais chance de converter.
                         </p>
                     </div>
 
@@ -230,7 +232,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                             {
                                 icon: Target,
                                 title: 'CRM simples e poderoso',
-                                color: 'from-[#0C3452] to-[#1a5a8a]',
+                                color: 'from-brand-blue to-blue-900',
                                 features: [
                                     'Cadastro de leads e clientes com informações importantes',
                                     'Funis de vendas personalizáveis por etapa',
@@ -250,7 +252,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                             {
                                 icon: BarChart3,
                                 title: 'Relatórios de desempenho',
-                                color: 'from-[#0C3452] to-[#1a5a8a]',
+                                color: 'from-brand-blue to-blue-900',
                                 features: [
                                     'Visão clara de quantos leads entram, quantos avançam e quantos fecham',
                                     'Métricas por atendente, por canal e por período',
@@ -260,17 +262,17 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                         ].map((pillar, index) => (
                             <div
                                 key={index}
-                                className="bg-gradient-to-br from-white to-[#F5F7FA] p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100 group"
+                                className="bg-card p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100 group"
                             >
                                 <div className={`w-16 h-16 bg-gradient-to-br ${pillar.color} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg`}>
                                     <pillar.icon className="w-8 h-8 text-white" />
                                 </div>
-                                <h3 className="text-2xl font-bold text-[#0C3452] mb-4">{pillar.title}</h3>
+                                <h3 className="text-2xl font-bold text-title mb-4">{pillar.title}</h3>
                                 <ul className="space-y-3">
                                     {pillar.features.map((feature, fIndex) => (
                                         <li key={fIndex} className="flex items-start gap-3">
                                             <CheckCircle2 className="w-5 h-5 text-[#FF7A2F] flex-shrink-0 mt-1" />
-                                            <span className="text-[#2B2B2B]">{feature}</span>
+                                            <span className="text-content">{feature}</span>
                                         </li>
                                     ))}
                                 </ul>
@@ -281,13 +283,13 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
             </section>
 
             {/* FEATURES IN DETAIL */}
-            <section className="py-20 lg:py-24 px-4 bg-gradient-to-b from-[#F5F7FA] to-white">
+            <section className="py-20 lg:py-24 px-4 bg-mid">
                 <div className="max-w-7xl mx-auto space-y-24">
 
                     {/* Feature 1: Omnichannel */}
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         <div className="order-2 lg:order-1">
-                            <div className="bg-gradient-to-br from-[#0C3452] to-[#1a5a8a] rounded-2xl p-8 shadow-2xl">
+                            <div className="bg-gradient-to-br from-brand-blue to-blue-900 rounded-2xl p-8 shadow-2xl">
                                 <div className="bg-white rounded-xl p-6 space-y-4">
                                     <div className="flex items-center gap-4 border-b border-gray-200 pb-4">
                                         <div className="flex gap-2">
@@ -295,10 +297,10 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                             <Facebook className="w-6 h-6 text-blue-500" />
                                             <MessageSquare className="w-6 h-6 text-green-500" />
                                         </div>
-                                        <span className="text-sm font-semibold text-[#0C3452]">Caixa Unificada</span>
+                                        <span className="text-sm font-semibold text-brand-blue">Caixa Unificada</span>
                                     </div>
                                     {[1, 2, 3].map((i) => (
-                                        <div key={i} className="flex items-center gap-3 p-3 bg-[#F5F7FA] rounded-lg">
+                                        <div key={i} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                                             <div className="w-10 h-10 bg-gradient-to-br from-[#FF7A2F] to-[#FF9A5A] rounded-full"></div>
                                             <div className="flex-grow">
                                                 <div className="h-2 bg-gray-300 rounded w-2/3 mb-2"></div>
@@ -310,7 +312,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                             </div>
                         </div>
                         <div className="space-y-6 order-1 lg:order-2">
-                            <h2 className="text-3xl lg:text-4xl font-bold text-[#0C3452]">
+                            <h2 className="text-3xl lg:text-4xl font-bold text-title">
                                 Atenda todos os canais em uma única tela
                             </h2>
                             <ul className="space-y-4">
@@ -322,7 +324,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                 ].map((feature, index) => (
                                     <li key={index} className="flex items-start gap-3">
                                         <CheckCircle2 className="w-6 h-6 text-[#FF7A2F] flex-shrink-0 mt-1" />
-                                        <span className="text-lg text-[#2B2B2B]">{feature}</span>
+                                        <span className="text-lg text-content">{feature}</span>
                                     </li>
                                 ))}
                             </ul>
@@ -332,7 +334,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                     {/* Feature 2: CRM & Funnels */}
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         <div className="space-y-6">
-                            <h2 className="text-3xl lg:text-4xl font-bold text-[#0C3452]">
+                            <h2 className="text-3xl lg:text-4xl font-bold text-title">
                                 Acompanhe cada lead do primeiro contato ao fechamento
                             </h2>
                             <ul className="space-y-4">
@@ -344,7 +346,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                 ].map((feature, index) => (
                                     <li key={index} className="flex items-start gap-3">
                                         <CheckCircle2 className="w-6 h-6 text-[#FF7A2F] flex-shrink-0 mt-1" />
-                                        <span className="text-lg text-[#2B2B2B]">{feature}</span>
+                                        <span className="text-lg text-content">{feature}</span>
                                     </li>
                                 ))}
                             </ul>
@@ -352,7 +354,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                         <div>
                             <div className="bg-gradient-to-br from-[#FF7A2F] to-[#FF9A5A] rounded-2xl p-8 shadow-2xl">
                                 <div className="bg-white rounded-xl p-6">
-                                    <h4 className="font-bold text-[#0C3452] mb-4">Funil de Vendas</h4>
+                                    <h4 className="font-bold text-brand-blue mb-4">Funil de Vendas</h4>
                                     <div className="space-y-3">
                                         {[
                                             { name: 'Novos Leads', count: 24, color: 'bg-blue-500' },
@@ -360,12 +362,12 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                             { name: 'Proposta Enviada', count: 8, color: 'bg-orange-500' },
                                             { name: 'Fechados', count: 15, color: 'bg-green-500' }
                                         ].map((stage, index) => (
-                                            <div key={index} className="flex items-center justify-between p-3 bg-[#F5F7FA] rounded-lg">
+                                            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                                 <div className="flex items-center gap-3">
                                                     <div className={`w-3 h-3 ${stage.color} rounded-full`}></div>
-                                                    <span className="font-medium text-[#0C3452]">{stage.name}</span>
+                                                    <span className="font-medium text-brand-blue">{stage.name}</span>
                                                 </div>
-                                                <span className="bg-white px-3 py-1 rounded-full text-sm font-bold text-[#0C3452]">
+                                                <span className="bg-white px-3 py-1 rounded-full text-sm font-bold text-brand-blue">
                                                     {stage.count}
                                                 </span>
                                             </div>
@@ -391,7 +393,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                             </div>
                         </div>
                         <div className="space-y-6 order-1 lg:order-2">
-                            <h2 className="text-3xl lg:text-4xl font-bold text-[#0C3452]">
+                            <h2 className="text-3xl lg:text-4xl font-bold text-title">
                                 Automação que trabalha por você, mesmo quando você não está online
                             </h2>
                             <ul className="space-y-4">
@@ -402,7 +404,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                 ].map((feature, index) => (
                                     <li key={index} className="flex items-start gap-3">
                                         <CheckCircle2 className="w-6 h-6 text-[#FF7A2F] flex-shrink-0 mt-1" />
-                                        <span className="text-lg text-[#2B2B2B]">{feature}</span>
+                                        <span className="text-lg text-content">{feature}</span>
                                     </li>
                                 ))}
                             </ul>
@@ -412,7 +414,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                     {/* Feature 4: Reports */}
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         <div className="space-y-6">
-                            <h2 className="text-3xl lg:text-4xl font-bold text-[#0C3452]">
+                            <h2 className="text-3xl lg:text-4xl font-bold text-title">
                                 Veja o que dá resultado e onde você está perdendo dinheiro
                             </h2>
                             <ul className="space-y-4">
@@ -423,7 +425,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                 ].map((feature, index) => (
                                     <li key={index} className="flex items-start gap-3">
                                         <CheckCircle2 className="w-6 h-6 text-[#FF7A2F] flex-shrink-0 mt-1" />
-                                        <span className="text-lg text-[#2B2B2B]">{feature}</span>
+                                        <span className="text-lg text-content">{feature}</span>
                                     </li>
                                 ))}
                             </ul>
@@ -435,7 +437,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                 className="rounded-2xl shadow-2xl"
                             />
                             <div className="absolute -top-4 -right-4 bg-white p-4 rounded-xl shadow-lg animate-bounce">
-                                <BarChart3 className="w-8 h-8 text-[#0C3452]" />
+                                <BarChart3 className="w-8 h-8 text-brand-blue" />
                             </div>
                         </div>
                     </div>
@@ -447,10 +449,10 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
             <section className="py-20 lg:py-24 px-4 bg-white">
                 <div className="max-w-6xl mx-auto">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl lg:text-5xl font-bold text-[#0C3452] mb-6">
+                        <h2 className="text-3xl lg:text-5xl font-black text-title mb-6">
                             Feito para negócios que querem vender mais com organização
                         </h2>
-                        <p className="text-xl text-[#2B2B2B] max-w-3xl mx-auto">
+                        <p className="text-xl text-subtitle max-w-3xl mx-auto">
                             O MD Converte se adapta a diferentes modelos, sem complicação técnica.
                         </p>
                     </div>
@@ -465,12 +467,12 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                         ].map((niche, index) => (
                             <div
                                 key={index}
-                                className="bg-gradient-to-b from-white to-[#F5F7FA] p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 text-center group border border-gray-100 hover:border-[#FF7A2F]"
+                                className="bg-card p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 text-center group border border-gray-100 hover:border-[#FF7A2F]"
                             >
                                 <div className={`w-16 h-16 bg-gradient-to-br ${niche.color} rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
                                     <niche.icon className="w-8 h-8 text-white" />
                                 </div>
-                                <p className="text-sm font-medium text-[#2B2B2B]">{niche.name}</p>
+                                <p className="text-sm font-medium text-content">{niche.name}</p>
                             </div>
                         ))}
                     </div>
@@ -478,10 +480,10 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
             </section>
 
             {/* HOW IT WORKS */}
-            <section id="how-it-works" className="py-20 lg:py-24 px-4 bg-gradient-to-b from-[#F5F7FA] to-white">
+            <section id="how-it-works" className="py-20 lg:py-24 px-4 bg-mid">
                 <div className="max-w-6xl mx-auto">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl lg:text-5xl font-bold text-[#0C3452] mb-6">
+                        <h2 className="text-3xl lg:text-5xl font-black text-title mb-6">
                             Como o MD Converte entra na rotina do seu negócio
                         </h2>
                     </div>
@@ -500,7 +502,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                 title: 'Seu time começa a atender dentro do MD Converte',
                                 description: 'Tudo passa a entrar por um lugar só, com cada pessoa sabendo o que precisa fazer.',
                                 icon: Users,
-                                color: 'from-[#0C3452] to-[#1a5a8a]'
+                                color: 'from-brand-blue to-blue-900'
                             },
                             {
                                 step: '03',
@@ -512,7 +514,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                         ].map((step, index) => (
                             <div
                                 key={index}
-                                className="relative bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 group"
+                                className="relative bg-card p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 group"
                             >
                                 {/* Step Number Badge */}
                                 <div className="absolute -top-6 left-8">
@@ -525,8 +527,8 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                     <div className={`w-12 h-12 bg-gradient-to-br ${step.color} rounded-lg flex items-center justify-center mb-6 opacity-20`}>
                                         <step.icon className="w-6 h-6 text-white" />
                                     </div>
-                                    <h3 className="text-xl font-bold text-[#0C3452] mb-4">{step.title}</h3>
-                                    <p className="text-[#2B2B2B] leading-relaxed">{step.description}</p>
+                                    <h3 className="text-xl font-bold text-title mb-4">{step.title}</h3>
+                                    <p className="text-content leading-relaxed">{step.description}</p>
                                 </div>
 
                                 {/* Connector Line (except last) */}
@@ -542,7 +544,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
             {/* SOCIAL PROOF */}
             <section className="py-20 lg:py-24 px-4 bg-white">
                 <div className="max-w-4xl mx-auto text-center">
-                    <div className="bg-gradient-to-br from-[#0C3452] to-[#1a5a8a] rounded-2xl p-12 shadow-2xl">
+                    <div className="bg-gradient-to-br from-brand-blue to-blue-900 rounded-2xl p-12 shadow-2xl">
                         <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
                             Mais do que uma ferramenta: acompanhamento de quem vive marketing e vendas todo dia
                         </h2>
@@ -566,10 +568,10 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
             </section>
 
             {/* PRICING / COMMERCIAL */}
-            <section className="py-20 lg:py-24 px-4 bg-gradient-to-b from-[#F5F7FA] to-white">
+            <section className="py-20 lg:py-24 px-4 bg-mid">
                 <div className="max-w-6xl mx-auto">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl lg:text-5xl font-bold text-[#0C3452] mb-6">
+                        <h2 className="text-3xl lg:text-5xl font-black text-title mb-6">
                             Como começar com o MD Converte
                         </h2>
                     </div>
@@ -601,7 +603,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                         ].map((plan, index) => (
                             <div
                                 key={index}
-                                className={`bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 group ${plan.highlight ? 'border-2 border-[#FF7A2F] relative' : 'border border-gray-100'
+                                className={`bg-card p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 group ${plan.highlight ? 'border-2 border-[#FF7A2F] relative' : 'border border-gray-100'
                                     }`}
                             >
                                 {plan.highlight && (
@@ -612,17 +614,17 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                     </div>
                                 )}
 
-                                <div className={`w-16 h-16 bg-gradient-to-br ${plan.highlight ? 'from-[#FF7A2F] to-[#FF9A5A]' : 'from-[#0C3452] to-[#1a5a8a]'} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg`}>
+                                <div className={`w-16 h-16 bg-gradient-to-br ${plan.highlight ? 'from-[#FF7A2F] to-[#FF9A5A]' : 'from-brand-blue to-blue-900'} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg`}>
                                     <plan.icon className="w-8 h-8 text-white" />
                                 </div>
 
-                                <h3 className="text-2xl font-bold text-[#0C3452] mb-6">{plan.title}</h3>
+                                <h3 className="text-2xl font-bold text-title mb-6">{plan.title}</h3>
 
                                 <ul className="space-y-4 mb-8">
                                     {plan.features.map((feature, fIndex) => (
                                         <li key={fIndex} className="flex items-start gap-3">
                                             <CheckCircle2 className="w-5 h-5 text-[#FF7A2F] flex-shrink-0 mt-1" />
-                                            <span className="text-[#2B2B2B]">{feature}</span>
+                                            <span className="text-content">{feature}</span>
                                         </li>
                                     ))}
                                 </ul>
@@ -649,7 +651,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
             <section className="py-20 lg:py-24 px-4 bg-white">
                 <div className="max-w-4xl mx-auto">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl lg:text-5xl font-bold text-[#0C3452] mb-6">
+                        <h2 className="text-3xl lg:text-5xl font-black text-title mb-6">
                             Perguntas Frequentes
                         </h2>
                     </div>
@@ -679,13 +681,13 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                         ].map((faq, index) => (
                             <div
                                 key={index}
-                                className="bg-gradient-to-br from-white to-[#F5F7FA] rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:border-[#FF7A2F] transition-all duration-300"
+                                className="bg-card rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:border-[#FF7A2F] transition-all duration-300"
                             >
                                 <button
                                     onClick={() => toggleFaq(index)}
-                                    className="w-full px-8 py-6 flex items-center justify-between text-left hover:bg-[#E2ECF7] transition-colors"
+                                    className="w-full px-8 py-6 flex items-center justify-between text-left hover:bg-gray-50 transition-colors"
                                 >
-                                    <span className="text-lg font-semibold text-[#0C3452] pr-4">{faq.question}</span>
+                                    <span className="text-lg font-semibold text-title pr-4">{faq.question}</span>
                                     <ChevronDown
                                         className={`w-6 h-6 text-[#FF7A2F] flex-shrink-0 transition-transform duration-300 ${openFaq === index ? 'rotate-180' : ''
                                             }`}
@@ -695,7 +697,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                     className={`px-8 overflow-hidden transition-all duration-300 ${openFaq === index ? 'py-6 max-h-96' : 'max-h-0'
                                         }`}
                                 >
-                                    <p className="text-[#2B2B2B] leading-relaxed">{faq.answer}</p>
+                                    <p className="text-content leading-relaxed">{faq.answer}</p>
                                 </div>
                             </div>
                         ))}
@@ -704,7 +706,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
             </section>
 
             {/* FINAL CTA */}
-            <section id="contact-form" className="py-20 lg:py-32 px-4 bg-gradient-to-br from-[#0C3452] via-[#1a5a8a] to-[#0C3452] relative overflow-hidden">
+            <section id="contact-form" className="py-20 lg:py-32 px-4 bg-gradient-to-br from-brand-blue via-blue-900 to-brand-blue relative overflow-hidden">
                 {/* Background Pattern */}
                 <div className="absolute inset-0 opacity-10">
                     <div className="absolute top-0 left-0 w-96 h-96 bg-[#FF7A2F] rounded-full blur-3xl"></div>
@@ -725,7 +727,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="grid md:grid-cols-2 gap-6">
                                 <div>
-                                    <label htmlFor="name" className="block text-sm font-semibold text-[#0C3452] mb-2">
+                                    <label htmlFor="name" className="block text-sm font-semibold text-brand-blue mb-2">
                                         Nome Completo *
                                     </label>
                                     <input
@@ -740,7 +742,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor="email" className="block text-sm font-semibold text-[#0C3452] mb-2">
+                                    <label htmlFor="email" className="block text-sm font-semibold text-brand-blue mb-2">
                                         E-mail *
                                     </label>
                                     <input
@@ -758,7 +760,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
 
                             <div className="grid md:grid-cols-2 gap-6">
                                 <div>
-                                    <label htmlFor="phone" className="block text-sm font-semibold text-[#0C3452] mb-2">
+                                    <label htmlFor="phone" className="block text-sm font-semibold text-brand-blue mb-2">
                                         Telefone/WhatsApp *
                                     </label>
                                     <input
@@ -773,7 +775,7 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor="businessType" className="block text-sm font-semibold text-[#0C3452] mb-2">
+                                    <label htmlFor="businessType" className="block text-sm font-semibold text-brand-blue mb-2">
                                         Tipo de Negócio *
                                     </label>
                                     <select
@@ -795,26 +797,20 @@ const MDConverteServicePage: React.FC<MDConverteServicePageProps> = () => {
                                 </div>
                             </div>
 
-                            <div className="pt-4">
+                            <div className="pt-4 text-center">
                                 <Button
                                     type="submit"
                                     variant="primary"
                                     size="large"
-                                    className="w-full bg-gradient-to-r from-[#FF7A2F] to-[#FF9A5A] hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                                    className="w-full md:w-auto px-12 py-5 bg-[#FF7A2F] hover:bg-[#E65F00] text-lg shadow-xl shadow-[#FF7A2F]/20"
                                 >
-                                    Agendar Reunião Estratégica
-                                    <Send className="w-5 h-5 ml-2" />
+                                    Quero conhecer agora <Send size={20} className="ml-3" />
                                 </Button>
                             </div>
-
-                            <p className="text-sm text-center text-[#9CA3AF] mt-4">
-                                Ao enviar, você concorda com nossos <a href="#termos" className="text-[#FF7A2F] hover:underline">Termos de Uso</a> e <a href="#privacidade" className="text-[#FF7A2F] hover:underline">Política de Privacidade</a>.
-                            </p>
                         </form>
                     </div>
                 </div>
             </section>
-
         </div>
     );
 };

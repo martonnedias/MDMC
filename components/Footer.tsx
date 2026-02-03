@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { MessageCircle, Mail, MapPin, CheckCircle, ArrowRight, ShieldCheck, Sparkles, Globe, Instagram, Facebook, Youtube } from 'lucide-react';
+import { MessageCircle, Mail, MapPin, CheckCircle, ArrowRight, ShieldCheck, Sparkles, Globe, Instagram, Facebook, Youtube, Send, Linkedin, Share2, Copy, Check } from 'lucide-react';
 import Button from './Button';
 import Logo from './Logo';
 import { FOOTER_CTA, CONTACT_INFO, FORM_VALIDATION_MSGS } from '../constants';
@@ -15,6 +14,7 @@ interface FooterProps {
 
 const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) => {
   const { config } = useSiteConfig();
+  const sectionConfig = config.content?.sections?.footer;
   const [formState, setFormState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [formData, setFormData] = useState({
     name: '',
@@ -23,6 +23,10 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
     interest: '',
     companySize: ''
   });
+  const [showShare, setShowShare] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  if (sectionConfig?.is_active === false) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,11 +57,42 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
     if (onNavigate) onNavigate(view);
   };
 
+  const handleCopyLink = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleShare = (platform: string) => {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(config.site_name);
+    let shareUrl = '';
+
+    if (platform === 'whatsapp') shareUrl = `https://wa.me/?text=${text}%20${url}`;
+    if (platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    if (platform === 'linkedin') shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+
+    if (shareUrl) window.open(shareUrl, '_blank');
+    setShowShare(false);
+  };
+
   const inputStyles = "w-full p-4 bg-white/60 backdrop-blur-sm rounded-2xl border border-gray-100 outline-none focus:border-brand-blue focus:ring-4 focus:ring-brand-blue/5 transition-all duration-300 text-sm placeholder:text-gray-400 font-medium shadow-sm";
   const selectStyles = "w-full p-4 bg-white/60 backdrop-blur-sm rounded-2xl border border-gray-100 outline-none focus:border-brand-blue focus:ring-4 focus:ring-brand-blue/5 transition-all duration-300 text-sm text-gray-500 font-medium shadow-sm cursor-pointer appearance-none";
 
+  const footerStyle = {
+    backgroundColor: sectionConfig?.background_color || 'var(--bg-footer)',
+    fontFamily: sectionConfig?.font_family,
+    color: sectionConfig?.text_color || 'white'
+  };
+
+  const titleStyle = {
+    color: sectionConfig?.title_color || 'white',
+    fontSize: sectionConfig?.font_size_title ? `var(--${sectionConfig.font_size_title})` : undefined
+  };
+
   return (
-    <footer id="contact" className="bg-brand-darkBlue text-white overflow-hidden font-sans">
+    <footer id="contact" style={footerStyle} className="overflow-hidden font-sans">
       {/* Contact Form Section */}
       <div className="pt-16 pb-16 lg:pt-24 lg:pb-24">
         <div className="container mx-auto px-4 md:px-6">
@@ -71,11 +106,11 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
                   <div className="inline-flex items-center gap-2 bg-brand-orange/20 text-brand-orange px-4 py-1.5 rounded-full mb-6 font-black text-[10px] uppercase tracking-widest border border-brand-orange/30">
                     <Sparkles size={14} /> Atendimento Personalizado
                   </div>
-                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-white leading-tight">
-                    {FOOTER_CTA.title}
+                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-white leading-tight" style={titleStyle}>
+                    {sectionConfig?.title || FOOTER_CTA.title}
                   </h2>
                   <p className="text-blue-100/70 text-lg md:text-xl mb-8 leading-relaxed max-w-lg">
-                    {FOOTER_CTA.text}
+                    {sectionConfig?.subtitle || sectionConfig?.description || FOOTER_CTA.text}
                   </p>
                 </div>
 
@@ -215,7 +250,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
       <div className="container mx-auto px-4 md:px-6 pt-16 pb-12 border-t border-white/5 mt-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-white/5 pb-16">
           <div className="md:col-span-1 space-y-6">
-            {/* Logo Linkável para Home em Versão Clara Conforme Solicitado */}
+            {/* Logo Linkável para Home */}
             <a
               href="/"
               className="inline-block transition-transform hover:scale-105 active:scale-95"
@@ -227,16 +262,44 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
             <p className="text-gray-500 text-sm leading-relaxed">
               Consultoria especializada em unir gestão estratégica e performance digital para pequenas e médias empresas brasileiras.
             </p>
+
+            {/* Share & Copy Link for Footer Section */}
+            {(sectionConfig?.show_share_menu !== false) && (
+              <div className="pt-4 flex items-center gap-4">
+                <div className="relative">
+                  <button
+                    onClick={() => setShowShare(!showShare)}
+                    className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-brand-orange transition-colors"
+                  >
+                    <Share2 size={14} /> Compartilhar MD Site
+                  </button>
+                  {showShare && (
+                    <div className="absolute bottom-full left-0 mb-2 bg-white rounded-xl shadow-2xl p-2 flex flex-col gap-1 min-w-[150px] z-50 animate-fade-in border border-gray-100">
+                      <button onClick={() => handleShare('whatsapp')} className="text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">WhatsApp</button>
+                      <button onClick={() => handleShare('facebook')} className="text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">Facebook</button>
+                      <button onClick={() => handleShare('linkedin')} className="text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">LinkedIn</button>
+                    </div>
+                  )}
+                </div>
+                <button
+                  onClick={handleCopyLink}
+                  className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-brand-orange transition-colors"
+                >
+                  {copied ? <Check size={14} className="text-brand-green" /> : <Copy size={14} />}
+                  {copied ? 'Copiado!' : 'Copiar Link'}
+                </button>
+              </div>
+            )}
           </div>
 
           <div>
             <h4 className="font-heading font-bold text-sm mb-8 text-white uppercase tracking-[0.2em] opacity-50">Soluções</h4>
             <ul className="space-y-4 text-gray-400 text-sm font-medium">
-              <li><a href="#" onClick={(e) => handleLinkClick(e, 'md-converte')} className="hover:text-brand-blue transition-colors">MD Converte</a></li>
-              <li><a href="#" onClick={(e) => handleLinkClick(e, 'gmb')} className="hover:text-brand-blue transition-colors">Google Meu Negócio</a></li>
-              <li><a href="#" onClick={(e) => handleLinkClick(e, 'ads')} className="hover:text-brand-blue transition-colors">Tráfego Pago (Anúncios)</a></li>
-              <li><a href="#" onClick={(e) => handleLinkClick(e, 'sites')} className="hover:text-brand-blue transition-colors">Sites & Landing Pages</a></li>
-              <li><a href="#" onClick={(e) => handleLinkClick(e, 'consultancy')} className="hover:text-brand-blue transition-colors">Consultoria de Vendas</a></li>
+              {config.content?.sections?.['md-converte']?.is_active !== false && <li><a href="#" onClick={(e) => handleLinkClick(e, 'md-converte')} className="hover:text-brand-blue transition-colors">MD Converte</a></li>}
+              {config.content?.sections?.['gmb']?.is_active !== false && <li><a href="#" onClick={(e) => handleLinkClick(e, 'gmb')} className="hover:text-brand-blue transition-colors">Google Meu Negócio</a></li>}
+              {config.content?.sections?.['ads']?.is_active !== false && <li><a href="#" onClick={(e) => handleLinkClick(e, 'ads')} className="hover:text-brand-blue transition-colors">Tráfego Pago (Anúncios)</a></li>}
+              {config.content?.sections?.['sites']?.is_active !== false && <li><a href="#" onClick={(e) => handleLinkClick(e, 'sites')} className="hover:text-brand-blue transition-colors">Sites & Landing Pages</a></li>}
+              {config.content?.sections?.['consultancy']?.is_active !== false && <li><a href="#" onClick={(e) => handleLinkClick(e, 'consultancy')} className="hover:text-brand-blue transition-colors">Consultoria de Vendas</a></li>}
             </ul>
           </div>
 
@@ -246,10 +309,10 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
               {config.is_blog_active && (
                 <li><a href="#" onClick={(e) => handleLinkClick(e, 'blog')} className="hover:text-brand-blue transition-colors">Blog & Artigos</a></li>
               )}
-              {config.is_swot_active && (
+              {config.is_swot_active && config.content?.sections?.['swot']?.is_active !== false && (
                 <li><a href="#" onClick={(e) => handleLinkClick(e, 'swot-service')} className="hover:text-brand-blue transition-colors">Análise SWOT (Audit)</a></li>
               )}
-              <li><a href="#" onClick={(e) => handleLinkClick(e, 'marketing-diagnosis')} className="hover:text-brand-blue transition-colors">Diagnóstico Marketing (Free)</a></li>
+              {config.content?.sections?.['diagnosis']?.is_active !== false && <li><a href="#" onClick={(e) => handleLinkClick(e, 'marketing-diagnosis')} className="hover:text-brand-blue transition-colors">Diagnóstico Marketing (Free)</a></li>}
             </ul>
           </div>
 
@@ -268,17 +331,29 @@ const Footer: React.FC<FooterProps> = ({ onNavigate, currentView = 'landing' }) 
               </li>
             </ul>
 
-            <div className="flex gap-4">
-              <a href={config.instagram_url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all duration-300" aria-label="Instagram">
-                <Instagram size={18} />
-              </a>
-              <a href={config.facebook_url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all duration-300" aria-label="Facebook">
-                <Facebook size={18} />
-              </a>
-              <a href={config.youtube_url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all duration-300" aria-label="YouTube">
-                <Youtube size={18} />
-              </a>
-            </div>
+            {(sectionConfig?.show_social_icons !== false) && (
+              <div className="flex gap-4">
+                <a href={config.instagram_url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all duration-300" aria-label="Instagram">
+                  <Instagram size={18} />
+                </a>
+                <a href={config.facebook_url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all duration-300" aria-label="Facebook">
+                  <Facebook size={18} />
+                </a>
+                <a href={config.youtube_url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all duration-300" aria-label="YouTube">
+                  <Youtube size={18} />
+                </a>
+                {config.tiktok_url && (
+                  <a href={config.tiktok_url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all duration-300" aria-label="TikTok">
+                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.06-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.03 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-1.13-.32-2.43-.2-3.41.44-.71.46-1.13 1.25-1.13 2.1 0 .68.27 1.33.73 1.84.58.63 1.41.97 2.22.97 1.05-.03 2.12-.66 2.55-1.61.12-.26.16-.54.17-.82V.02z" /></svg>
+                  </a>
+                )}
+                {config.linkedin_url && (
+                  <a href={config.linkedin_url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-orange hover:border-brand-orange transition-all duration-300" aria-label="LinkedIn">
+                    <Linkedin size={18} />
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         </div>
 

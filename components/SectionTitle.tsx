@@ -15,17 +15,17 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
 }) => {
   return (
     <div className={`mb-8 lg:mb-12 ${alignment === 'center' ? 'text-center' : 'text-left'}`}>
-      <h2 className={`text-3xl md:text-4xl font-heading font-bold mb-4 ${light ? 'text-white' : 'text-gray-900'}`}>
+      <h2 className={`text-4xl md:text-5xl font-heading font-black mb-4 ${light ? 'text-white' : 'text-title'}`}>
         {title}
       </h2>
       {subtitle && (
-        <p className={`text-lg max-w-2xl ${alignment === 'center' ? 'mx-auto' : ''} ${light ? 'text-blue-100' : 'text-gray-600'}`}>
+        <p className={`text-xl max-w-2xl font-light ${alignment === 'center' ? 'mx-auto' : ''} ${light ? 'text-blue-100' : 'text-subtitle'}`}>
           {subtitle}
         </p>
       )}
       <div className={`mt-4 lg:mt-6 flex ${alignment === 'center' ? 'justify-center' : 'justify-start'} gap-1`}>
-        <div className="h-1.5 w-24 bg-brand-orange rounded-full" />
-        <div className="h-1.5 w-8 bg-brand-gold rounded-full opacity-60" />
+        <div className="h-2 w-24 bg-brand-orange rounded-full" />
+        <div className="h-2 w-8 bg-brand-gold rounded-full opacity-60" />
       </div>
     </div>
   );

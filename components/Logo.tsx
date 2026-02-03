@@ -26,7 +26,7 @@ const Logo: React.FC<LogoProps> = ({ className = '', size = 'md', variant = 'dar
   const logoSrc = config.logo_url && variant === 'dark' ? config.logo_url : defaultLogo;
 
   return (
-    <div className={`flex items-center group transition-all duration-300 ${className}`}>
+    <div className={`flex items-center gap-3 group transition-all duration-300 ${className}`}>
       <img
         src={logoSrc}
         alt="MD Solution Marketing e Consultoria"
@@ -41,6 +41,13 @@ const Logo: React.FC<LogoProps> = ({ className = '', size = 'md', variant = 'dar
           }
         }}
       />
+      {config.slogan && (
+        <div className={`hidden md:flex flex-col border-l border-gray-200 pl-3 py-1 ${variant === 'light' ? 'border-white/20' : 'border-gray-200'}`}>
+          <span className={`text-[10px] font-black uppercase tracking-[0.2em] leading-tight ${variant === 'light' ? 'text-white' : 'text-gray-900'}`}>
+            {config.slogan}
+          </span>
+        </div>
+      )}
     </div>
   );
 };

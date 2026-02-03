@@ -29,7 +29,7 @@ const SwotReport: React.FC<SwotReportProps> = ({ formData, onBack }) => {
       setLoading(true);
       setError(null);
 
-      const apiKey = process.env.API_KEY;
+      const apiKey = process.env.API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
       if (!apiKey || apiKey === 'PLACEHOLDER_API_KEY') {
         setError("Chave de API não configurada. Verifique o arquivo .env.local");
         setLoading(false);

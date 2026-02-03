@@ -1,20 +1,54 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import SectionTitle from './SectionTitle';
-import { ShieldCheck, Target, TrendingUp, Search, Eye, Users, Heart, Sparkles, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Target, TrendingUp, Search, Eye, Users, Heart, Sparkles, CheckCircle2, Instagram, Facebook, Youtube, Linkedin, Send, Share2, Copy, Check } from 'lucide-react';
 import Button from './Button';
 import { CONTACT_INFO } from '../constants';
-import ShareButtons from './ShareButtons';
+import { useSiteConfig } from '../lib/SiteContext';
 
 const AboutPage: React.FC = () => {
+  const { config } = useSiteConfig();
+  const section = config.content?.sections?.about;
+  const [showShare, setShowShare] = useState(false);
+  const [copied, setCopied] = useState(false);
+
   const scrollToContact = () => {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleCopyLink = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleShare = (platform: string) => {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(section?.title || 'MD Solution - Sobre Nós');
+    let shareUrl = '';
+
+    if (platform === 'whatsapp') shareUrl = `https://wa.me/?text=${text}%20${url}`;
+    if (platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    if (platform === 'linkedin') shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+
+    if (shareUrl) window.open(shareUrl, '_blank');
+    setShowShare(false);
+  };
+
+  if (section?.is_active === false) return null;
+
+  const sectionStyle = {
+    backgroundColor: section?.background_color,
+    fontFamily: section?.font_family
+  };
+
+  const titleFontSize = section?.font_size_title || 'text-4xl md:text-6xl lg:text-7xl';
+  const subtitleFontSize = section?.font_size_subtitle || 'text-xl md:text-2xl';
+
   return (
-    <div className="pt-0 font-sans">
+    <div className="pt-0 font-sans" style={{ fontFamily: section?.font_family }}>
       {/* Manifesto Hero */}
-      <section className="pt-8 lg:pt-12 pb-12 lg:pb-32 bg-brand-darkBlue text-white relative overflow-hidden">
+      <section className="pt-20 lg:pt-32 pb-12 lg:pb-32 bg-top text-white relative overflow-hidden" style={sectionStyle}>
         <div className="absolute top-0 left-0 w-full h-full bg-[url(&quot;data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E&quot;)] opacity-40"></div>
         <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -22,24 +56,63 @@ const AboutPage: React.FC = () => {
               <div className="inline-flex items-center gap-2 bg-brand-orange/20 text-brand-orange px-4 py-1.5 rounded-full mb-8 font-black text-[10px] uppercase tracking-widest border border-brand-orange/30 shadow-lg">
                 Nosso Manifesto
               </div>
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold mb-8 leading-tight">
-                O marketing digital está quebrado. <span className="text-brand-orange">Nós viemos consertar.</span>
+              <h1 className={`${titleFontSize} font-heading font-black mb-8 leading-tight`} style={{ color: section?.title_color || 'white' }}>
+                {section?.title || 'O marketing digital está quebrado. Nós viemos consertar.'}
               </h1>
-              <p className="text-xl md:text-2xl text-blue-100/80 leading-relaxed mb-10 font-light">
-                Chega de promessas milagrosas e relatórios cheios de métricas de vaidade. A MD Solution nasceu para unir a clareza da **estratégia de gestão** com a força da **performance digital**.
+              <p className={`${subtitleFontSize} text-blue-100/80 leading-relaxed mb-10 font-light`}>
+                {section?.subtitle || section?.description || 'Chega de promessas milagrosas e relatórios cheios de métricas de vaidade. A MD Solution nasceu para unir a clareza da estratégia de gestão com a força da performance digital.'}
               </p>
+
               <div className="flex flex-col sm:flex-row items-center gap-8">
                 <Button onClick={scrollToContact} variant="primary" className="px-10 py-5 text-lg shadow-2xl shadow-brand-orange/20" withIcon>
-                  Fazer Parte do Futuro
+                  {section?.button_text || 'Fazer Parte do Futuro'}
                 </Button>
-                <ShareButtons title="MD Solution - Nosso Manifesto por um Marketing Honesto" />
+
+                {/* Social & Share Controls */}
+                <div className="flex flex-wrap items-center gap-6">
+                  {(section?.show_social_icons !== false) && (
+                    <div className="flex items-center gap-4">
+                      <a href={config.instagram_url} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-brand-orange transition-colors"><Instagram size={20} /></a>
+                      <a href={config.facebook_url} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-brand-orange transition-colors"><Facebook size={20} /></a>
+                      <a href={config.youtube_url} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-brand-orange transition-colors"><Youtube size={20} /></a>
+                      {config.linkedin_url && <a href={config.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-brand-orange transition-colors"><Linkedin size={20} /></a>}
+                    </div>
+                  )}
+
+                  {(section?.show_share_menu !== false) && (
+                    <div className="flex items-center gap-2 border-l border-white/10 pl-6">
+                      <div className="relative">
+                        <button
+                          onClick={() => setShowShare(!showShare)}
+                          className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white/60 hover:text-white transition-colors"
+                        >
+                          <Share2 size={16} /> Compartilhar
+                        </button>
+                        {showShare && (
+                          <div className="absolute top-full left-0 mt-2 bg-white rounded-xl shadow-2xl p-2 flex flex-col gap-1 min-w-[150px] z-50 animate-fade-in">
+                            <button onClick={() => handleShare('whatsapp')} className="text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">WhatsApp</button>
+                            <button onClick={() => handleShare('facebook')} className="text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">Facebook</button>
+                            <button onClick={() => handleShare('linkedin')} className="text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">LinkedIn</button>
+                          </div>
+                        )}
+                      </div>
+                      <button
+                        onClick={handleCopyLink}
+                        className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white/60 hover:text-white transition-colors"
+                      >
+                        {copied ? <Check size={16} className="text-brand-green" /> : <Copy size={16} />}
+                        {copied ? 'Copiado!' : 'Copiar Link'}
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             <div className="relative group perspective-1000 hidden lg:block">
               <div className="absolute -inset-4 bg-brand-orange/20 rounded-[3rem] blur-2xl group-hover:bg-brand-orange/30 transition-all duration-700"></div>
               <div className="relative rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl transform transition-all duration-700 hover:rotate-2 hover:scale-105">
                 <img
-                  src="/about-team.png"
+                  src={section?.image_url || "/about-team.png"}
                   alt="Time MD Solution em reunião estratégica"
                   className="w-full h-auto object-cover"
                 />
@@ -51,24 +124,24 @@ const AboutPage: React.FC = () => {
       </section>
 
       {/* Visão, Missão e Valores */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-mid">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="bg-gray-50 p-10 rounded-[2.5rem] border border-gray-100 flex flex-col items-start gap-6 hover:shadow-xl transition-all duration-500">
+            <div className="bg-card p-10 rounded-[2.5rem] border border-gray-100 flex flex-col items-start gap-6 hover:shadow-xl transition-all duration-500">
               <div className="w-14 h-14 bg-brand-blue text-white rounded-2xl flex items-center justify-center shadow-lg"><Target size={28} /></div>
-              <h3 className="text-2xl font-heading font-bold text-gray-900">Nossa Missão</h3>
-              <p className="text-gray-600 leading-relaxed">
+              <h3 className="text-2xl font-heading font-bold text-title">Nossa Missão</h3>
+              <p className="text-content leading-relaxed">
                 Transformar pequenas e médias empresas brasileiras através de uma presença digital honesta, estratégica e altamente lucrativa. Existimos para que o empresário possa focar no que ama, enquanto nós cuidamos do motor de vendas.
               </p>
             </div>
-            <div className="bg-gray-50 p-10 rounded-[2.5rem] border border-gray-100 flex flex-col items-start gap-6 hover:shadow-xl transition-all duration-500">
+            <div className="bg-card p-10 rounded-[2.5rem] border border-gray-100 flex flex-col items-start gap-6 hover:shadow-xl transition-all duration-500">
               <div className="w-14 h-14 bg-brand-orange text-white rounded-2xl flex items-center justify-center shadow-lg"><Eye size={28} /></div>
-              <h3 className="text-2xl font-heading font-bold text-gray-900">Nossa Visão</h3>
-              <p className="text-gray-600 leading-relaxed">
+              <h3 className="text-2xl font-heading font-bold text-title">Nossa Visão</h3>
+              <p className="text-content leading-relaxed">
                 Ser a consultoria de referência em integridade e resultados reais no Brasil. Queremos elevar o padrão do mercado digital, onde a transparência é o ativo mais valioso de uma parceria.
               </p>
             </div>
-            <div className="bg-brand-darkBlue p-10 rounded-[2.5rem] text-white flex flex-col items-start gap-6 shadow-2xl scale-105 z-10">
+            <div className="bg-footer p-10 rounded-[2.5rem] text-white flex flex-col items-start gap-6 shadow-2xl scale-105 z-10">
               <div className="w-14 h-14 bg-white text-brand-darkBlue rounded-2xl flex items-center justify-center shadow-lg"><Heart size={28} /></div>
               <h3 className="text-2xl font-heading font-bold">Nossa Entrega</h3>
               <p className="text-blue-100 leading-relaxed">
@@ -80,7 +153,7 @@ const AboutPage: React.FC = () => {
       </section>
 
       {/* Os 4 Pilares da Transparência Radical */}
-      <section className="py-24 bg-gray-50/50">
+      <section className="py-24 bg-mid">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <SectionTitle
             title="A Transparência como Fundação"
@@ -114,12 +187,12 @@ const AboutPage: React.FC = () => {
                 color: "text-purple-500"
               }
             ].map((pilar, i) => (
-              <div key={i} className="bg-white p-8 rounded-3xl border border-gray-100 hover:shadow-2xl transition-all group">
+              <div key={i} className="bg-card p-8 rounded-3xl border border-gray-100 hover:shadow-2xl transition-all group">
                 <div className={`w-12 h-12 rounded-xl bg-gray-50 ${pilar.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
                   <pilar.icon size={24} />
                 </div>
-                <h4 className="text-lg font-bold mb-3 text-gray-900 leading-tight">{pilar.title}</h4>
-                <p className="text-gray-500 text-sm leading-relaxed">{pilar.text}</p>
+                <h4 className="text-lg font-bold mb-3 text-title leading-tight">{pilar.title}</h4>
+                <p className="text-content text-sm leading-relaxed">{pilar.text}</p>
               </div>
             ))}
           </div>
@@ -127,13 +200,13 @@ const AboutPage: React.FC = () => {
       </section>
 
       {/* Seção Compromisso */}
-      <section className="py-24">
+      <section className="py-24 bg-top">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="max-w-5xl mx-auto flex flex-col lg:flex-row items-center gap-16">
             <div className="lg:w-1/2 relative">
               <div className="absolute -inset-4 bg-brand-blue/5 rounded-[4rem] -rotate-3 blur-2xl"></div>
-              <div className="relative bg-white p-8 rounded-[3rem] shadow-2xl border border-gray-100">
-                <h3 className="text-3xl font-heading font-bold text-brand-darkBlue mb-6">Por que somos diferentes?</h3>
+              <div className="relative bg-card p-8 rounded-[3rem] shadow-2xl border border-gray-100">
+                <h3 className="text-3xl font-heading font-bold text-title mb-6">Por que somos diferentes?</h3>
                 <div className="space-y-4">
                   {[
                     "Foco 100% em PMEs e negócios locais.",
@@ -143,17 +216,17 @@ const AboutPage: React.FC = () => {
                   ].map((t, i) => (
                     <div key={i} className="flex gap-4">
                       <CheckCircle2 className="text-brand-green shrink-0" size={24} />
-                      <p className="text-gray-700 font-medium">{t}</p>
+                      <p className="text-content font-medium">{t}</p>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
             <div className="lg:w-1/2 text-center lg:text-left">
-              <h2 className="text-3xl md:text-5xl font-heading font-bold text-gray-900 mb-6 leading-tight">
+              <h2 className="text-3xl md:text-5xl font-heading font-black text-title mb-6 leading-tight">
                 Nossa entrega tem o seu <span className="text-brand-orange">nome escrito nela.</span>
               </h2>
-              <p className="text-lg text-gray-600 mb-10 leading-relaxed">
+              <p className="text-lg text-subtitle mb-10 leading-relaxed">
                 Não somos uma agência de massa. Somos uma consultoria boutique. Isso significa que limitamos o número de clientes que atendemos para garantir que o seu projeto receba a atenção, a originalidade e a honestidade que ele merece.
               </p>
               <Button onClick={scrollToContact} variant="primary" className="px-10 py-5 text-lg" withIcon>
@@ -165,12 +238,12 @@ const AboutPage: React.FC = () => {
       </section>
 
       {/* Selo de Integridade */}
-      <section className="py-24 bg-brand-darkBlue text-white text-center relative overflow-hidden">
+      <section className="py-24 bg-footer text-white text-center relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[url(&quot;data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E&quot;)] opacity-40"></div>
         <div className="max-w-7xl mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto">
             <ShieldCheck size={64} className="text-brand-orange mx-auto mb-8 animate-pulse" />
-            <h2 className="text-3xl md:text-5xl font-heading font-bold mb-6">Compromisso MD Solution</h2>
+            <h2 className="text-3xl md:text-5xl font-heading font-black mb-6">Compromisso MD Solution</h2>
             <p className="text-xl md:text-2xl font-light opacity-80 mb-12 italic leading-relaxed">
               "Nós nunca recomendaremos uma estratégia que nós mesmos não usaríamos com o nosso próprio dinheiro."
             </p>
@@ -178,7 +251,7 @@ const AboutPage: React.FC = () => {
               <Button onClick={scrollToContact} variant="primary" className="bg-brand-orange hover:bg-brand-orangeHover border-none px-12 py-5 text-lg">
                 Agendar Diagnóstico Grátis
               </Button>
-              <Button onClick={() => window.open(`${CONTACT_INFO.whatsappLink}?text=Olá! Gostaria de falar sobre a consultoria MD Solution.`, '_blank')} variant="outline" className="px-12 py-5 text-lg">
+              <Button onClick={() => window.open(`${config.whatsapp ? `https://wa.me/${config.whatsapp?.replace(/\D/g, '')}` : CONTACT_INFO.whatsappLink}?text=Olá! Gostaria de falar sobre a consultoria MD Solution.`, '_blank')} variant="outline" className="px-12 py-5 text-lg">
                 Falar no WhatsApp
               </Button>
             </div>

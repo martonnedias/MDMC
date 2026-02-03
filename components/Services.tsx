@@ -20,10 +20,22 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
     "Consultoria de Vendas": "consultancy"
   };
 
+  const serviceConfigKeys: Record<string, string> = {
+    "Campanhas de Captação": "ads",
+    "Sites & Landing Pages": "sites",
+    "Redes Sociais & Google": "gmb",
+    "Consultoria de Vendas": "consultancy"
+  };
+
+  const activeServices = SERVICES_CONTENT.items.filter(service => {
+    const key = serviceConfigKeys[service.title];
+    return config.content?.sections?.[key]?.is_active !== false;
+  });
+
   const bgColor = config.content?.sections?.services?.background_color || '#f9fafb'; // fallback bg-gray-50 hex
 
   return (
-    <section id="servicos" className="py-12 lg:py-20" style={{ backgroundColor: bgColor }}>
+    <section id="servicos" className={`${config.content?.sections?.services?.is_active === false ? 'hidden' : 'py-12 lg:py-20'}`} style={{ backgroundColor: bgColor }}>
       <div className="container mx-auto px-4 md:px-6">
         <SectionTitle
           title={config.content?.sections?.services?.title || SERVICES_CONTENT.title}
@@ -31,7 +43,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {SERVICES_CONTENT.items.map((service, index) => (
+          {activeServices.map((service, index) => (
             <div
               key={index}
               onClick={() => onNavigate && onNavigate(serviceViews[service.title])}

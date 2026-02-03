@@ -56,8 +56,13 @@
             card: 'var(--bg-card, #f9fafb)',
             header: 'var(--bg-header, #ffffff)',
             footer: 'var(--bg-footer, #112240)',
+            top: 'var(--bg-top, #ffffff)',
+            mid: 'var(--bg-mid, #ffffff)',
             txtPrimary: 'var(--text-primary, #111827)',
             txtSecondary: 'var(--text-secondary, #6b7280)',
+            title: 'var(--color-title, #111827)',
+            subtitle: 'var(--color-subtitle, #6b7280)',
+            content: 'var(--color-content, #111827)',
 
             brand: {
               blue: 'var(--color-brand-blue, #0052FF)',
@@ -71,6 +76,11 @@
               gold: '#FFD700', // For premium accents
               green: '#10B981',
             }
+          },
+          fontSize: {
+            base: ['var(--font-size-base, 1rem)', { lineHeight: '1.5' }],
+            heading: ['var(--font-size-heading, 3rem)', { lineHeight: '1.2', fontWeight: '800' }],
+            subtitle: ['var(--font-size-subtitle, 1.125rem)', { lineHeight: '1.6' }],
           },
           keyframes: {
             fadeIn: {

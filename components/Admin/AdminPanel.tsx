@@ -4,7 +4,8 @@ import {
     Save, Plus, Trash2, Globe, MessageCircle,
     Instagram, Facebook, Youtube, Palette, Power,
     ArrowLeft, X, Check, Image as ImageIcon,
-    LogOut, ExternalLink, Star, Sparkles, Upload, Eye, Users, Search
+    LogOut, ExternalLink, Star, Sparkles, Upload, Eye, Users, Search,
+    RotateCcw
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { adminService, SiteConfig, BlogPost, ServiceData } from '../../services/adminService';
@@ -12,6 +13,34 @@ import { aiService } from '../../services/aiService';
 import { PLANS, SWOT_PLANS, COMBOS_CONTENT, GMB_CONTENT } from '../../constants';
 import Button from '../Button';
 import RichTextEditor from './RichTextEditor';
+
+const ORIGINAL_COLORS: Record<string, { bg: string, title: string }> = {
+    hero: { bg: '#0A1931', title: '#ffffff' },
+    services: { bg: '#f1f5f9', title: '#111827' },
+    about: { bg: '#ffffff', title: '#111827' },
+    'md-converte': { bg: '#0A1931', title: '#ffffff' },
+    gmb: { bg: '#111827', title: '#ffffff' },
+    ads: { bg: '#112240', title: '#ffffff' },
+    sites: { bg: '#112240', title: '#ffffff' },
+    swot: { bg: '#ffffff', title: '#111827' },
+    diagnosis: { bg: '#f9fafb', title: '#111827' },
+    consultancy: { bg: '#0052FF', title: '#ffffff' },
+    footer: { bg: '#112240', title: '#ffffff' }
+};
+
+const SIZES = ['text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl', 'text-3xl', 'text-4xl', 'text-5xl', 'text-6xl', 'text-7xl', 'text-8xl', 'text-9xl'];
+const REDIRECTS = [
+    { label: 'Página Inicial', value: 'landing' },
+    { label: 'Diagnóstico de Marketing', value: 'diagnosis' },
+    { label: 'Google Business Profile', value: 'gmb' },
+    { label: 'Gestão de Tráfego (Ads)', value: 'ads' },
+    { label: 'Criação de Sites', value: 'sites' },
+    { label: 'Consultoria Estratégica', value: 'consultancy' },
+    { label: 'Análise SWOT', value: 'swot' },
+    { label: 'Blog', value: 'blog' },
+    { label: 'Sobre Nós', value: 'about' },
+    { label: 'Serviços', value: 'services' },
+];
 
 interface AdminPanelProps {
     onNavigate?: (view: any) => void;
@@ -533,7 +562,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                         <h4 className="font-black text-lg flex items-center gap-3 border-b border-gray-50 pb-6 text-gray-900">
                                             <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600"><FileText size={20} /></div> Conteúdo da Home (Hero)
                                         </h4>
-                                        <div className="grid grid-cols-1 gap-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div>
                                                 <label className={labelStyles}>Título Principal</label>
                                                 <input
@@ -563,6 +592,26 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                                     placeholder="Iniciar Diagnóstico Grátis"
                                                 />
                                             </div>
+                                            <div>
+                                                <label className={labelStyles}>URL da Imagem Hero</label>
+                                                <input
+                                                    type="text"
+                                                    value={config.content?.hero_image || ''}
+                                                    onChange={(e) => setConfig({ ...config, content: { ...config.content, hero_image: e.target.value } })}
+                                                    className={inputStyles}
+                                                    placeholder="https://images.unsplash.com/..."
+                                                />
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className={labelStyles}>Cor Fundo Hero</label>
+                                                    <input type="color" value={config.content?.hero_background_color || '#0A1931'} onChange={(e) => setConfig({ ...config, content: { ...config.content, hero_background_color: e.target.value } })} className="w-full h-8 rounded-lg cursor-pointer" />
+                                                </div>
+                                                <div>
+                                                    <label className={labelStyles}>Cor Título Hero</label>
+                                                    <input type="color" value={config.content?.hero_title_color || '#ffffff'} onChange={(e) => setConfig({ ...config, content: { ...config.content, hero_title_color: e.target.value } })} className="w-full h-8 rounded-lg cursor-pointer" />
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -573,58 +622,204 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                         </h4>
 
                                         <div className="space-y-8">
-                                            {/* Seção Serviços */}
-                                            <div className="bg-gray-50 p-6 rounded-3xl border border-gray-200">
-                                                <h5 className="font-black text-gray-900 mb-4 flex items-center gap-2"><div className="w-2 h-2 bg-blue-500 rounded-full"></div> Seção Serviços</h5>
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                    <div>
-                                                        <label className={labelStyles}>Título da Seção</label>
-                                                        <input
-                                                            type="text"
-                                                            value={config.content?.sections?.services?.title || ''}
-                                                            onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, services: { ...config.content?.sections?.services, title: e.target.value } } } })}
-                                                            className={inputStyles}
-                                                            placeholder="Nossas Soluções"
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <label className={labelStyles}>Cor de Fundo (Override)</label>
-                                                        <input
-                                                            type="color"
-                                                            value={config.content?.sections?.services?.background_color || '#ffffff'}
-                                                            onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, services: { ...config.content?.sections?.services, background_color: e.target.value } } } })}
-                                                            className="w-full h-10 rounded-xl cursor-pointer bg-white border border-gray-200 p-1"
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            {['hero', 'services', 'swot', 'ads', 'gmb', 'sites', 'about', 'md-converte', 'diagnosis', 'consultancy', 'footer'].map((sectionKey) => (
+                                                <div key={sectionKey} className="bg-gray-50 p-6 rounded-3xl border border-gray-200">
+                                                    <h5 className="font-black text-gray-900 mb-4 flex items-center gap-2 capitalize">
+                                                        <div className={`w-2 h-2 rounded-full ${sectionKey === 'services' ? 'bg-blue-500' : sectionKey === 'swot' ? 'bg-orange-500' : 'bg-gray-400'}`}></div> Seção {sectionKey}
+                                                    </h5>
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                                        <div className="col-span-full md:col-span-1 lg:col-span-1 border-b pb-4 mb-2">
+                                                            <label className="flex items-center justify-between cursor-pointer group">
+                                                                <span className="text-sm font-black text-gray-900 uppercase">Seção Ativa</span>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={config.content?.sections?.[sectionKey]?.is_active !== false}
+                                                                    onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, [sectionKey]: { ...config.content?.sections?.[sectionKey], is_active: e.target.checked } } } })}
+                                                                    className="w-6 h-6 rounded-full accent-blue-600"
+                                                                />
+                                                            </label>
+                                                        </div>
 
-                                            {/* Seção SWOT */}
-                                            <div className="bg-gray-50 p-6 rounded-3xl border border-gray-200">
-                                                <h5 className="font-black text-gray-900 mb-4 flex items-center gap-2"><div className="w-2 h-2 bg-orange-500 rounded-full"></div> Seção SWOT</h5>
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                    <div>
-                                                        <label className={labelStyles}>Título da Seção</label>
-                                                        <input
-                                                            type="text"
-                                                            value={config.content?.sections?.swot?.title || ''}
-                                                            onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, swot: { ...config.content?.sections?.swot, title: e.target.value } } } })}
-                                                            className={inputStyles}
-                                                            placeholder="Análise SWOT"
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <label className={labelStyles}>Subtítulo</label>
-                                                        <input
-                                                            type="text"
-                                                            value={config.content?.sections?.swot?.subtitle || ''}
-                                                            onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, swot: { ...config.content?.sections?.swot, subtitle: e.target.value } } } })}
-                                                            className={inputStyles}
-                                                            placeholder="Descubra suas forças e fraquezas"
-                                                        />
+                                                        <div>
+                                                            <label className={labelStyles}>Título</label>
+                                                            <input
+                                                                type="text"
+                                                                value={config.content?.sections?.[sectionKey]?.title || ''}
+                                                                onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, [sectionKey]: { ...config.content?.sections?.[sectionKey], title: e.target.value } } } })}
+                                                                className={inputStyles}
+                                                                placeholder="Título da Seção"
+                                                            />
+                                                        </div>
+
+                                                        <div>
+                                                            <label className={labelStyles}>Subtítulo / Descrição</label>
+                                                            <input
+                                                                type="text"
+                                                                value={config.content?.sections?.[sectionKey]?.subtitle || config.content?.sections?.[sectionKey]?.description || ''}
+                                                                onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, [sectionKey]: { ...config.content?.sections?.[sectionKey], subtitle: e.target.value } } } })}
+                                                                className={inputStyles}
+                                                                placeholder="Subtítulo ou breve descrição"
+                                                            />
+                                                        </div>
+
+                                                        <div>
+                                                            <label className={labelStyles}>Imagem da Seção</label>
+                                                            <div className="flex gap-2">
+                                                                <input
+                                                                    type="text"
+                                                                    value={config.content?.sections?.[sectionKey]?.image_url || ''}
+                                                                    onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, [sectionKey]: { ...config.content?.sections?.[sectionKey], image_url: e.target.value } } } })}
+                                                                    className={inputStyles}
+                                                                    placeholder="URL da Imagem"
+                                                                />
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        const input = document.createElement('input');
+                                                                        input.type = 'file';
+                                                                        input.accept = 'image/*';
+                                                                        input.onchange = async (e: any) => {
+                                                                            const file = e.target.files[0];
+                                                                            if (file) {
+                                                                                const url = await adminService.uploadImage(file);
+                                                                                if (url) setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, [sectionKey]: { ...config.content?.sections?.[sectionKey], image_url: url } } } });
+                                                                            }
+                                                                        };
+                                                                        input.click();
+                                                                    }}
+                                                                    className="p-3 bg-white border border-gray-200 rounded-2xl text-blue-500 hover:bg-gray-50 shadow-sm"
+                                                                    title="Upload de Imagem"
+                                                                >
+                                                                    <Upload size={18} />
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <div>
+                                                            <label className={labelStyles}>Fonte (Google Fonts)</label>
+                                                            <select
+                                                                value={config.content?.sections?.[sectionKey]?.font_family || ''}
+                                                                onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, [sectionKey]: { ...config.content?.sections?.[sectionKey], font_family: e.target.value } } } })}
+                                                                className={inputStyles}
+                                                                style={{ fontFamily: config.content?.sections?.[sectionKey]?.font_family }}
+                                                            >
+                                                                <option value="">Fonte Padrão</option>
+                                                                <option value="Inter">Inter (Padrão)</option>
+                                                                <option value="Poppins">Poppins</option>
+                                                                <option value="Montserrat">Montserrat</option>
+                                                                <option value="Open Sans">Open Sans</option>
+                                                                <option value="Playfair Display">Playfair Display (Serif)</option>
+                                                                <option value="Ubuntu">Ubuntu</option>
+                                                                <option value="Sora">Sora</option>
+                                                                <option value="Roboto">Roboto</option>
+                                                                <option value="Outfit">Outfit</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div>
+                                                            <label className={labelStyles}>Tamanho Título</label>
+                                                            <select
+                                                                value={config.content?.sections?.[sectionKey]?.font_size_title || ''}
+                                                                onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, [sectionKey]: { ...config.content?.sections?.[sectionKey], font_size_title: e.target.value } } } })}
+                                                                className={inputStyles}
+                                                            >
+                                                                <option value="">Padrão</option>
+                                                                {SIZES.map(s => <option key={s} value={s}>{s}</option>)}
+                                                            </select>
+                                                        </div>
+
+                                                        <div>
+                                                            <label className={labelStyles}>Tamanho Subtítulo</label>
+                                                            <select
+                                                                value={config.content?.sections?.[sectionKey]?.font_size_subtitle || ''}
+                                                                onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, [sectionKey]: { ...config.content?.sections?.[sectionKey], font_size_subtitle: e.target.value } } } })}
+                                                                className={inputStyles}
+                                                            >
+                                                                <option value="">Padrão</option>
+                                                                {SIZES.map(s => <option key={s} value={s}>{s}</option>)}
+                                                            </select>
+                                                        </div>
+
+                                                        <div>
+                                                            <label className={labelStyles}>Redirecionamento do Botão</label>
+                                                            <select
+                                                                value={config.content?.sections?.[sectionKey]?.button_redirect || ''}
+                                                                onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, [sectionKey]: { ...config.content?.sections?.[sectionKey], button_redirect: e.target.value } } } })}
+                                                                className={inputStyles}
+                                                            >
+                                                                <option value="">Nenhum / Link Manual</option>
+                                                                {REDIRECTS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
+                                                            </select>
+                                                        </div>
+
+                                                        {!config.content?.sections?.[sectionKey]?.button_redirect && (
+                                                            <div>
+                                                                <label className={labelStyles}>Link Manual do Botão</label>
+                                                                <input
+                                                                    type="text"
+                                                                    value={config.content?.sections?.[sectionKey]?.button_link || ''}
+                                                                    onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, [sectionKey]: { ...config.content?.sections?.[sectionKey], button_link: e.target.value } } } })}
+                                                                    className={inputStyles}
+                                                                    placeholder="/link-slug"
+                                                                />
+                                                            </div>
+                                                        )}
+
+                                                        <div className="grid grid-cols-2 gap-4">
+                                                            <div>
+                                                                <div className="flex justify-between items-center mb-1">
+                                                                    <label className={labelStyles + " mb-0"}>Cor Fundo</label>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, [sectionKey]: { ...config.content?.sections?.[sectionKey], background_color: ORIGINAL_COLORS[sectionKey]?.bg || '#ffffff' } } } })}
+                                                                        className="text-[9px] font-black uppercase text-blue-500 hover:text-blue-700 flex items-center gap-1"
+                                                                        title="Redefinir para padrão"
+                                                                    >
+                                                                        <RotateCcw size={10} /> Reset
+                                                                    </button>
+                                                                </div>
+                                                                <input type="color" value={config.content?.sections?.[sectionKey]?.background_color || ORIGINAL_COLORS[sectionKey]?.bg || '#ffffff'} onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, [sectionKey]: { ...config.content?.sections?.[sectionKey], background_color: e.target.value } } } })} className="w-full h-8 rounded-lg cursor-pointer" />
+                                                            </div>
+                                                            <div>
+                                                                <div className="flex justify-between items-center mb-1">
+                                                                    <label className={labelStyles + " mb-0"}>Cor Título</label>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, [sectionKey]: { ...config.content?.sections?.[sectionKey], title_color: ORIGINAL_COLORS[sectionKey]?.title || '#000000' } } } })}
+                                                                        className="text-[9px] font-black uppercase text-blue-500 hover:text-blue-700 flex items-center gap-1"
+                                                                        title="Redefinir para padrão"
+                                                                    >
+                                                                        <RotateCcw size={10} /> Reset
+                                                                    </button>
+                                                                </div>
+                                                                <input type="color" value={config.content?.sections?.[sectionKey]?.title_color || ORIGINAL_COLORS[sectionKey]?.title || '#000000'} onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, [sectionKey]: { ...config.content?.sections?.[sectionKey], title_color: e.target.value } } } })} className="w-full h-8 rounded-lg cursor-pointer" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="flex gap-4 col-span-full border-t pt-4 mt-2">
+                                                            <label className="flex items-center gap-2 cursor-pointer">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={config.content?.sections?.[sectionKey]?.show_social_icons !== false}
+                                                                    onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, [sectionKey]: { ...config.content?.sections?.[sectionKey], show_social_icons: e.target.checked } } } })}
+                                                                    className="w-4 h-4 rounded accent-blue-600"
+                                                                />
+                                                                <span className="text-xs font-bold text-gray-500 uppercase">Mostrar Redes Sociais</span>
+                                                            </label>
+
+                                                            <label className="flex items-center gap-2 cursor-pointer">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={config.content?.sections?.[sectionKey]?.show_share_menu !== false}
+                                                                    onChange={(e) => setConfig({ ...config, content: { ...config.content, sections: { ...config.content?.sections, [sectionKey]: { ...config.content?.sections?.[sectionKey], show_share_menu: e.target.checked } } } })}
+                                                                    className="w-4 h-4 rounded accent-blue-600"
+                                                                />
+                                                                <span className="text-xs font-bold text-gray-500 uppercase">Mostrar Menu Compartilhar</span>
+                                                            </label>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            ))}
                                         </div>
                                     </div>
 
@@ -636,7 +831,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                             <div className="space-y-4">
-                                                <h5 className="font-bold text-sm text-gray-900 uppercase tracking-widest border-b pb-2">Cores de Fundo</h5>
+                                                <h5 className="font-bold text-sm text-gray-900 uppercase tracking-widest border-b pb-2">Cores Globais</h5>
                                                 <div className="grid grid-cols-2 gap-4">
                                                     <div>
                                                         <label className={labelStyles}>Fundo da Página</label>
@@ -646,10 +841,17 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                                         </div>
                                                     </div>
                                                     <div>
-                                                        <label className={labelStyles}>Fundo dos Cards</label>
+                                                        <label className={labelStyles}>Topo da Página</label>
                                                         <div className="flex items-center gap-2">
-                                                            <input type="color" value={config.theme?.colors?.card_background || '#f9fafb'} onChange={(e) => setConfig({ ...config, theme: { ...config.theme, colors: { ...config.theme?.colors, card_background: e.target.value } as any } })} className="w-8 h-8 rounded cursor-pointer border-none bg-transparent" />
-                                                            <span className="text-xs text-gray-500">{config.theme?.colors?.card_background || '#f9fafb'}</span>
+                                                            <input type="color" value={config.theme?.colors?.top_background || '#ffffff'} onChange={(e) => setConfig({ ...config, theme: { ...config.theme, colors: { ...config.theme?.colors, top_background: e.target.value } as any } })} className="w-8 h-8 rounded cursor-pointer border-none bg-transparent" />
+                                                            <span className="text-xs text-gray-500">{config.theme?.colors?.top_background || '#ffffff'}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <label className={labelStyles}>Meio da Página</label>
+                                                        <div className="flex items-center gap-2">
+                                                            <input type="color" value={config.theme?.colors?.mid_background || '#ffffff'} onChange={(e) => setConfig({ ...config, theme: { ...config.theme, colors: { ...config.theme?.colors, mid_background: e.target.value } as any } })} className="w-8 h-8 rounded cursor-pointer border-none bg-transparent" />
+                                                            <span className="text-xs text-gray-500">{config.theme?.colors?.mid_background || '#ffffff'}</span>
                                                         </div>
                                                     </div>
                                                     <div>
@@ -670,33 +872,48 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
                                             </div>
 
                                             <div className="space-y-4">
-                                                <h5 className="font-bold text-sm text-gray-900 uppercase tracking-widest border-b pb-2">Tipografia e Textos</h5>
-                                                <div className="grid grid-cols-2 gap-4">
-                                                    <div>
-                                                        <label className={labelStyles}>Texto Principal</label>
-                                                        <div className="flex items-center gap-2">
-                                                            <input type="color" value={config.theme?.colors?.text_primary || '#111827'} onChange={(e) => setConfig({ ...config, theme: { ...config.theme, colors: { ...config.theme?.colors, text_primary: e.target.value } as any } })} className="w-8 h-8 rounded cursor-pointer border-none bg-transparent" />
-                                                            <span className="text-xs text-gray-500">Cor Títulos</span>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <label className={labelStyles}>Texto Secundário</label>
-                                                        <div className="flex items-center gap-2">
-                                                            <input type="color" value={config.theme?.colors?.text_secondary || '#6b7280'} onChange={(e) => setConfig({ ...config, theme: { ...config.theme, colors: { ...config.theme?.colors, text_secondary: e.target.value } as any } })} className="w-8 h-8 rounded cursor-pointer border-none bg-transparent" />
-                                                            <span className="text-xs text-gray-500">Cor Parágrafos</span>
-                                                        </div>
+                                                <h5 className="font-bold text-sm text-gray-900 uppercase tracking-widest border-b pb-2">Tipografia Global</h5>
+                                                <div>
+                                                    <label className={labelStyles}>Cor do Título Global</label>
+                                                    <div className="flex items-center gap-2">
+                                                        <input type="color" value={config.theme?.colors?.title_color || '#111827'} onChange={(e) => setConfig({ ...config, theme: { ...config.theme, colors: { ...config.theme?.colors, title_color: e.target.value } as any } })} className="w-8 h-8 rounded cursor-pointer border-none bg-transparent" />
+                                                        <span className="text-xs text-gray-500">{config.theme?.colors?.title_color || '#111827'}</span>
                                                     </div>
                                                 </div>
-                                                <div className="pt-2">
-                                                    <label className={labelStyles}>Fonte Principal (Google Fonts Name)</label>
-                                                    <input
-                                                        type="text"
+                                                <div>
+                                                    <label className={labelStyles}>Cor do Subtítulo Global</label>
+                                                    <div className="flex items-center gap-2">
+                                                        <input type="color" value={config.theme?.colors?.subtitle_color || '#6b7280'} onChange={(e) => setConfig({ ...config, theme: { ...config.theme, colors: { ...config.theme?.colors, subtitle_color: e.target.value } as any } })} className="w-8 h-8 rounded cursor-pointer border-none bg-transparent" />
+                                                        <span className="text-xs text-gray-500">{config.theme?.colors?.subtitle_color || '#6b7280'}</span>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label className={labelStyles}>Fonte Principal (Google Fonts)</label>
+                                                    <select
                                                         value={config.theme?.typography?.font_family || 'Inter'}
                                                         onChange={(e) => setConfig({ ...config, theme: { ...config.theme, typography: { ...config.theme?.typography, font_family: e.target.value } as any } })}
                                                         className={inputStyles}
-                                                        placeholder="Ex: Inter, Roboto, Lato"
-                                                    />
-                                                    <p className="text-[10px] text-gray-400 mt-1">Certifique-se que a fonte é válida.</p>
+                                                    >
+                                                        <option value="Inter">Inter</option>
+                                                        <option value="Poppins">Poppins</option>
+                                                        <option value="Montserrat">Montserrat</option>
+                                                        <option value="Open Sans">Open Sans</option>
+                                                        <option value="Playfair Display">Playfair Display</option>
+                                                        <option value="Ubuntu">Ubuntu</option>
+                                                        <option value="Sora">Sora</option>
+                                                        <option value="Roboto">Roboto</option>
+                                                        <option value="Outfit">Outfit</option>
+                                                    </select>
+                                                </div>
+                                                <div className="grid grid-cols-2 gap-4 pt-4">
+                                                    <div>
+                                                        <label className={labelStyles}>Tamanho Base</label>
+                                                        <input type="text" value={config.theme?.typography?.base_font_size || '1rem'} onChange={(e) => setConfig({ ...config, theme: { ...config.theme, typography: { ...config.theme?.typography, base_font_size: e.target.value } as any } })} className={inputStyles} placeholder="Ex: 16px" />
+                                                    </div>
+                                                    <div>
+                                                        <label className={labelStyles}>Tamanho Títulos</label>
+                                                        <input type="text" value={config.theme?.typography?.heading_font_size || '3rem'} onChange={(e) => setConfig({ ...config, theme: { ...config.theme, typography: { ...config.theme?.typography, heading_font_size: e.target.value } as any } })} className={inputStyles} placeholder="Ex: 3rem" />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

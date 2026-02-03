@@ -5,6 +5,7 @@ import PainPoints from './components/PainPoints';
 import Checklist from './components/Checklist';
 import Services from './components/Services';
 import SwotSection from './components/SwotSection';
+import MDConverteSection from './components/MDConverteSection';
 import SwotBriefing from './components/SwotBriefing';
 import SwotPricing from './components/SwotPricing';
 import Combos from './components/Combos';
@@ -100,6 +101,26 @@ const AppContent: React.FC = () => {
 
       if (entry) {
         const view = entry[0] as ViewState;
+
+        // Verificação de ativação da seção
+        const sectionMapping: Record<string, string> = {
+          'gmb': 'gmb',
+          'ads': 'ads',
+          'sites': 'sites',
+          'consultancy': 'consultancy',
+          'swot-service': 'swot',
+          'marketing-diagnosis': 'diagnosis',
+          'md-converte': 'md-converte',
+          'about': 'about'
+        };
+
+        const sectionKey = sectionMapping[view];
+        if (sectionKey && config.content?.sections?.[sectionKey]?.is_active === false) {
+          setCurrentView('landing');
+          window.location.hash = '';
+          return;
+        }
+
         setCurrentView(view);
         if (view === 'blog-post' && slug) {
           setViewParams({ slug });
@@ -112,7 +133,7 @@ const AppContent: React.FC = () => {
     handleHashChange(); // Executa ao carregar
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
+  }, [config]); // Adicionado config como dependência
 
   // SEO: atualiza document.title de forma dinâmica
   useEffect(() => {
@@ -138,12 +159,13 @@ const AppContent: React.FC = () => {
     <div className="font-sans antialiased text-gray-900 bg-white min-h-screen flex flex-col w-full overflow-x-hidden">
       {currentView !== 'admin' && <Header currentView={currentView} onNavigate={navigateTo} />}
 
-      <main id="main-content" role="main" aria-label="Conteúdo principal" className={`flex-grow ${currentView !== 'landing' ? 'pt-24 lg:pt-32' : 'pt-0'}`}>
+      <main id="main-content" role="main" aria-label="Conteúdo principal" className={`flex-grow ${currentView !== 'landing' ? 'pt-[90px]' : 'pt-0'}`}>
         {currentView === 'landing' && (
           <>
             <Hero
               onStartBriefing={() => navigateTo('marketing-diagnosis')}
               onStartSwot={() => navigateTo('swot-service')}
+              onNavigate={navigateTo}
             />
 
             <FadeIn>
@@ -152,6 +174,10 @@ const AppContent: React.FC = () => {
 
             <FadeIn>
               <Checklist />
+            </FadeIn>
+
+            <FadeIn>
+              <MDConverteSection onNavigate={navigateTo} />
             </FadeIn>
 
             <FadeIn>

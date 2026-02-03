@@ -44,7 +44,7 @@ const BlogList: React.FC<BlogListProps> = ({ onNavigate }) => {
     }
 
     return (
-        <section className="py-24 bg-gray-50">
+        <section className="pt-20 lg:pt-32 pb-24 bg-gray-50">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
                     <div className="max-w-2xl">

@@ -115,17 +115,17 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
   };
 
   const services = [
-    { label: 'MD Converte', view: 'md-converte' as ViewState, icon: MessageSquare, desc: 'Atendimento + CRM' },
-    { label: 'Google Meu Negócio', view: 'gmb' as ViewState, icon: MapPin, desc: 'Local SEO' },
-    { label: 'Tráfego Pago (Anúncios)', view: 'ads' as ViewState, icon: Megaphone, desc: 'Meta & Google Ads' },
-    { label: 'Sites & Landing Pages', view: 'sites' as ViewState, icon: Globe, desc: 'Alta Conversão' },
-    { label: 'Consultoria de Vendas', view: 'consultancy' as ViewState, icon: Handshake, desc: 'Gestão Comercial' },
-  ];
+    { label: 'MD Converte', view: 'md-converte' as ViewState, icon: MessageSquare, desc: 'Atendimento + CRM', key: 'md-converte' },
+    { label: 'Google Meu Negócio', view: 'gmb' as ViewState, icon: MapPin, desc: 'Local SEO', key: 'gmb' },
+    { label: 'Tráfego Pago (Anúncios)', view: 'ads' as ViewState, icon: Megaphone, desc: 'Meta & Google Ads', key: 'ads' },
+    { label: 'Sites & Landing Pages', view: 'sites' as ViewState, icon: Globe, desc: 'Alta Conversão', key: 'sites' },
+    { label: 'Consultoria de Vendas', view: 'consultancy' as ViewState, icon: Handshake, desc: 'Gestão Comercial', key: 'consultancy' },
+  ].filter(s => config.content?.sections?.[s.key]?.is_active !== false);
 
   const tools = [
     { label: 'Blog & Artigos', view: 'blog' as ViewState, icon: FileText, desc: 'Conteúdo Educativo', active: config.is_blog_active },
-    { label: 'Análise SWOT (Audit)', view: 'swot-service' as ViewState, icon: Target, desc: 'Auditoria Estratégica', active: config.is_swot_active },
-    { label: 'Diagnóstico Marketing (Free)', view: 'marketing-diagnosis' as ViewState, icon: BarChart3, desc: 'Análise de Vendas', active: true },
+    { label: 'Análise SWOT (Audit)', view: 'swot-service' as ViewState, icon: Target, desc: 'Auditoria Estratégica', active: config.is_swot_active && config.content?.sections?.['swot']?.is_active !== false },
+    { label: 'Diagnóstico Marketing (Free)', view: 'marketing-diagnosis' as ViewState, icon: BarChart3, desc: 'Análise de Vendas', active: config.content?.sections?.['diagnosis']?.is_active !== false },
   ].filter(t => t.active);
 
   // Header turns solid ONLY on scroll now as requested for ALL pages
@@ -136,26 +136,28 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
 
   // Dynamic classes based on background state (altura fixa em todas as páginas)
   const headerBgClass = isSolid
-    ? 'bg-white/95 shadow-[0_10px_30px_rgba(0,0,0,0.1)]'
+    ? `bg-white ${isDarkPage ? 'shadow-sm' : 'shadow-[0_5px_25px_rgba(0,0,0,0.1)]'}`
     : currentView === 'landing'
-      ? 'bg-transparent shadow-[0_10px_40px_rgba(0,0,0,0.4)]'
-      : 'bg-white/95 shadow-[0_10px_30px_rgba(0,0,0,0.1)]';
+      ? 'bg-transparent shadow-[0_10px_40px_rgba(0,0,0,0.3)]'
+      : 'bg-white shadow-none border-b border-gray-100/50';
 
-  // When solid (scrolled), we always use darkBlue text on white background.
-  // When transparent, we use white on dark pages and darkBlue on light pages.
-  const navLinkClass = isSolid
+  const isHeaderWhite = isSolid || currentView !== 'landing';
+
+  // When solid (scrolled) or on internal pages, we always use darkBlue text on white background.
+  // When transparent (only on landing), we use white on dark pages and darkBlue on light pages.
+  const navLinkClass = isHeaderWhite
     ? 'text-sm font-black tracking-tight transition-all relative group text-brand-darkBlue hover:text-brand-orange'
     : isDarkPage
       ? 'text-sm font-black tracking-tight transition-all relative group text-white hover:text-brand-orange'
       : 'text-sm font-black tracking-tight transition-all relative group text-brand-darkBlue hover:text-brand-orange';
 
-  const iconColorClass = isSolid
+  const iconColorClass = isHeaderWhite
     ? 'text-brand-darkBlue'
     : (isDarkPage ? 'text-white' : 'text-brand-darkBlue');
 
   const buttonVariant = 'primary';
 
-  const buttonExtraClass = isSolid
+  const buttonExtraClass = isHeaderWhite
     ? 'bg-brand-orange text-white hover:bg-brand-orangeHover border-none shadow-xl shadow-brand-orange/10'
     : (isDarkPage ? 'shadow-xl shadow-brand-orange/10' : 'bg-brand-darkBlue text-white hover:bg-brand-navy shadow-lg shadow-brand-darkBlue/20');
 
@@ -200,13 +202,13 @@ const Header: React.FC<HeaderProps> = ({ currentView = 'landing', onNavigate }) 
   };
 
   return (
-    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 h-[90px] flex items-center ${headerBgClass} backdrop-blur-md`}>
+    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 h-[90px] flex items-center ${headerBgClass}`}>
       <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
         {/* Logo Linkável para Home */}
         <a href="/" onClick={goHome} className="block transition-transform active:scale-95" aria-label="Voltar para Início">
           <Logo
             size={isScrolled ? 'sm' : 'md'}
-            variant={isSolid || !isDarkPage ? 'dark' : 'light'}
+            variant={isHeaderWhite || !isDarkPage ? 'dark' : 'light'}
           />
         </a>
 

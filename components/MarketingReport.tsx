@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import Button from './Button';
 import {
   FileText, Download, Share2, ArrowLeft, Loader2, Sparkles,
@@ -27,16 +27,27 @@ const MarketingReport: React.FC<MarketingReportProps> = ({ formData, onBack }) =
   useEffect(() => {
     const generateReport = async () => {
       setLoading(true);
-      try {
-        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      setError(null);
 
-        const systemInstruction = `Você é um Agente de IA especializado em análise estratégica de negócios, criado para a MD Solution Marketing & Consultoria.
-        SUA FUNÇÃO: Analisar respostas de um briefing e gerar um Relatório de Diagnóstico profissional, conciso e humano.
-        REGRAS DE OURO:
-        - Nunca mencione ser uma IA.
-        - Use português do Brasil profissional e empático.
-        - Foque em análise de PRODUTO/SERVIÇO (preço, formas de pagamento, diferencial vs benchmarks).
-        - Estrutura obrigatória: 1. Resumo Executivo, 2. Momento Atual, 3. Presença Digital, 4. Análise de Produto/Serviço (Posicionamento de preço, Facilidade de compra, Diferencial), 5. Atendimento e Vendas, 6. Posicionamento vs Concorrência, 7. Tabela de Benchmarks do Segmento, 8. Pontos Fortes, 9. Oportunidades (Ajuste de preço/parcelamento), 10. Recomendação de Plano (Essencial/Profissional/Premium), 11. Consultoria de Vendas (Se necessário), 12. Próximos Passos.`;
+      const apiKey = process.env.API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
+      if (!apiKey || apiKey === 'PLACEHOLDER_API_KEY') {
+        setError("Chave de API não configurada. Por favor, verique suas variáveis de ambiente ou o arquivo .env.local.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({
+          model: "gemini-1.5-flash",
+          systemInstruction: `Você é um Agente de IA especializado em análise estratégica de negócios, criado para a MD Solution Marketing & Consultoria.
+          SUA FUNÇÃO: Analisar respostas de um briefing e gerar um Relatório de Diagnóstico profissional, conciso e humano.
+          REGRAS DE OURO:
+          - Nunca mencione ser uma IA.
+          - Use português do Brasil profissional e empático.
+          - Foque em análise de PRODUTO/SERVIÇO (preço, formas de pagamento, diferencial vs benchmarks).
+          - Estrutura obrigatória: 1. Resumo Executivo, 2. Momento Atual, 3. Presença Digital, 4. Análise de Produto/Serviço (Posicionamento de preço, Facilidade de compra, Diferencial), 5. Atendimento e Vendas, 6. Posicionamento vs Concorrência, 7. Tabela de Benchmarks do Segmento, 8. Pontos Fortes, 9. Oportunidades (Ajuste de preço/parcelamento), 10. Recomendação de Plano (Essencial/Profissional/Premium), 11. Consultoria de Vendas (Se necessário), 12. Próximos Passos.`
+        });
 
         const prompt = `Gere o relatório completo para a empresa "${formData.companyName}".
         DADOS DE ENTRADA:
@@ -44,17 +55,12 @@ const MarketingReport: React.FC<MarketingReportProps> = ({ formData, onBack }) =
         
         Compare os dados de preço (${formData.priceRange}), parcelamento (${formData.maxInstallments}) e entrega (${formData.deliveryTime}) com os benchmarks típicos do segmento "${formData.segment}". Identifique se o preço está acima ou abaixo e se há barreiras de conversão no pagamento.`;
 
-        const response = await ai.models.generateContent({
-          model: 'gemini-3-flash-preview',
-          contents: prompt,
-          config: {
-            systemInstruction: systemInstruction,
-            temperature: 0.7,
-          }
-        });
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
 
-        if (response.text) {
-          setReportText(response.text);
+        if (text) {
+          setReportText(text);
         } else {
           throw new Error("Erro na geração do conteúdo.");
         }
