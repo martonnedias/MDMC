@@ -44,12 +44,12 @@ const BlogList: React.FC<BlogListProps> = ({ onNavigate }) => {
     }
 
     return (
-        <section className="pt-20 lg:pt-32 pb-24 bg-gray-50">
+        <section className="pt-44 lg:pt-60 pb-24 bg-white">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
                     <div className="max-w-2xl">
-                        <h1 className="text-4xl md:text-5xl font-heading font-bold text-gray-900 mb-6">
-                            Blog Inteligência Digital
+                        <h1 className="text-4xl lg:text-7xl font-heading font-black text-brand-darkBlue mb-6 tracking-tighter leading-[0.95]">
+                            Blog <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-orange-400 italic pr-1">inteligência digital</span>
                         </h1>
                         <p className="text-xl text-gray-600 leading-relaxed">
                             Estratégias, tendências e insights para fazer seu negócio crescer no mundo real através do digital.

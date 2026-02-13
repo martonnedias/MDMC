@@ -14,6 +14,7 @@ export interface PricingPlan {
   features: string[];
   highlight?: boolean;
   ctaText: string;
+  badge?: string;
 }
 
 export interface FaqItem {
@@ -26,6 +27,7 @@ export interface ServiceItem {
   description: string;
   icon: React.ComponentType<any>;
   color: string;
+  icon_bg?: string;
 }
 
 export interface ComboItem {

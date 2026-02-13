@@ -3,35 +3,36 @@ import React from 'react';
 import { ArrowRight, Loader2 } from 'lucide-react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline';
+  variant?: 'primary' | 'secondary' | 'outline' | 'outline-dark';
   fullWidth?: boolean;
   withIcon?: boolean;
   loading?: boolean;
   children: React.ReactNode;
 }
 
-const Button: React.FC<ButtonProps> = ({ 
-  variant = 'primary', 
-  fullWidth = false, 
+const Button: React.FC<ButtonProps> = ({
+  variant = 'primary',
+  fullWidth = false,
   withIcon = false,
   loading = false,
-  children, 
+  children,
   className = '',
   disabled,
-  ...props 
+  ...props
 }) => {
   const baseStyles = "inline-flex items-center justify-center font-heading font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:-translate-y-1 shadow-md disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0 box-border";
-  
+
   const variants = {
     primary: "bg-brand-orange text-white hover:bg-brand-orangeHover shadow-orange-500/20 border-2 border-transparent",
     secondary: "bg-white text-brand-blue border-2 border-brand-blue hover:bg-blue-50 shadow-blue-500/5",
-    outline: "border-2 border-white text-white hover:bg-white/10"
+    outline: "border-2 border-white text-white hover:bg-white/10",
+    "outline-dark": "border-2 border-slate-200 text-brand-darkBlue hover:border-brand-darkBlue hover:bg-brand-darkBlue hover:text-white"
   };
 
   const widthStyle = fullWidth ? "w-full" : "";
 
   return (
-    <button 
+    <button
       className={`${baseStyles} ${variants[variant]} ${widthStyle} ${className}`}
       disabled={loading || disabled}
       {...props}

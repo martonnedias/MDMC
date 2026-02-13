@@ -100,6 +100,10 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 root.style.setProperty('--color-title', config.theme.colors.title_color || config.theme.colors.text_primary || '#111827');
                 root.style.setProperty('--color-subtitle', config.theme.colors.subtitle_color || config.theme.colors.text_secondary || '#6b7280');
                 root.style.setProperty('--color-content', config.theme.colors.content_color || config.theme.colors.text_primary || '#111827');
+                root.style.setProperty('--color-accent', config.theme.colors.accent_color || config.secondary_color || '#FF6B00');
+
+                if (config.theme.colors.brand_blue) root.style.setProperty('--color-brand-blue', config.theme.colors.brand_blue);
+                if (config.theme.colors.brand_orange) root.style.setProperty('--color-brand-orange', config.theme.colors.brand_orange);
             }
 
             // Tipografia (se necessário carregar fontes externas, seria aqui ou no HTML)

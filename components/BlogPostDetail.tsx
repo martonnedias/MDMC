@@ -157,7 +157,7 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({ slug, onNavigate }) => 
     return (
         <article className="bg-white min-h-screen">
             {/* Header do Post */}
-            <header className="relative h-[60vh] min-h-[400px] flex items-end pb-16">
+            <header className="relative h-[60vh] min-h-[400px] flex items-end pb-16 pt-24">
                 <div className="absolute inset-0">
                     <img
                         src={post.featured_image || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80'}

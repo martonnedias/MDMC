@@ -12,7 +12,7 @@ const Faq: React.FC = () => {
   };
 
   return (
-    <section className="py-12 lg:pt-20 lg:pb-24 bg-gray-50">
+    <section className="py-12 lg:pt-20 lg:pb-24 bg-white">
       <div className="container mx-auto px-4 md:px-6">
         <SectionTitle
           title="Dúvidas comuns sobre nossos serviços"

@@ -11,6 +11,7 @@ import SwotPricing from './components/SwotPricing';
 import Combos from './components/Combos';
 import Testimonials from './components/Testimonials';
 import Trust from './components/Trust';
+import TrustSeals from './components/TrustSeals';
 import Faq from './components/Faq';
 import Footer from './components/Footer';
 import WhatsAppWidget from './components/WhatsAppWidget';
@@ -23,6 +24,8 @@ import AdsServicePage from './components/AdsServicePage';
 import SitesServicePage from './components/SitesServicePage';
 import ConsultancyServicePage from './components/ConsultancyServicePage';
 import SwotServicePage from './components/SwotServicePage';
+import SocialMediaServicePage from './components/SocialMediaServicePage';
+import CRMServicePage from './components/CRMServicePage';
 import MarketingDiagnosisPage from './components/MarketingDiagnosisPage';
 import AboutPage from './components/AboutPage';
 import Pricing from './components/Pricing';
@@ -34,21 +37,25 @@ import CommentPolicy from './components/CommentPolicy';
 import CookieConsent from './components/CookieConsent';
 import { SiteProvider, useSiteConfig } from './lib/SiteContext';
 import { AdminPanel } from './components/Admin/AdminPanel';
+import { ProtectedRoute } from './components/Auth/ProtectedRoute';
 
 import BlogList from './components/BlogList';
 import BlogPostDetail from './components/BlogPostDetail';
+import DesignShowcase from './components/DesignShowcase';
 
-export type ViewState = 'landing' | 'briefing' | 'terms' | 'privacy' | 'swot' | 'swot-pricing' | 'gmb' | 'ads' | 'sites' | 'consultancy' | 'swot-service' | 'marketing-diagnosis' | 'about' | 'auth' | 'blog' | 'admin' | 'blog-post' | 'comment-policy' | 'md-converte';
+export type ViewState = 'landing' | 'briefing' | 'terms' | 'privacy' | 'swot' | 'swot-pricing' | 'gmb' | 'ads' | 'sites' | 'consultancy' | 'swot-service' | 'social-media' | 'marketing-diagnosis' | 'about' | 'auth' | 'blog' | 'admin' | 'blog-post' | 'comment-policy' | 'md-converte' | 'design-showcase' | 'crm-service';
 
 const VIEW_CONFIGS: Record<ViewState, { hash: string; title: string }> = {
   landing: { hash: '', title: '' },
   about: { hash: 'sobre', title: 'Sobre Nós' },
   gmb: { hash: 'google-meu-negocio', title: 'Google Meu Negócio' },
-  ads: { hash: 'trafego-pago', title: 'Tráfego Pago' },
+  ads: { hash: 'anuncios-pagos', title: 'Estratégias de Anúncios Pagos' },
   sites: { hash: 'sites', title: 'Sites & Landing Pages' },
   consultancy: { hash: 'consultoria', title: 'Consultoria de Vendas' },
   'swot-service': { hash: 'auditoria', title: 'Auditoria Estratégica' },
+  'social-media': { hash: 'social-media', title: 'Social Media & Branding' },
   'marketing-diagnosis': { hash: 'diagnostico', title: 'Diagnóstico de Marketing' },
+  'crm-service': { hash: 'crm', title: 'Gestão de CRM' },
   briefing: { hash: 'questionario', title: 'Questionário' },
   'swot-pricing': { hash: 'planos-swot', title: 'Planos SWOT' },
   swot: { hash: 'swot', title: 'Análise SWOT' },
@@ -59,28 +66,40 @@ const VIEW_CONFIGS: Record<ViewState, { hash: string; title: string }> = {
   admin: { hash: 'admin', title: 'Painel Admin' },
   'blog-post': { hash: 'artigo', title: 'Artigo' },
   'comment-policy': { hash: 'regras-comunidade', title: 'Regras da Comunidade' },
-  'md-converte': { hash: 'md-converte', title: 'MD Converte' }
+  'md-converte': { hash: 'md-converte', title: 'CONVERTE Sim.' },
+  'design-showcase': { hash: 'showcase', title: 'Showcase de Design' }
 };
 
 const AppContent: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewState>('landing');
   const [viewParams, setViewParams] = useState<any>(null);
   const [selectedSwotPlan, setSelectedSwotPlan] = useState<string | null>(null);
+  const [returnTo, setReturnTo] = useState<ViewState | null>(null);
   const { user, loading } = useAuth();
   const { config } = useSiteConfig();
 
-  const navigateTo = (view: ViewState, params: any = null) => {
+  const navigateTo = (view: ViewState, params: any = null, options: { skipScroll?: boolean } = {}) => {
     let targetView = view;
 
-    // Se logado, pula as landing pages de serviço e vai direto para a ferramenta
-    if (user) {
-      if (view === 'marketing-diagnosis') targetView = 'briefing';
-      if (view === 'swot-service') targetView = 'swot-pricing';
+    // Salva para onde voltar se estiver indo para auth e estiver em uma área restrita
+    if (view === 'auth') {
+      if (currentView === 'admin' || currentView === 'swot') {
+        setReturnTo(currentView);
+      }
     }
+
+    // Removal of auto-redirect logic to allow viewing landing pages even when logged in
+    // if (user) {
+    //   if (view === 'marketing-diagnosis') targetView = 'briefing';
+    //   if (view === 'swot-service') targetView = 'swot-pricing';
+    // }
 
     setCurrentView(targetView);
     setViewParams(params);
-    window.scrollTo(0, 0);
+
+    if (!options.skipScroll) {
+      window.scrollTo(0, 0);
+    }
 
     // Atualiza a hash para permitir navegação direta e persistência no refresh
     const config = VIEW_CONFIGS[targetView];
@@ -109,6 +128,7 @@ const AppContent: React.FC = () => {
           'sites': 'sites',
           'consultancy': 'consultancy',
           'swot-service': 'swot',
+          'social-media': 'social_media',
           'marketing-diagnosis': 'diagnosis',
           'md-converte': 'md-converte',
           'about': 'about'
@@ -159,7 +179,7 @@ const AppContent: React.FC = () => {
     <div className="font-sans antialiased text-gray-900 bg-white min-h-screen flex flex-col w-full overflow-x-hidden">
       {currentView !== 'admin' && <Header currentView={currentView} onNavigate={navigateTo} />}
 
-      <main id="main-content" role="main" aria-label="Conteúdo principal" className={`flex-grow ${currentView !== 'landing' ? 'pt-[90px]' : 'pt-0'}`}>
+      <main id="main-content" role="main" aria-label="Conteúdo principal" className="flex-grow pt-0">
         {currentView === 'landing' && (
           <>
             <Hero
@@ -168,23 +188,31 @@ const AppContent: React.FC = () => {
               onNavigate={navigateTo}
             />
 
-            <FadeIn>
-              <PainPoints />
-            </FadeIn>
+            {config.content?.sections?.['pain_points']?.is_active !== false && (
+              <FadeIn>
+                <PainPoints />
+              </FadeIn>
+            )}
 
-            <FadeIn>
-              <Checklist />
-            </FadeIn>
+            {config.content?.sections?.['checklist']?.is_active !== false && (
+              <FadeIn>
+                <Checklist />
+              </FadeIn>
+            )}
 
-            <FadeIn>
-              <MDConverteSection onNavigate={navigateTo} />
-            </FadeIn>
+            {config.content?.sections?.['md_converte']?.is_active !== false && (
+              <FadeIn>
+                <MDConverteSection onNavigate={navigateTo} />
+              </FadeIn>
+            )}
 
-            <FadeIn>
-              <Services onNavigate={navigateTo} />
-            </FadeIn>
+            {config.content?.sections?.['services']?.is_active !== false && (
+              <FadeIn>
+                <Services onNavigate={navigateTo} />
+              </FadeIn>
+            )}
 
-            {config.is_swot_active && (
+            {(config.is_swot_active || config.content?.sections?.['swot']?.is_active !== false) && (
               <FadeIn>
                 <SwotSection
                   onNavigate={navigateTo}
@@ -192,29 +220,35 @@ const AppContent: React.FC = () => {
               </FadeIn>
             )}
 
+            {config.content?.sections?.['combos']?.is_active !== false && (
+              <FadeIn>
+                <Combos />
+              </FadeIn>
+            )}
 
+            {config.content?.sections?.['testimonials']?.is_active !== false && (
+              <FadeIn>
+                <Testimonials />
+              </FadeIn>
+            )}
 
-            <FadeIn>
-              <Combos />
-            </FadeIn>
+            {config.content?.sections?.['trust']?.is_active !== false && (
+              <FadeIn>
+                <Trust />
+              </FadeIn>
+            )}
 
-            <FadeIn>
-              <Testimonials />
-            </FadeIn>
-
-            <FadeIn>
-              <Trust />
-            </FadeIn>
-
-            <FadeIn>
-              <Faq />
-            </FadeIn>
+            {config.content?.sections?.['faq']?.is_active !== false && (
+              <FadeIn>
+                <Faq />
+              </FadeIn>
+            )}
           </>
         )}
 
         {currentView === 'about' && (
           <FadeIn>
-            <AboutPage />
+            <AboutPage onNavigate={navigateTo} />
           </FadeIn>
         )}
 
@@ -235,15 +269,25 @@ const AppContent: React.FC = () => {
         )}
 
         {currentView === 'swot-service' && (
-          <SwotServicePage onSelectPlan={handleSwotPlanSelection} />
+          <SwotServicePage />
+        )}
+
+        {currentView === 'social-media' && (
+          <SocialMediaServicePage />
+        )}
+
+        {currentView === 'crm-service' && (
+          <CRMServicePage />
         )}
 
         {currentView === 'marketing-diagnosis' && (
-          <MarketingDiagnosisPage onStart={() => navigateTo('briefing')} />
+          <MarketingDiagnosisPage onStart={() => navigateTo('briefing', null, { skipScroll: true })} />
         )}
 
         {currentView === 'briefing' && (
-          <Briefing />
+          <ProtectedRoute onNavigate={navigateTo}>
+            <Briefing />
+          </ProtectedRoute>
         )}
 
         {currentView === 'swot-pricing' && (
@@ -251,11 +295,17 @@ const AppContent: React.FC = () => {
         )}
 
         {currentView === 'auth' && (
-          <AuthPage onSuccess={() => navigateTo('swot')} />
+          <AuthPage onSuccess={() => {
+            const nextView = returnTo || 'swot';
+            setReturnTo(null);
+            navigateTo(nextView);
+          }} />
         )}
 
         {currentView === 'swot' && (
-          <SwotBriefing selectedPlan={selectedSwotPlan} />
+          <ProtectedRoute onNavigate={navigateTo}>
+            <SwotBriefing selectedPlan={selectedSwotPlan} />
+          </ProtectedRoute>
         )}
 
         {currentView === 'terms' && (
@@ -267,7 +317,9 @@ const AppContent: React.FC = () => {
         )}
 
         {currentView === 'admin' && (
-          <AdminPanel onNavigate={navigateTo} />
+          <ProtectedRoute onNavigate={navigateTo} adminOnly>
+            <AdminPanel onNavigate={navigateTo} />
+          </ProtectedRoute>
         )}
 
         {currentView === 'blog' && (
@@ -285,10 +337,15 @@ const AppContent: React.FC = () => {
         {currentView === 'md-converte' && (
           <MDConverteServicePage />
         )}
+
+        {currentView === 'design-showcase' && (
+          <DesignShowcase />
+        )}
       </main>
 
       {currentView !== 'admin' && (
         <>
+          <TrustSeals />
           <Footer onNavigate={navigateTo} currentView={currentView} />
           <WhatsAppWidget />
         </>

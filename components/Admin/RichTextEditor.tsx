@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import {
     Bold, Italic, Link as LinkIcon, Image as ImageIcon, List,
-    Heading1, Heading2, Quote, AlignLeft, AlignCenter, AlignRight,
+    Heading1, Heading2, Heading3, Quote, AlignLeft, AlignCenter, AlignRight,
     Maximize, Minimize, Upload, Trash2, Link2, Type,
     Eraser, Underline as UnderlineIcon, Sparkles
 } from 'lucide-react';
@@ -254,6 +254,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, classN
                 <div className="flex items-center gap-0.5">
                     <button type="button" onMouseDown={(e) => { e.preventDefault(); execCmd('formatBlock', 'h1'); }} className="toolbar-btn" title="Título 1"><Heading1 size={18} /></button>
                     <button type="button" onMouseDown={(e) => { e.preventDefault(); execCmd('formatBlock', 'h2'); }} className="toolbar-btn" title="Título 2"><Heading2 size={18} /></button>
+                    <button type="button" onMouseDown={(e) => { e.preventDefault(); execCmd('formatBlock', 'h3'); }} className="toolbar-btn" title="Título 3"><Heading3 size={18} /></button>
                     <button type="button" onMouseDown={(e) => { e.preventDefault(); execCmd('insertUnorderedList'); }} className="toolbar-btn" title="Lista"><List size={18} /></button>
                     <button type="button" onMouseDown={(e) => { e.preventDefault(); execCmd('formatBlock', 'blockquote'); }} className="toolbar-btn" title="Citação"><Quote size={18} /></button>
                 </div>
@@ -345,6 +346,13 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, classN
                 .blog-image:hover {
                     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4);
                 }
+                /* Explicit Heading Styles */
+                [contenteditable] h1 { font-size: 2.5em; font-weight: 800; margin-bottom: 0.5em; line-height: 1.2; color: #1e293b; }
+                [contenteditable] h2 { font-size: 2em; font-weight: 700; margin-top: 1em; margin-bottom: 0.5em; line-height: 1.3; color: #334155; }
+                [contenteditable] h3 { font-size: 1.5em; font-weight: 600; margin-top: 1em; margin-bottom: 0.5em; line-height: 1.4; color: #475569; }
+                [contenteditable] ul { list-style-type: disc; padding-left: 1.5em; margin: 1em 0; }
+                [contenteditable] ol { list-style-type: decimal; padding-left: 1.5em; margin: 1em 0; }
+                [contenteditable] blockquote { border-left: 4px solid #e2e8f0; padding-left: 1em; font-style: italic; color: #64748b; margin: 1em 0; }
             `}</style>
         </div>
     );

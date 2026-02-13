@@ -3,10 +3,11 @@ import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import Button from './Button';
 import { FORM_VALIDATION_MSGS } from '../constants';
 import MarketingReport from './MarketingReport';
+import { ProgressIndicator } from './ProgressIndicator';
 import {
   UserCheck, Briefcase, BarChart3, Target, Heart, Users, Globe,
   Headphones, TrendingUp, Wallet, History, Rocket,
-  CheckCircle2, PackageSearch, Lock, Wand2, ChevronLeft, ChevronRight, AlertCircle
+  CheckCircle2, PackageSearch, Lock, Wand2, ChevronLeft, ChevronRight, AlertCircle, Zap, TrendingDown
 } from 'lucide-react';
 import { leadService } from '../services/leadService';
 import { useAuth } from './Auth/AuthProvider';
@@ -27,70 +28,12 @@ const sections = [
   { title: 'Finalizar', icon: Rocket },
 ];
 
-const ProgressIndicator: React.FC<{ currentStep: number }> = ({ currentStep }) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      const activeElement = scrollRef.current.children[currentStep] as HTMLElement;
-      if (activeElement) {
-        const scrollLeft = activeElement.offsetLeft - (scrollRef.current.offsetWidth / 2) + (activeElement.offsetWidth / 2);
-        scrollRef.current.scrollTo({ left: scrollLeft, behavior: 'smooth' });
-      }
-    }
-  }, [currentStep]);
-
-  return (
-    <div className="mb-10 relative">
-      <div
-        ref={scrollRef}
-        className="flex items-center gap-0 overflow-x-auto pb-6 hide-scrollbar px-4"
-      >
-        {sections.map((section, index) => {
-          const isCompleted = currentStep > index;
-          const isActive = currentStep === index;
-          const Icon = section.icon;
-
-          return (
-            <React.Fragment key={index}>
-              <div className="flex flex-col items-center min-w-[100px] group">
-                <div
-                  className={`relative z-10 w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all duration-500 
-                    ${isCompleted ? 'bg-brand-blue border-brand-blue text-white' :
-                      isActive ? 'bg-white border-brand-orange text-brand-orange scale-110 shadow-lg shadow-orange-200' :
-                        'bg-white border-gray-100 text-gray-300'}`}
-                >
-                  {isCompleted ? <CheckCircle2 size={20} /> : <Icon size={20} />}
-                  {isActive && (
-                    <div className="absolute -inset-1 rounded-full border-2 border-brand-orange animate-ping opacity-20"></div>
-                  )}
-                </div>
-                <p className={`text-[10px] mt-3 font-bold uppercase tracking-tighter transition-colors whitespace-nowrap 
-                  ${isActive ? 'text-brand-orange' : isCompleted ? 'text-brand-blue' : 'text-gray-400'}`}
-                >
-                  {section.title}
-                </p>
-              </div>
-
-              {index < sections.length - 1 && (
-                <div className="flex-1 min-w-[40px] h-[4px] -mt-8 mx-0 relative">
-                  <div className="absolute inset-0 bg-gray-100 rounded-full"></div>
-                  <div
-                    className="absolute inset-0 bg-brand-blue rounded-full transition-all duration-700 ease-in-out"
-                    style={{ width: isCompleted ? '100%' : '0%' }}
-                  ></div>
-                </div>
-              )}
-            </React.Fragment>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
 
 const Briefing: React.FC = () => {
   const { user } = useAuth();
+  const allowedEmails = (import.meta as any).env.VITE_ADMIN_EMAILS?.split(',').map((e: string) => e.trim()) || [];
+  const isAdmin = user?.email && allowedEmails.includes(user.email);
+
   const [loading, setLoading] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
@@ -98,6 +41,8 @@ const Briefing: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const sliderContainerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const formTopRef = useRef<HTMLDivElement>(null);
+  const [sectionsCompleted, setSectionsCompleted] = useState<boolean[]>(new Array(sections.length).fill(false));
 
   const [formData, setFormData] = useState<any>({
     companyName: '', responsibleName: '', role: '', email: '', phone: '',
@@ -124,6 +69,42 @@ const Briefing: React.FC = () => {
       }));
     }
   }, [user]);
+
+  // Auto-Save progress
+  useEffect(() => {
+    const saveProgress = () => {
+      localStorage.setItem('briefing_progress', JSON.stringify({
+        formData,
+        currentStep,
+        timestamp: new Date().toISOString()
+      }));
+    };
+
+    const timer = setTimeout(saveProgress, 1000);
+    return () => clearTimeout(timer);
+  }, [formData, currentStep]);
+
+  // Restore progress on load
+  useEffect(() => {
+    const saved = localStorage.getItem('briefing_progress');
+    if (saved) {
+      try {
+        const { formData: savedData, currentStep: savedStep, timestamp } = JSON.parse(saved);
+        const hourAgo = new Date(Date.now() - 60 * 60 * 1000);
+
+        if (new Date(timestamp) > hourAgo) {
+          if (window.confirm('Encontramos um diagnóstico em andamento. Deseja continuar de onde parou?')) {
+            setFormData(savedData);
+            setCurrentStep(savedStep);
+          } else {
+            localStorage.removeItem('briefing_progress');
+          }
+        }
+      } catch (e) {
+        console.error("Error parsing saved progress", e);
+      }
+    }
+  }, []);
 
   useLayoutEffect(() => {
     if (showReport) return;
@@ -182,6 +163,26 @@ const Briefing: React.FC = () => {
     setErrors(prev => ({ ...prev, [field]: false }));
   };
 
+  const handleStepClick = (step: number) => {
+    // Permite voltar livremente
+    if (step < currentStep) {
+      setCurrentStep(step);
+      scrollToFormTop();
+      return;
+    }
+
+    // Permite avançar se o atual for válido ou se o destino já foi completado
+    if (validateStep(currentStep)) {
+      setSectionsCompleted(prev => {
+        const next = [...prev];
+        next[currentStep] = true;
+        return next;
+      });
+      setCurrentStep(step);
+      scrollToFormTop();
+    }
+  };
+
   const validateStep = (step: number) => {
     const requiredFieldsByStep: Record<number, string[]> = {
       0: ['companyName', 'responsibleName', 'role', 'email', 'phone', 'location'],
@@ -220,8 +221,21 @@ const Briefing: React.FC = () => {
       setFormError("Por favor, preencha todos os campos obrigatórios em destaque antes de prosseguir.");
     } else {
       setFormError(null);
+      setSectionsCompleted(prev => {
+        const next = [...prev];
+        next[step] = true;
+        return next;
+      });
     }
     return isValid;
+  };
+
+  const scrollToFormTop = () => {
+    if (formTopRef.current) {
+      const yOffset = -120; // Fixed header (100px) + margin
+      const y = formTopRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -231,6 +245,7 @@ const Briefing: React.FC = () => {
     setLoading(true);
     const success = await leadService.saveBriefingLead({ ...formData, type: 'MARKETING_DIAGNOSIS' });
     if (success) {
+      localStorage.removeItem('briefing_progress'); // Clear on success
       setShowReport(true);
     } else {
       setFormError(FORM_VALIDATION_MSGS.saveError);
@@ -241,37 +256,127 @@ const Briefing: React.FC = () => {
   if (showReport) return <MarketingReport formData={formData} onBack={() => window.location.reload()} />;
 
   const stepContentClass = "p-6 md:p-10 w-full flex-shrink-0 flex flex-col h-fit";
-  const labelClass = "block text-sm font-bold text-gray-700 mb-2";
+  const labelClass = "block text-sm font-black uppercase tracking-wider text-gray-700 mb-3";
+  const helperTextClass = "text-xs text-gray-500 mt-1.5 leading-relaxed";
 
   const getInputClass = (field: string) => {
-    const base = "w-full p-4 bg-gray-50 rounded-xl border outline-none transition-all text-sm";
-    const errorState = errors[field] ? "border-red-500 bg-red-50 focus:border-red-500" : "border-gray-200 focus:border-brand-blue";
+    const base = "w-full px-4 py-4 bg-white rounded-xl border-2 outline-none transition-all duration-200 text-base font-medium placeholder:text-gray-400 placeholder:font-normal";
+    const errorState = errors[field]
+      ? "border-red-400 bg-red-50/50 focus:border-red-500 focus:ring-4 focus:ring-red-100"
+      : "border-gray-200 hover:border-gray-300 focus:border-brand-blue focus:ring-4 focus:ring-blue-50";
     return `${base} ${errorState}`;
   };
 
   const getSelectClass = (field: string) => {
-    const base = "w-full p-4 bg-gray-50 rounded-xl border outline-none text-sm cursor-pointer hover:bg-gray-100 transition-colors";
-    const errorState = errors[field] ? "border-red-500 bg-red-50 focus:border-red-500" : "border-gray-200 focus:border-brand-blue";
+    const base = "w-full px-4 py-4 bg-white rounded-xl border-2 outline-none transition-all duration-200 text-base font-medium cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e')] bg-[length:20px] bg-[right_1rem_center] bg-no-repeat pr-12";
+    const errorState = errors[field]
+      ? "border-red-400 bg-red-50/50 focus:border-red-500 focus:ring-4 focus:ring-red-100"
+      : "border-gray-200 hover:border-gray-300 focus:border-brand-blue focus:ring-4 focus:ring-blue-50";
+    return `${base} ${errorState}`;
+  };
+
+  const getTextareaClass = (field: string) => {
+    const base = "w-full px-4 py-4 bg-white rounded-xl border-2 outline-none transition-all duration-200 text-base font-medium placeholder:text-gray-400 placeholder:font-normal resize-none min-h-[120px]";
+    const errorState = errors[field]
+      ? "border-red-400 bg-red-50/50 focus:border-red-500 focus:ring-4 focus:ring-red-100"
+      : "border-gray-200 hover:border-gray-300 focus:border-brand-blue focus:ring-4 focus:ring-blue-50";
     return `${base} ${errorState}`;
   };
 
   return (
-    <div className="pt-16 lg:pt-24 pb-12 lg:pb-24 bg-gray-50 min-h-screen font-sans">
+    <div className="pt-44 lg:pt-60 pb-12 lg:pb-24 bg-gray-50 min-h-screen font-sans">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center mb-12 gap-4">
-          <div className="text-center md:text-left">
-            <h1 className="text-3xl font-heading font-bold text-brand-darkBlue leading-tight">Diagnóstico Estratégico MD Solution</h1>
-            <p className="text-gray-500 text-sm">Entenda os gargalos que impedem sua empresa de faturar mais.</p>
+        <div className="max-w-4xl mx-auto mb-12">
+          {/* Hero Section */}
+          <div className="bg-gradient-to-br from-brand-darkBlue via-blue-900 to-brand-blue rounded-3xl p-8 md:p-12 text-white shadow-2xl border-2 border-blue-800 relative overflow-hidden mb-8">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-orange/10 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-400/10 rounded-full blur-3xl"></div>
+
+            <div className="relative z-10">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-brand-orange rounded-2xl flex items-center justify-center shadow-lg">
+                  <Zap className="text-white" size={24} />
+                </div>
+                <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest border border-white/20">
+                  Análise Gratuita • 100% Confidencial
+                </div>
+              </div>
+
+              <h1 className="text-3xl md:text-5xl font-heading font-black mb-4 leading-tight">
+                Diagnóstico Estratégico de Marketing
+              </h1>
+
+              <p className="text-blue-100 text-base md:text-lg leading-relaxed max-w-2xl mb-6">
+                Descubra os <strong className="text-white">3 gargalos principais</strong> que estão impedindo sua empresa de faturar mais.
+                Análise profissional baseada em dados reais do seu segmento.
+              </p>
+
+              <div className="flex flex-wrap gap-4 items-center">
+                <div className="flex items-center gap-2 text-sm">
+                  <CheckCircle2 size={18} className="text-brand-orange" />
+                  <span className="text-blue-100">Relatório em 5 minutos</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <CheckCircle2 size={18} className="text-brand-orange" />
+                  <span className="text-blue-100">Benchmarks do segmento</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <CheckCircle2 size={18} className="text-brand-orange" />
+                  <span className="text-blue-100">Recomendações práticas</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <button type="button" onClick={handleAutoFill} className="flex items-center gap-2 bg-brand-blue/10 text-brand-blue px-6 py-3 rounded-full font-bold text-sm hover:bg-brand-blue hover:text-white transition-all shadow-sm">
-            <Wand2 size={18} /> Preenchimento Mágico (Demo)
-          </button>
+
+          <div className="flex justify-end">
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={handleAutoFill}
+                className="flex items-center gap-2 bg-white text-brand-darkBlue px-4 py-2 rounded-xl font-bold text-[10px] hover:bg-gray-50 transition-all shadow-lg border border-gray-100 uppercase tracking-widest"
+              >
+                <Wand2 size={14} /> Auto-Preencher (Admin)
+              </button>
+            )}
+          </div>
         </div>
 
-        <div className="max-w-4xl mx-auto">
-          <ProgressIndicator currentStep={currentStep} />
+        <div ref={formTopRef} className="max-w-4xl mx-auto">
+          {/* Discrete Top Navigation */}
+          <div className="flex justify-between items-center px-4 mb-4 opacity-30 hover:opacity-100 transition-opacity">
+            <button
+              type="button"
+              onClick={() => {
+                setCurrentStep(prev => Math.max(0, prev - 1));
+                scrollToFormTop();
+              }}
+              disabled={currentStep === 0}
+              className={`text-[9px] font-black uppercase tracking-widest flex items-center gap-1 hover:text-brand-blue transition-colors ${currentStep === 0 ? 'invisible' : ''}`}
+            >
+              <ChevronLeft size={12} /> Anterior
+            </button>
 
-          <form onSubmit={handleSubmit} noValidate className="bg-white rounded-[2.5rem] shadow-xl border border-gray-100 overflow-hidden">
+            <button
+              type="button"
+              onClick={() => {
+                if (validateStep(currentStep)) {
+                  setCurrentStep(prev => Math.min(sections.length - 1, prev + 1));
+                  scrollToFormTop();
+                }
+              }}
+              disabled={currentStep === sections.length - 1}
+              className={`text-[9px] font-black uppercase tracking-widest flex items-center gap-1 hover:text-brand-blue transition-colors ${currentStep === sections.length - 1 ? 'invisible' : ''}`}
+            >
+              Próximo <ChevronRight size={12} />
+            </button>
+          </div>
+          <ProgressIndicator
+            currentStep={currentStep}
+            onStepClick={handleStepClick}
+            sectionsCompleted={sectionsCompleted}
+          />
+
+          <form onSubmit={handleSubmit} noValidate className="bg-gradient-to-br from-white to-gray-50/30 rounded-[2.5rem] shadow-2xl border-2 border-gray-100 overflow-hidden backdrop-blur-sm">
             <div ref={sliderContainerRef} className="relative transition-[height] duration-500 overflow-hidden ease-in-out">
               <div ref={sliderRef} className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentStep * 100}%)` }}>
 
@@ -503,7 +608,7 @@ const Briefing: React.FC = () => {
                 variant="secondary"
                 onClick={() => {
                   setCurrentStep(prev => Math.max(0, prev - 1));
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  scrollToFormTop();
                   setFormError(null);
                 }}
                 disabled={currentStep === 0}
@@ -524,7 +629,7 @@ const Briefing: React.FC = () => {
                   onClick={() => {
                     if (validateStep(currentStep)) {
                       setCurrentStep(prev => prev + 1);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                      scrollToFormTop();
                     }
                   }}
                   className="py-3 px-8 text-sm font-bold"

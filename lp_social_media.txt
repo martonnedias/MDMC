@@ -1,0 +1,35 @@
+Plano para Criação da Landing Page
+📋  ESTRUTURA DA LANDING PAGE
+1. SEÇÕES PRINCIPAIS
+Hero Section (Atenção - AIDA)
+Headline impactante
+Subheadline complementar
+CTA principal
+Imagem/vídeo de impacto
+Problema/Dor (Interesse - AIDA)
+Identificação das dores do cliente
+Conexão emocional
+Solução (Interesse - AIDA)
+Apresentação dos pacotes
+Diferenciais da MD Solution Digital
+Benefícios Detalhados (Desejo - AIDA)
+O que cada pacote entrega
+Resultados esperados
+Prova social (depoimentos, cases)
+Comparativo de Pacotes (Desejo - AIDA)
+Tabela comparativa clara
+Destaque para o mais popular
+Garantias e Segurança (Desejo - AIDA)
+Garantia de satisfação
+Credenciais da agência
+FAQ (Ação - AIDA)
+Objeções respondidas
+CTA Final (Ação - AIDA)
+Formulário ou botão de contato
+Urgência/escassez se aplicável
+🎨  ELEMENTOS VISUAIS NECESSÁRIOS
+Paleta de cores: Profissional (azul/laranja ou cores da marca)
+Tipografia: Moderna e legível
+Ícones: Para benefícios e funcionalidades
+Imagens: Mockups de posts, dashboards, relatórios
+Layout: Responsivo (mobile-first)

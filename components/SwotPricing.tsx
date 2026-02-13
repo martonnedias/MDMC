@@ -15,7 +15,7 @@ const SwotPricing: React.FC<SwotPricingProps> = ({ onSelectPlan }) => {
   React.useEffect(() => {
     const fetchSwot = async () => {
       const data = await adminService.getServices();
-      const swotPlans = data.filter(s => s.category === 'swot');
+      const swotPlans = data.filter(s => (s.page === 'swot' || s.category === 'swot') && s.is_active !== false);
       if (swotPlans.length > 0) {
         setDisplayPlans(swotPlans.map((s, index) => {
           const defaultPlan = SWOT_PLANS[index] || SWOT_PLANS[0];
@@ -37,6 +37,7 @@ const SwotPricing: React.FC<SwotPricingProps> = ({ onSelectPlan }) => {
     };
     fetchSwot();
   }, []);
+
   return (
     <section id="swot-pricing" className="py-24 bg-gray-50">
       <div className="container mx-auto px-4 md:px-6">

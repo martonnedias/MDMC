@@ -5,7 +5,7 @@ import { Shield, Lock, Eye, CheckCircle } from 'lucide-react';
 
 const PrivacyPolicy: React.FC = () => {
   return (
-    <div className="pt-32 pb-64 bg-gray-50 min-h-screen">
+    <div className="pt-44 lg:pt-60 pb-64 bg-gray-50 min-h-screen">
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 md:p-12 animate-fade-in">
           <SectionTitle title="Política de Privacidade" alignment="left" />

@@ -18,6 +18,10 @@ export interface SiteConfig {
     is_blog_active: boolean;
     is_swot_active: boolean;
     logo_url?: string;
+    logo_footer_url?: string;
+    logo_light_url?: string;
+    logo_height_header?: string;
+    logo_height_footer?: string;
     theme?: {
         colors?: {
             background: string;
@@ -32,6 +36,8 @@ export interface SiteConfig {
             subtitle_color?: string;
             content_color?: string;
             accent_color?: string;
+            brand_blue?: string;
+            brand_orange?: string;
         };
         typography?: {
             font_family: string;
@@ -50,6 +56,25 @@ export interface SiteConfig {
         hero_background_color?: string;
         hero_title_color?: string;
         footer_text?: string;
+        header?: {
+            show_login?: boolean;
+            show_cta_header?: boolean;
+            cta_text?: string;
+            cta_link?: string;
+        };
+        footer?: {
+            is_active?: boolean;
+            title?: string;
+            subtitle?: string;
+            description?: string;
+            background_color?: string;
+            text_color?: string;
+            title_color?: string;
+            show_social_icons?: boolean;
+            show_share_menu?: boolean;
+            font_family?: string;
+            font_size_title?: string;
+        };
         sections?: {
             [key: string]: {
                 title?: string;
@@ -71,6 +96,8 @@ export interface SiteConfig {
                 button_redirect?: string;
                 show_social_icons?: boolean;
                 show_share_menu?: boolean;
+                badge_text?: string;
+                highlight_color?: string;
             }
         }
     };
@@ -137,6 +164,8 @@ export interface ServiceData {
     badge_text?: string;
     extra_info?: string;
     is_highlighted?: boolean;
+    page?: string;
+    section_id?: string;
 }
 
 class AdminService {

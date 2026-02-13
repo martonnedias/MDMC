@@ -6,31 +6,60 @@ interface LogoProps {
   className?: string;
   size?: 'sm' | 'md' | 'lg';
   variant?: 'light' | 'dark'; // 'light' para fundo escuro, 'dark' para fundo claro
+  customHeight?: string;
 }
 
-const Logo: React.FC<LogoProps> = ({ className = '', size = 'md', variant = 'dark' }) => {
+const Logo: React.FC<LogoProps> = ({ className = '', size = 'md', variant = 'dark', customHeight }) => {
   const { config } = useSiteConfig();
   // Configuração de alturas máximas (max-height) conforme especificado pelo usuário
   const heights = {
-    sm: 'max-h-[100px] max-w-[100px] w-auto h-auto',  // Scrolled Header
-    md: 'max-h-[100px] max-w-[100px] w-auto h-auto',  // Static Header
-    lg: 'max-h-[120px] max-w-[120px] w-auto h-auto'   // Footer
+    sm: 'w-[100px] h-auto',
+    md: 'w-[100px] h-auto',
+    lg: 'w-[120px] h-auto'
   };
 
   // Seleção automática do arquivo de imagem com base na variante
-  // Usar BASE_URL para funcionar no GitHub Pages (caminho relativo ao deploy)
   // logo.png = versão escura (letras azuis/pretas)
   // logo-light.png = versão clara (letras brancas/rainbow)
   const base = import.meta.env.BASE_URL;
-  const defaultLogo = `${base}${variant === 'light' ? 'logo-light.png' : 'logo.png'}`;
-  const logoSrc = config.logo_url && variant === 'dark' ? config.logo_url : defaultLogo;
+  const defaultLogo = `${base}${variant === 'light' ? '1.png' : '2.png'}`;
+
+  // Logic: 
+  // 1. If variant is light (dark bg), try config.logo_light_url, then config.logo_footer_url (if footer?), then default.
+  // 2. If variant is dark (light bg), try config.logo_url, then default.
+
+  let logoSrc = defaultLogo;
+  if (variant === 'light') {
+    logoSrc = config.logo_light_url || config.logo_url || defaultLogo;
+  } else {
+    logoSrc = config.logo_url || defaultLogo;
+  }
+
+  // Size override
+  // If config provides specific heights, use them instead of standard classes if we are in header/footer context?
+  // Since Logo doesn't know if it's header or footer easily without props, we rely on usage.
+  // BUT the user asked to "edit size".
+  // Config has `logo_height_header` and `logo_height_footer`.
+  // Ideally Header passes `className={config.logo_height_header}`.
+  // But Header passes "size='md'" currently.
+  // I will prioritize `className` passed to Logo if it contains height, but here className is usually margins.
+  // I will check if I can use a dynamic style attribute or Tailwind class based on config.
+
+  // However, Header.tsx uses this component. I will update Header.tsx to pass the configured height as a prop or class.
+  // For now, let's just fix the Source selection.
+
+  // Size override
+  // Allow custom height class if provided (e.g. from config)
+  const heightClass = customHeight || heights[size] || 'h-10'; // Default to h-10 if unknown
+
+  const imgClass = `${heightClass} mt-0 mb-0 object-contain transition-all duration-500 group-hover:scale-[1.02] group-hover:brightness-110`;
 
   return (
     <div className={`flex items-center gap-3 group transition-all duration-300 ${className}`}>
       <img
         src={logoSrc}
         alt="MD Solution Marketing e Consultoria"
-        className={`${heights[size]} mt-0 mb-0 object-contain transition-all duration-500 group-hover:scale-[1.02] group-hover:brightness-110`}
+        className={imgClass}
         loading="eager"
         onError={(e) => {
           // Fallback visual caso a imagem não seja encontrada

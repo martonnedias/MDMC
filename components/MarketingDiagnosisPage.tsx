@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import SectionTitle from './SectionTitle';
 import Button from './Button';
-import { BarChart3, Search, Target, Users, Smartphone, Zap, CheckCircle2, FileText, Sparkles, User, Mail, MessageCircle, Lock, Share2, Copy, Check, Instagram, Facebook, Youtube, Linkedin, Send } from 'lucide-react';
+import { BarChart3, Search, Target, Users, Smartphone, Zap, CheckCircle2, FileText, Sparkles, User, Mail, MessageCircle, Lock, Share2, Copy, Check, Instagram, Facebook, Youtube, Linkedin, Send, ChevronRight, Clock, Star, Wand2 } from 'lucide-react';
 import { leadService } from '../services/leadService';
 import { FORM_VALIDATION_MSGS } from '../constants';
 import { useSiteConfig } from '../lib/SiteContext';
+import { formatPhone } from '../lib/formatters';
+
+import { useAuth } from './Auth/AuthProvider';
 
 interface MarketingDiagnosisPageProps {
   onStart: () => void;
@@ -12,6 +15,9 @@ interface MarketingDiagnosisPageProps {
 
 const MarketingDiagnosisPage: React.FC<MarketingDiagnosisPageProps> = ({ onStart }) => {
   const { config } = useSiteConfig();
+  const { user } = useAuth();
+  const allowedEmails = (import.meta as any).env.VITE_ADMIN_EMAILS?.split(',').map((e: string) => e.trim()) || [];
+  const isAdmin = user?.email && allowedEmails.includes(user.email);
   const section = config.content?.sections?.diagnosis;
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
@@ -36,6 +42,11 @@ const MarketingDiagnosisPage: React.FC<MarketingDiagnosisPageProps> = ({ onStart
     setLoading(false);
   };
 
+  const handleAuthenticatedStart = () => {
+    onStart();
+  };
+
+  // ... (keep handleCopyLink and handleShare same as before) ...
   const handleCopyLink = () => {
     const url = window.location.href;
     navigator.clipboard.writeText(url);
@@ -58,201 +69,262 @@ const MarketingDiagnosisPage: React.FC<MarketingDiagnosisPageProps> = ({ onStart
 
   if (section?.is_active === false) return null;
 
-  const heroStyle = {
-    backgroundColor: section?.background_color,
-    fontFamily: section?.font_family
-  };
-
-  const titleFontSize = section?.font_size_title || 'text-heading';
-  const subtitleFontSize = section?.font_size_subtitle || 'text-xl';
+  const titleFontSize = section?.font_size_title || 'text-5xl sm:text-6xl lg:text-7xl';
+  const subtitleFontSize = section?.font_size_subtitle || 'text-xl lg:text-2xl';
 
   return (
     <div className="pt-0 pb-12 lg:pb-24 font-sans" style={{ fontFamily: section?.font_family }}>
-      {/* Hero with Lead Gate */}
-      <section className="pt-20 lg:pt-32 pb-12 lg:pb-32 bg-top overflow-hidden" style={heroStyle}>
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
+      {/* Super Hero Section - Light & Friendly */}
+      <section className="pt-44 lg:pt-60 pb-12 lg:pb-32 bg-gradient-to-b from-blue-50/50 to-white overflow-hidden relative">
+        {/* Abstract Shapes */}
+        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-brand-blue/5 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute bottom-0 left-[-10%] w-[500px] h-[500px] bg-brand-orange/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="text-center lg:text-left flex flex-col items-center lg:items-start">
-              <div className="inline-flex items-center gap-2 bg-blue-100 text-brand-blue px-4 py-2 rounded-full mb-6 font-bold text-xs uppercase tracking-widest border border-blue-200">
-                <Sparkles size={14} className="animate-pulse" /> 100% Gratuito & IA-Powered
+            <div className="text-center lg:text-left flex flex-col items-center lg:items-start order-2 lg:order-1">
+              <div className="inline-flex items-center gap-2 bg-white text-brand-blue px-4 py-1.5 rounded-full mb-8 font-black text-[9px] uppercase tracking-[0.2em] border border-blue-100 shadow-sm animate-fade-in">
+                <Sparkles size={14} className="text-brand-orange animate-pulse" /> Inteligência de Vendas
               </div>
-              <h1 className={`${titleFontSize} font-heading font-black leading-tight mb-6`} style={{ color: section?.title_color || 'var(--color-title)' }}>
-                {section?.title || 'Descubra por que sua empresa não vende mais no digital.'}
+
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-heading font-black mb-8 leading-[0.95] pb-2 tracking-tighter text-brand-darkBlue"
+                dangerouslySetInnerHTML={{
+                  __html: section?.title || 'Por que você não está vendendo mais no <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-blue-400 italic pr-1">digital?</span>'
+                }}>
               </h1>
-              <p className={`${subtitleFontSize} text-subtitle mb-10 leading-relaxed font-light`}>
-                {section?.subtitle || section?.description || 'Nosso sistema analisa seus gargalos de vendas e gera um plano de ação profissional. Cadastre-se abaixo para liberar seu acesso imediato.'}
+
+              <p className={`${subtitleFontSize} text-slate-500 mb-10 leading-relaxed font-medium max-w-xl`}>
+                {section?.subtitle || section?.description || 'Não é achismo, é dado. Nossa IA analisa sua presença digital e entrega um Plano de Ação personalizado para desbloquear seu faturamento.'}
               </p>
 
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 mb-10">
-                {(section?.show_social_icons !== false) && (
-                  <div className="flex items-center gap-4">
-                    <a href={config.instagram_url} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-brand-blue transition-colors"><Instagram size={20} /></a>
-                    <a href={config.facebook_url} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-brand-blue transition-colors"><Facebook size={20} /></a>
-                    <a href={config.youtube_url} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-brand-blue transition-colors"><Youtube size={20} /></a>
-                    {config.linkedin_url && <a href={config.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-brand-blue transition-colors"><Linkedin size={20} /></a>}
-                  </div>
-                )}
-
-                {(section?.show_share_menu !== false) && (
-                  <div className="flex items-center gap-2 border-l border-gray-100 pl-6">
-                    <div className="relative">
-                      <button
-                        onClick={() => setShowShare(!showShare)}
-                        className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-gray-900 transition-colors"
-                      >
-                        <Share2 size={16} /> Compartilhar
-                      </button>
-                      {showShare && (
-                        <div className="absolute top-full left-0 mt-2 bg-white rounded-xl shadow-2xl p-2 flex flex-col gap-1 min-w-[150px] z-50 animate-fade-in border border-gray-50">
-                          <button onClick={() => handleShare('whatsapp')} className="text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">WhatsApp</button>
-                          <button onClick={() => handleShare('facebook')} className="text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">Facebook</button>
-                          <button onClick={() => handleShare('linkedin')} className="text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">LinkedIn</button>
-                        </div>
-                      )}
+              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                {/* Social Proof Mini */}
+                <div className="flex -space-x-3">
+                  {[1, 2, 3, 4].map(i => (
+                    <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-slate-200 shadow-sm flex items-center justify-center text-xs font-bold text-slate-500">
+                      {i === 4 ? '+99' : ''}
                     </div>
-                    <button
-                      onClick={handleCopyLink}
-                      className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-gray-900 transition-colors"
-                    >
-                      {copied ? <Check size={16} className="text-brand-green" /> : <Copy size={16} />}
-                      {copied ? 'Copiado!' : 'Copiar Link'}
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              <div className="hidden lg:grid grid-cols-2 gap-6">
-                <div className="flex items-center gap-3 text-content font-medium">
-                  <CheckCircle2 className="text-brand-green" /> Relatório em PDF na hora
+                  ))}
                 </div>
-                <div className="flex items-center gap-3 text-content font-medium">
-                  <CheckCircle2 className="text-brand-green" /> Auditoria de Concorrência
+                <div className="flex flex-col justify-center text-left">
+                  <div className="flex gap-1 text-brand-orange">
+                    {[1, 2, 3, 4, 5].map(i => <Star key={i} size={14} fill="currentColor" />)}
+                  </div>
+                  <p className="text-xs font-medium text-slate-500">Empresas analisadas este mês</p>
                 </div>
               </div>
             </div>
 
-            <div className="relative">
-              <div className="absolute -inset-4 bg-brand-blue/10 rounded-[4rem] rotate-3 blur-2xl"></div>
-              <div className="bg-card p-8 md:p-10 rounded-[3rem] shadow-2xl border border-gray-100 relative z-10">
-                <h3 className="text-2xl font-heading font-bold text-title mb-2 text-center">Libere seu Diagnóstico</h3>
-                <p className="text-subtitle text-sm mb-8 text-center">Preencha os dados básicos para iniciar a análise.</p>
-
-                <form onSubmit={handleRegistration} className="space-y-4">
-                  <div className="relative">
-                    <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                    <input
-                      required
-                      type="text"
-                      placeholder="Seu Nome Completo"
-                      title={FORM_VALIDATION_MSGS.required}
-                      className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:border-brand-blue outline-none transition-all"
-                      value={formData.name}
-                      onChange={e => { setFormData({ ...formData, name: e.target.value }); (e.target as HTMLInputElement).setCustomValidity(''); }}
-                      onInvalid={e => { const el = e.target as HTMLInputElement; el.setCustomValidity(FORM_VALIDATION_MSGS.required); }}
-                    />
+            {/* Assessment Card - The Form or Action Button */}
+            <div className="relative order-1 lg:order-2 w-full max-w-md mx-auto lg:mr-0">
+              <div className="absolute -inset-4 bg-gradient-to-tr from-brand-blue/20 to-brand-orange/20 rounded-[3rem] blur-2xl opacity-70 animate-pulse-slow"></div>
+              <div className="bg-white p-8 md:p-10 rounded-[2.5rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-slate-100 relative z-10 transform transition-transform hover:scale-[1.01]">
+                <div className="flex items-center justify-between mb-8">
+                  <div>
+                    <div className="flex flex-col items-center mb-8 gap-4">
+                      <h3 className="text-3xl font-heading font-black text-brand-darkBlue tracking-tight uppercase text-center">Gere sua estratégia</h3>
+                      {isAdmin && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData({
+                              name: 'Empresa Teste Diagnosis',
+                              phone: '(11) 99999-9999',
+                              email: 'admin@diagnosis.com'
+                            });
+                          }}
+                          className="flex items-center gap-2 bg-brand-darkBlue text-white px-4 py-2 rounded-full font-bold text-[9px] hover:bg-brand-darkBlue/90 transition-all uppercase tracking-widest shadow-lg shadow-brand-darkBlue/20"
+                        >
+                          <Wand2 size={12} /> Auto-Preencher
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-xs font-bold text-brand-green uppercase tracking-widest mt-1">Gratuito • Online • Instantâneo</p>
                   </div>
-                  <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                    <input
-                      required
-                      type="email"
-                      placeholder="E-mail Profissional"
-                      title={FORM_VALIDATION_MSGS.email}
-                      className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:border-brand-blue outline-none transition-all"
-                      value={formData.email}
-                      onChange={e => { setFormData({ ...formData, email: e.target.value }); (e.target as HTMLInputElement).setCustomValidity(''); }}
-                      onInvalid={e => { const el = e.target as HTMLInputElement; el.setCustomValidity(el.validity.typeMismatch ? FORM_VALIDATION_MSGS.email : FORM_VALIDATION_MSGS.required); }}
-                    />
+                  <div className="w-12 h-12 bg-blue-50 text-brand-blue rounded-full flex items-center justify-center">
+                    <BarChart3 size={24} />
                   </div>
-                  <div className="relative">
-                    <MessageCircle className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                    <input
-                      required
-                      type="tel"
-                      placeholder="Seu WhatsApp"
-                      title={FORM_VALIDATION_MSGS.required}
-                      className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:border-brand-blue outline-none transition-all"
-                      value={formData.phone}
-                      onChange={e => { setFormData({ ...formData, phone: e.target.value }); (e.target as HTMLInputElement).setCustomValidity(''); }}
-                      onInvalid={e => { (e.target as HTMLInputElement).setCustomValidity(FORM_VALIDATION_MSGS.required); }}
-                    />
+                </div>
+
+                {user ? (
+                  <div className="text-center py-6">
+                    <div className="w-20 h-20 bg-brand-blue/10 text-brand-blue rounded-full flex items-center justify-center mx-auto mb-6">
+                      <User size={32} />
+                    </div>
+
+                    <div className="text-left mb-6">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1 mb-2 block">Usuário Identificado</label>
+                      <div className="relative group opacity-80">
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-blue" size={18} />
+                        <input
+                          disabled
+                          type="text"
+                          className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-xl font-medium text-slate-900 cursor-not-allowed"
+                          value={user.user_metadata?.name || user.email?.split('@')[0]}
+                        />
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 text-green-500">
+                          <CheckCircle2 size={18} />
+                        </div>
+                      </div>
+                      <p className="text-xs text-slate-400 mt-2 px-1">Você já está logado. Vamos pular o cadastro.</p>
+                    </div>
+
+                    <Button
+                      fullWidth
+                      variant="primary"
+                      onClick={handleAuthenticatedStart}
+                      className="py-5 text-sm font-black uppercase tracking-widest rounded-xl shadow-xl shadow-brand-blue/20 hover:shadow-brand-blue/30 transition-shadow"
+                    >
+                      Continuar para o Teste <ChevronRight size={16} />
+                    </Button>
                   </div>
+                ) : (
+                  <form onSubmit={handleRegistration} className="space-y-5">
+                    <div className="space-y-4">
+                      <div className="relative group">
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-blue transition-colors" size={18} />
+                        <input
+                          required
+                          type="text"
+                          placeholder="Nome do Responsável"
+                          className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-brand-blue outline-none transition-all font-medium text-slate-700 placeholder:text-slate-400"
+                          value={formData.name}
+                          onChange={e => setFormData({ ...formData, name: e.target.value })}
+                        />
+                      </div>
+                      <div className="relative group">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-blue transition-colors" size={18} />
+                        <input
+                          required
+                          type="email"
+                          placeholder="E-mail Comercial"
+                          className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-brand-blue outline-none transition-all font-medium text-slate-700 placeholder:text-slate-400"
+                          value={formData.email}
+                          onChange={e => setFormData({ ...formData, email: e.target.value })}
+                        />
+                      </div>
+                      <div className="relative group">
+                        <MessageCircle className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-blue transition-colors" size={18} />
+                        <input
+                          required
+                          type="tel"
+                          placeholder="WhatsApp (com DDD)"
+                          className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-brand-blue outline-none transition-all font-medium text-slate-700 placeholder:text-slate-400"
+                          value={formData.phone}
+                          onChange={e => setFormData({ ...formData, phone: formatPhone(e.target.value) })}
+                        />
+                      </div>
+                    </div>
 
-                  <Button fullWidth variant="primary" loading={loading} className="py-5 text-lg rounded-2xl shadow-xl shadow-orange-500/20">
-                    Iniciar Diagnóstico Grátis
-                  </Button>
+                    <Button fullWidth variant="primary" loading={loading} className="py-5 text-sm font-black uppercase tracking-widest rounded-xl shadow-xl shadow-brand-blue/20 hover:shadow-brand-blue/30 transition-shadow">
+                      Iniciar Análise Agora <ChevronRight size={16} />
+                    </Button>
 
-                  <p className="flex items-center justify-center gap-2 text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-4">
-                    <Lock size={12} /> Seus dados estão protegidos pela LGPD
-                  </p>
-                </form>
+                    <div className="bg-slate-50 rounded-lg p-3 flex items-start gap-3 border border-slate-100">
+                      <Lock size={14} className="text-slate-400 mt-0.5 shrink-0" />
+                      <p className="text-[10px] text-slate-500 leading-tight">
+                        Seus dados são usados apenas para gerar o relatório. Respeitamos a LGPD e odiamos spam tanto quanto você.
+                      </p>
+                    </div>
+                  </form>
+                )}
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Why it works */}
-      <section className="py-24 bg-mid">
+      {/* Value Proposition - Friendly Grid */}
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <SectionTitle
-            title="O que analisamos no seu Diagnóstico?"
-            subtitle="Nosso sistema de inteligência audita os pilares que geram faturamento no digital."
+            badge="Checklist inteligente"
+            title="O que vamos <span class='text-brand-blue italic'>descobrir juntos?</span>"
+            subtitle="Nosso algoritmo varre os 6 pilares fundamentais do sucesso digital."
+            alignment="center"
           />
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
             {[
-              { icon: Search, title: "Visibilidade", text: "Sua empresa é encontrada por quem te procura hoje?" },
-              { icon: Target, title: "Conversão", text: "Seu site e WhatsApp estão prontos para fechar vendas?" },
-              { icon: Users, title: "Público", text: "Você está falando com quem realmente tem dinheiro para pagar?" },
-              { icon: Zap, title: "Performance", text: "Seus anúncios estão dando lucro ou apenas gerando cliques?" },
-              { icon: Smartphone, title: "Social", text: "Suas redes sociais passam credibilidade ou afastam clientes?" },
-              { icon: FileText, title: "Plano de Ação", text: "O que você deve fazer exatamente nos próximos 30 dias." }
+              { icon: Search, title: "Visibilidade", text: "Você aparece quando o cliente precisa?", color: "blue" },
+              { icon: Target, title: "Conversão", text: "Seu site vende ou só informa?", color: "orange" },
+              { icon: Users, title: "Público", text: "Você atrai compradores ou curiosos?", color: "purple" },
+              { icon: Zap, title: "Anúncios", text: "Seu dinheiro está trazendo retorno?", color: "yellow" },
+              { icon: Smartphone, title: "Social", text: "Suas redes passam autoridade?", color: "pink" },
+              { icon: FileText, title: "Plano Prático", text: "O passo a passo para crescer.", color: "green" }
             ].map((item, i) => (
-              <div key={i} className="p-8 bg-card rounded-3xl border border-gray-100 hover:shadow-xl transition-all">
-                <div className="w-12 h-12 bg-white text-brand-blue rounded-xl flex items-center justify-center mb-6 shadow-sm border border-gray-100">
-                  <item.icon size={24} />
+              <div key={i} className="group p-10 bg-white rounded-[2.5rem] border border-slate-100 hover:shadow-[0_30px_60px_-12px_rgba(0,0,0,0.08)] transition-all duration-500 hover:scale-[1.02] flex flex-col items-center text-center">
+                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 transition-all group-hover:scale-110 shadow-sm bg-${item.color}-50 text-${item.color}-600`}>
+                  <item.icon size={32} />
                 </div>
-                <h4 className="text-xl font-bold text-title mb-3">{item.title}</h4>
-                <p className="text-content text-sm leading-relaxed">{item.text}</p>
+                <h4 className="text-xl font-heading font-black text-brand-darkBlue mb-4 uppercase tracking-tighter">{item.title}</h4>
+                <p className="text-slate-500 font-bold leading-relaxed">{item.text}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How it works Step by Step */}
-      <section className="py-24 bg-footer text-white">
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-heading font-black mb-16 text-center">Como funciona o processo</h2>
-            <div className="space-y-12">
-              {[
-                { step: "01", title: "Cadastro de Acesso", text: "Você informa seus dados de contato para liberar o sistema." },
-                { step: "02", title: "Responda o Briefing", text: "Você preenche dados sobre seu negócio, faturamento e desafios." },
-                { step: "03", title: "IA & Benchmarking", text: "Nossa tecnologia compara seus dados com os melhores resultados do seu setor." },
-                { step: "04", title: "Geração de Relatório", text: "Você recebe um PDF detalhado com suas forças e pontos de melhoria." }
-              ].map((s, i) => (
-                <div key={i} className="flex gap-8 items-start">
-                  <span className="text-5xl font-black text-brand-orange opacity-50">{s.step}</span>
-                  <div>
-                    <h4 className="text-2xl font-black mb-2">{s.title}</h4>
-                    <p className="text-blue-100 leading-relaxed font-light">{s.text}</p>
+      {/* How it works - Visual Steps */}
+      <section className="py-24 bg-brand-darkBlue text-white relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-brand-darkBlue via-slate-900 to-brand-navy opacity-80"></div>
+        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-brand-orange/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-brand-blue/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] pointer-events-none"></div>
+
+        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+          <SectionTitle
+            className="mb-16"
+            badge="Simples e rápido"
+            title="Como funciona a <span class='text-brand-orange italic'>magia?</span>"
+            subtitle="Em menos de 5 minutos você sai da dúvida para a certeza."
+            light={true}
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {[
+              { icon: User, title: "Cadastro", desc: "Acesso liberado" },
+              { icon: FileText, title: "Briefing", desc: "Responda rápido" },
+              { icon: Zap, title: "Análise IA", desc: "Varredura total" },
+              { icon: CheckCircle2, title: "Relatório", desc: "Seu plano pronto" }
+            ].map((step, i) => (
+              <div key={i} className="relative group">
+                {i < 3 && (
+                  <div className="hidden md:block absolute top-12 left-1/2 w-full h-[1px] bg-gradient-to-r from-white/20 to-transparent group-hover:from-brand-orange/40 transition-all duration-500"></div>
+                )}
+                <div className="relative bg-white/[0.03] border border-white/10 p-8 rounded-[2rem] backdrop-blur-md hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300 text-center shadow-2xl">
+                  <div className="w-20 h-20 mx-auto bg-gradient-to-br from-brand-darkBlue to-brand-navy border border-white/10 rounded-[1.5rem] flex items-center justify-center mb-6 shadow-xl group-hover:scale-110 group-hover:border-brand-orange/50 transition-all duration-500 relative z-10">
+                    <step.icon size={28} className="text-white group-hover:text-brand-orange transition-colors" />
+                    {/* Step number badge */}
+                    <div className="absolute -top-2 -right-2 w-7 h-7 bg-brand-orange text-white text-[10px] font-black rounded-full flex items-center justify-center shadow-lg border-2 border-brand-darkBlue">
+                      {i + 1}
+                    </div>
                   </div>
+                  <h4 className="text-xl font-bold mb-2 group-hover:text-brand-orange transition-colors">{step.title}</h4>
+                  <p className="text-sm text-slate-400 font-medium group-hover:text-white/70 transition-colors">{step.desc}</p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-24 bg-mid text-center">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl md:text-5xl font-heading font-black text-title mb-6">Pare de adivinhar. Comece a medir.</h2>
-          <p className="text-xl text-subtitle mb-10 max-w-2xl mx-auto">Mais de 100 empresas já utilizaram nosso diagnóstico para redefinir suas estratégias de marketing digital.</p>
-          <Button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} variant="primary" className="px-12 py-5 text-lg" withIcon>
-            Quero meu Diagnóstico Agora
-          </Button>
+      {/* CTA Bottom */}
+      <section className="py-24 bg-white text-center">
+        <div className="max-w-4xl mx-auto px-4">
+          <SectionTitle
+            title={<>Pare de adivinhar. <span className="text-brand-blue italic pr-1">comece a medir.</span></>}
+            alignment="center"
+          />
+          <div className="mt-10">
+            <Button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} variant="primary" className="px-12 py-6 text-lg rounded-2xl shadow-xl shadow-brand-orange/20" withIcon>
+              Quero meu Diagnóstico Agora
+            </Button>
+            <p className="mt-6 text-sm font-medium text-slate-400">
+              <Clock size={14} className="inline mr-1 relative -top-0.5" /> Tempo estimado: 3 minutos
+            </p>
+          </div>
         </div>
       </section>
     </div>

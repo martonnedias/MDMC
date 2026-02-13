@@ -142,7 +142,7 @@ const SwotReport: React.FC<SwotReportProps> = ({ formData, onBack }) => {
   );
 
   if (loading) return (
-    <div className="container mx-auto px-4 pt-32 pb-64">
+    <div className="container mx-auto px-4 pt-44 lg:pt-60 pb-64">
       <div className="max-w-4xl mx-auto bg-white rounded-[3rem] shadow-2xl p-12 border border-gray-100">
         <LoadingState />
       </div>
@@ -150,7 +150,7 @@ const SwotReport: React.FC<SwotReportProps> = ({ formData, onBack }) => {
   );
 
   if (error) return (
-    <div className="container mx-auto px-4 pt-32 pb-64">
+    <div className="container mx-auto px-4 pt-44 lg:pt-60 pb-64">
       <div className="max-w-2xl mx-auto bg-white rounded-[3rem] shadow-2xl p-12 text-center border border-red-100">
         <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
           <AlertCircle size={40} />
@@ -163,7 +163,7 @@ const SwotReport: React.FC<SwotReportProps> = ({ formData, onBack }) => {
   );
 
   return (
-    <div className="container mx-auto px-4 pt-32 pb-32">
+    <div className="container mx-auto px-4 pt-44 lg:pt-60 pb-32">
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-8 no-print">
           <button onClick={onBack} className="flex items-center gap-2 text-gray-500 font-bold hover:text-brand-blue transition-colors group">

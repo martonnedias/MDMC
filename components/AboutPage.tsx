@@ -1,15 +1,34 @@
 import React, { useState } from 'react';
 import SectionTitle from './SectionTitle';
-import { ShieldCheck, Target, TrendingUp, Search, Eye, Users, Heart, Sparkles, CheckCircle2, Instagram, Facebook, Youtube, Linkedin, Send, Share2, Copy, Check } from 'lucide-react';
+import { ShieldCheck, Target, TrendingUp, Search, Eye, Users, Heart, Sparkles, CheckCircle2, Instagram, Facebook, Youtube, Linkedin, Send, Share2, Copy, Check, Wand2, ChevronLeft, ChevronRight } from 'lucide-react';
 import Button from './Button';
 import { CONTACT_INFO } from '../constants';
 import { useSiteConfig } from '../lib/SiteContext';
+import { useAuth } from './Auth/AuthProvider';
+import { leadService } from '../services/leadService';
+import { formatPhone } from '../lib/formatters';
 
-const AboutPage: React.FC = () => {
+interface AboutPageProps {
+  onNavigate?: (view: any) => void;
+}
+
+const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
   const { config } = useSiteConfig();
+  const { user } = useAuth();
+  const allowedEmails = (import.meta as any).env.VITE_ADMIN_EMAILS?.split(',').map((e: string) => e.trim()) || [];
+  const isAdmin = user?.email && allowedEmails.includes(user.email);
   const section = config.content?.sections?.about;
   const [showShare, setShowShare] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  // Form State
+  const [formState, setFormState] = useState('idle');
+  const [formData, setFormData] = useState({
+    name: '',
+    whatsapp: '',
+    email: '',
+    interest: 'Consultoria Estratégica (Geral)'
+  });
 
   const scrollToContact = () => {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
@@ -35,29 +54,56 @@ const AboutPage: React.FC = () => {
     setShowShare(false);
   };
 
-  if (section?.is_active === false) return null;
-
-  const sectionStyle = {
-    backgroundColor: section?.background_color,
-    fontFamily: section?.font_family
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormState('loading');
+    try {
+      const success = await leadService.saveContactLead({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.whatsapp,
+        interest: `Sobre Nós - Interesse: ${formData.interest}`,
+        companySize: 'N/A'
+      });
+      if (success) {
+        setFormState('success');
+        setFormData({ name: '', whatsapp: '', email: '', interest: 'Consultoria Estratégica (Geral)' });
+      } else {
+        setFormState('error');
+      }
+    } catch (error) {
+      console.error(error);
+      setFormState('error');
+    }
   };
 
-  const titleFontSize = section?.font_size_title || 'text-4xl md:text-6xl lg:text-7xl';
-  const subtitleFontSize = section?.font_size_subtitle || 'text-xl md:text-2xl';
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    let formattedValue = value;
+    if (name === 'whatsapp') {
+      formattedValue = formatPhone(value);
+    }
+    setFormData(prev => ({ ...prev, [name]: formattedValue }));
+  };
+
+  if (section?.is_active === false) return null;
+
+  const titleFontSize = section?.font_size_title || 'text-5xl lg:text-7xl';
+  const subtitleFontSize = section?.font_size_subtitle || 'text-xl lg:text-2xl';
 
   return (
     <div className="pt-0 font-sans" style={{ fontFamily: section?.font_family }}>
       {/* Manifesto Hero */}
-      <section className="pt-20 lg:pt-32 pb-12 lg:pb-32 bg-top text-white relative overflow-hidden" style={sectionStyle}>
+      <section className="pt-44 lg:pt-60 pb-12 lg:pb-32 bg-brand-darkBlue text-white relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[url(&quot;data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E&quot;)] opacity-40"></div>
         <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="max-w-4xl animate-fade-in">
-              <div className="inline-flex items-center gap-2 bg-brand-orange/20 text-brand-orange px-4 py-1.5 rounded-full mb-8 font-black text-[10px] uppercase tracking-widest border border-brand-orange/30 shadow-lg">
+              <div className="inline-flex items-center gap-2 bg-brand-orange/20 text-brand-orange px-4 py-1.5 rounded-full mb-8 font-black text-[9px] uppercase tracking-[0.2em] border border-brand-orange/30 shadow-lg">
                 Nosso Manifesto
               </div>
-              <h1 className={`${titleFontSize} font-heading font-black mb-8 leading-tight`} style={{ color: section?.title_color || 'white' }}>
-                {section?.title || 'O marketing digital está quebrado. Nós viemos consertar.'}
+              <h1 className="text-5xl lg:text-7xl font-heading font-black mb-12 leading-[0.95] pb-2 tracking-tighter max-w-4xl" style={{ color: section?.title_color || 'white' }}>
+                O marketing digital está quebrado. Nós <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-orange-400 italic pr-1">viemos consertar.</span>
               </h1>
               <p className={`${subtitleFontSize} text-blue-100/80 leading-relaxed mb-10 font-light`}>
                 {section?.subtitle || section?.description || 'Chega de promessas milagrosas e relatórios cheios de métricas de vaidade. A MD Solution nasceu para unir a clareza da estratégia de gestão com a força da performance digital.'}
@@ -112,7 +158,7 @@ const AboutPage: React.FC = () => {
               <div className="absolute -inset-4 bg-brand-orange/20 rounded-[3rem] blur-2xl group-hover:bg-brand-orange/30 transition-all duration-700"></div>
               <div className="relative rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl transform transition-all duration-700 hover:rotate-2 hover:scale-105">
                 <img
-                  src={section?.image_url || "/about-team.png"}
+                  src={section?.image_url || "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"}
                   alt="Time MD Solution em reunião estratégica"
                   className="w-full h-auto object-cover"
                 />
@@ -223,13 +269,12 @@ const AboutPage: React.FC = () => {
               </div>
             </div>
             <div className="lg:w-1/2 text-center lg:text-left">
-              <h2 className="text-3xl md:text-5xl font-heading font-black text-title mb-6 leading-tight">
-                Nossa entrega tem o seu <span className="text-brand-orange">nome escrito nela.</span>
-              </h2>
-              <p className="text-lg text-subtitle mb-10 leading-relaxed">
-                Não somos uma agência de massa. Somos uma consultoria boutique. Isso significa que limitamos o número de clientes que atendemos para garantir que o seu projeto receba a atenção, a originalidade e a honestidade que ele merece.
-              </p>
-              <Button onClick={scrollToContact} variant="primary" className="px-10 py-5 text-lg" withIcon>
+              <SectionTitle
+                title={<>Nossa entrega tem o seu <span className="text-brand-orange italic pr-1">nome escrito nela.</span></>}
+                subtitle="Não somos uma agência de massa. Somos uma consultoria boutique. Isso significa que limitamos o número de clientes que atendemos para garantir que o seu projeto receba a atenção, a originalidade e a honestidade que ele merece."
+                alignment="left"
+              />
+              <Button onClick={() => onNavigate?.('landing')} variant="primary" className="px-10 py-5 text-lg" withIcon>
                 Conheça Nossos Planos
               </Button>
             </div>
@@ -237,21 +282,141 @@ const AboutPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Selo de Integridade */}
-      <section className="py-24 bg-footer text-white text-center relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full bg-[url(&quot;data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E&quot;)] opacity-40"></div>
+      {/* FINAL CTA WITH FORM */}
+      <section id="contact" className="py-24 lg:py-40 bg-brand-darkBlue relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="bg-white rounded-[3rem] p-10 shadow-3xl">
+              {formState === 'success' ? (
+                <div className="text-center py-10">
+                  <CheckCircle2 size={64} className="text-green-500 mx-auto mb-6" />
+                  <h3 className="text-2xl font-black text-brand-darkBlue uppercase tracking-tighter">Solicitação Enviada!</h3>
+                  <p className="text-slate-500 font-medium mt-4 mb-8">Nossa equipe entrará em contato em breve através do seu WhatsApp.</p>
+                  <Button onClick={() => setFormState('idle')} variant="outline-dark" className="mt-6">Voltar</Button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <h3 className="text-3xl font-black text-brand-darkBlue uppercase text-center mb-8">Solicitar Atendimento</h3>
+
+                  {isAdmin && (
+                    <button
+                      type="button"
+                      onClick={() => setFormData({
+                        name: 'Admin Teste',
+                        email: 'admin@teste.com',
+                        whatsapp: '(11) 99999-9999',
+                        interest: 'Consultoria Estratégica'
+                      })}
+                      className="mx-auto block text-[10px] font-black uppercase tracking-widest bg-slate-100 p-2 rounded-lg mb-4 hover:bg-slate-200 transition-colors"
+                    >
+                      <Wand2 size={12} className="inline mr-2" /> Auto-Preencher
+                    </button>
+                  )}
+
+                  <div className="space-y-4">
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Seu Nome"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                      className="w-full h-14 px-6 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-brand-orange focus:bg-white transition-all font-medium"
+                    />
+                    <input
+                      type="tel"
+                      name="whatsapp"
+                      placeholder="WhatsApp com DDD"
+                      value={formData.whatsapp}
+                      onChange={handleChange}
+                      required
+                      className="w-full h-14 px-6 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-brand-orange focus:bg-white transition-all font-medium"
+                    />
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="E-mail Corporativo"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className="w-full h-14 px-6 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-brand-orange focus:bg-white transition-all font-medium"
+                    />
+                    <select
+                      name="interest"
+                      value={formData.interest}
+                      onChange={handleChange}
+                      required
+                      className="w-full h-14 px-6 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-brand-orange focus:bg-white transition-all font-medium"
+                    >
+                      <option value="Consultoria Estratégica (Geral)">Consultoria Estratégica (Geral)</option>
+                      <option value="Estratégia de Tráfego Pago">Estratégia de Tráfego Pago</option>
+                      <option value="Desenvolvimento de Sites/LP">Desenvolvimento de Sites/LP</option>
+                      <option value="Gestão de Redes Sociais">Gestão de Redes Sociais</option>
+                    </select>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="w-full h-16 font-black uppercase tracking-widest shadow-xl shadow-brand-orange/20"
+                    disabled={formState === 'loading'}
+                  >
+                    {formState === 'loading' ? 'Enviando...' : 'Falar com um Estrategista'}
+                  </Button>
+                </form>
+              )}
+            </div>
+
+            <div className="text-white lg:pl-12">
+              <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full mb-8 font-black text-[9px] uppercase tracking-[0.2em]">
+                <ShieldCheck size={14} className="text-brand-orange" /> Garantia de Integridade
+              </div>
+              <h2 className="text-4xl lg:text-6xl font-heading font-black mb-8 uppercase leading-[0.9] tracking-tighter">
+                Sua empresa no <span className="text-brand-orange italic">próximo nível</span> com quem joga limpo.
+              </h2>
+              <p className="text-blue-100/70 text-lg mb-12 max-w-xl font-medium leading-relaxed">
+                Preencha o formulário ao lado e agende sua conversa estratégica. Vamos analisar seu negócio sem filtros e com foco total em lucro.
+              </p>
+
+              <div className="flex flex-col gap-6">
+                <div className="flex items-center gap-4 group">
+                  <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center group-hover:bg-brand-orange/20 transition-colors">
+                    <CheckCircle2 className="text-brand-orange" size={24} />
+                  </div>
+                  <div>
+                    <p className="text-white font-bold uppercase tracking-widest text-[10px] mb-1">Passo 01</p>
+                    <p className="text-blue-100/60 text-sm font-medium">Preenchimento rápido de dados básicos.</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 group">
+                  <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center group-hover:bg-brand-orange/20 transition-colors">
+                    <CheckCircle2 className="text-brand-orange" size={24} />
+                  </div>
+                  <div>
+                    <p className="text-white font-bold uppercase tracking-widest text-[10px] mb-1">Passo 02</p>
+                    <p className="text-blue-100/60 text-sm font-medium">Reunião para alinhar expectativas e escopo.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Selo de Integridade Final */}
+      <section className="py-24 bg-mid text-center relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto">
             <ShieldCheck size={64} className="text-brand-orange mx-auto mb-8 animate-pulse" />
-            <h2 className="text-3xl md:text-5xl font-heading font-black mb-6">Compromisso MD Solution</h2>
-            <p className="text-xl md:text-2xl font-light opacity-80 mb-12 italic leading-relaxed">
-              "Nós nunca recomendaremos uma estratégia que nós mesmos não usaríamos com o nosso próprio dinheiro."
-            </p>
+            <SectionTitle
+              title="Compromisso MD Solution"
+              subtitle='"Nós nunca recomendaremos uma estratégia que nós mesmos não usaríamos com o nosso próprio dinheiro."'
+              alignment="center"
+            />
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button onClick={scrollToContact} variant="primary" className="bg-brand-orange hover:bg-brand-orangeHover border-none px-12 py-5 text-lg">
+              <Button onClick={scrollToContact} variant="primary" className="bg-brand-orange hover:bg-brand-orangeHover border-none px-12 py-5 text-lg shadow-xl shadow-brand-orange/20">
                 Agendar Diagnóstico Grátis
               </Button>
-              <Button onClick={() => window.open(`${config.whatsapp ? `https://wa.me/${config.whatsapp?.replace(/\D/g, '')}` : CONTACT_INFO.whatsappLink}?text=Olá! Gostaria de falar sobre a consultoria MD Solution.`, '_blank')} variant="outline" className="px-12 py-5 text-lg">
+              <Button onClick={() => window.open(`${config.whatsapp ? `https://wa.me/${config.whatsapp?.replace(/\D/g, '')}` : CONTACT_INFO.whatsappLink}?text=Olá! Gostaria de falar sobre a consultoria MD Solution.`, '_blank')} variant="outline-dark" className="px-12 py-5 text-lg">
                 Falar no WhatsApp
               </Button>
             </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Button from './Button';
 import { HERO_CONTENT } from '../constants';
-import { ArrowRight, BarChart3, Target, ChevronDown, Share2, Copy, Check, Instagram, Facebook, Youtube, Send, Linkedin } from 'lucide-react';
+import { ArrowRight, BarChart3, Target, ChevronDown, Share2, Copy, Check, Instagram, Facebook, Youtube, Send, Linkedin, Sparkles } from 'lucide-react';
 import { useSiteConfig } from '../lib/SiteContext';
 
 interface HeroProps {
@@ -23,8 +23,8 @@ const Hero: React.FC<HeroProps> = ({ onStartBriefing, onStartSwot, onNavigate })
   const heroImage = sectionConfig?.image_url || config.content?.hero_image || "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800";
 
   const fontFamily = sectionConfig?.font_family;
-  const fontSizeTitle = sectionConfig?.font_size_title || 'text-4xl sm:text-5xl lg:text-7xl';
-  const fontSizeSubtitle = sectionConfig?.font_size_subtitle || 'text-lg';
+  const fontSizeTitle = sectionConfig?.font_size_title || 'text-5xl sm:text-6xl lg:text-7xl';
+  const fontSizeSubtitle = sectionConfig?.font_size_subtitle || 'text-xl';
 
   const handleCopyLink = () => {
     const url = window.location.href;
@@ -47,135 +47,153 @@ const Hero: React.FC<HeroProps> = ({ onStartBriefing, onStartSwot, onNavigate })
   };
 
   return (
-    <section className="relative pt-32 lg:pt-44 pb-20 lg:pb-32 overflow-hidden text-white bg-top"
+    <section className="relative pt-44 lg:pt-60 pb-20 lg:pb-32 overflow-hidden text-white bg-slate-950 font-heading"
       style={{
         backgroundColor: sectionConfig?.background_color || config.content?.hero_background_color,
         fontFamily: fontFamily
       }}>
 
-      {!(sectionConfig?.background_color || config.content?.hero_background_color) && (
-        <div
-          className="absolute inset-0 z-0 pointer-events-none"
-          style={{
-            background: 'radial-gradient(circle at 50% 0%, #112240 0%, #0A1931 100%)'
-          }}
-        ></div>
-      )}
+      {/* Modern Mesh Gradient Background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40">
+        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-brand-blue/30 rounded-full blur-[120px] animate-pulse"></div>
+        <div className="absolute top-[20%] -right-[5%] w-[30%] h-[30%] bg-brand-orange/20 rounded-full blur-[100px] animate-pulse delay-700"></div>
+        <div className="absolute -bottom-[10%] left-[20%] w-[35%] h-[35%] bg-brand-blue/10 rounded-full blur-[120px] animate-pulse delay-1000"></div>
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+      {/* Grain Overlay for Texture */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+
+      <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+        <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
 
           {/* Left Column: Text and Buttons */}
-          <div className="flex-1 text-center lg:text-left animate-fade-in-up flex flex-col items-center lg:items-start">
-            <div className="inline-flex items-center gap-2 bg-blue-500/10 text-blue-300 px-4 py-2 rounded-full mb-8 font-bold text-xs uppercase tracking-widest border border-blue-500/20">
-              <Target size={14} className="animate-pulse" /> Performance & Gestão
+          <div className="flex-[1.2] text-center lg:text-left animate-fade-in-up flex flex-col items-center lg:items-start">
+            <div className="inline-flex items-center gap-3 bg-white/5 backdrop-blur-md text-brand-orange px-5 py-2 rounded-full mb-10 font-black text-[10px] uppercase tracking-[0.3em] border border-white/10 shadow-xl">
+              <Sparkles size={14} className="animate-pulse" /> Performance de Elite
             </div>
 
-            <h1 className={`${fontSizeTitle} font-heading font-black leading-[1.1] tracking-tight mb-6`}
+            <h1 className={`${fontSizeTitle} font-black leading-tight pb-4 tracking-tighter mb-8 max-w-4xl`}
               style={{ color: sectionConfig?.title_color || config.content?.hero_title_color || 'white' }}>
-              {mainHeadline.split(' ').map((word, i) =>
-                word.toLowerCase() === 'vendas' || word.toLowerCase() === 'marketing' ? <span key={i} className="text-brand-orange">{word} </span> : word + ' '
-              )}
+              {(() => {
+                const words = mainHeadline.trim().split(/\s+/);
+                return words.map((word, i) => {
+                  const cleanWord = word.toLowerCase().replace(/[^\wáéíóúâêîôûãõç]/g, '');
+                  const isHighlighted = ['vendas', 'marketing', 'importa'].includes(cleanWord);
+                  return (
+                    <React.Fragment key={i}>
+                      {isHighlighted ? (
+                        <span className="relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-orange-400 italic px-1">
+                          {word}
+                        </span>
+                      ) : (
+                        word
+                      )}
+                      {i < words.length - 1 && ' '}
+                    </React.Fragment>
+                  );
+                });
+              })()}
             </h1>
 
-            <div className={`${fontSizeSubtitle} text-blue-100 mb-8 max-w-2xl leading-relaxed space-y-4 font-light`}>
-              <p>
+            <div className={`${fontSizeSubtitle} text-slate-400 mb-12 max-w-2xl leading-relaxed space-y-6 font-medium border-l-2 border-brand-orange/30 pl-6 lg:pl-8`}>
+              <p className="italic">
                 {subHeadline}
               </p>
-              <p>
-                Oferecemos dois caminhos gratuitos para o seu crescimento: Um foco em <strong>Vendas Imediatas (Marketing)</strong> ou um foco em <strong>Estratégia de Negócio (SWOT)</strong>. Escolha o seu momento abaixo:
+              <p className="text-sm uppercase tracking-widest text-slate-500 font-bold">
+                Duas vias para o lucro: <span className="text-white">Marketing</span> ou <span className="text-white">Estratégia</span>.
               </p>
             </div>
 
-            <div className="flex flex-col gap-6 w-full max-w-2xl">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
-                {/* Botão Marketing */}
-                <div className="flex flex-col gap-3">
-                  <Button
-                    onClick={() => {
-                      if (sectionConfig?.button_redirect && onNavigate) {
-                        onNavigate(sectionConfig.button_redirect);
-                      } else {
-                        onStartBriefing();
-                      }
-                    }}
-                    variant="primary"
-                    className="w-full min-h-[84px] text-lg px-4 flex flex-col items-center justify-center leading-tight py-4"
-                  >
-                    <span className="block text-center">{HERO_CONTENT.secondaryCta}</span>
-                  </Button>
-                  <p className="text-[10px] text-blue-300 font-black uppercase tracking-widest text-center">Foco em Vendas e Anúncios</p>
-                </div>
+            <div className="flex flex-col sm:flex-row gap-6 w-full lg:w-auto">
+              <Button
+                onClick={() => {
+                  if (sectionConfig?.button_redirect && onNavigate) {
+                    onNavigate(sectionConfig.button_redirect);
+                  } else {
+                    onStartBriefing();
+                  }
+                }}
+                variant="primary"
+                className="h-20 px-10 text-xs font-black uppercase tracking-[0.2em] transform hover:scale-105 transition-all shadow-2xl shadow-brand-orange/20 flex flex-col items-center justify-center min-w-[240px]"
+              >
+                <span>{HERO_CONTENT.secondaryCta.split('(')[0]}</span>
+                <span className="text-[9px] opacity-60 font-bold lowercase tracking-normal">(foco em vendas)</span>
+              </Button>
 
-                {/* Botão SWOT */}
-                <div className="flex flex-col gap-3">
-                  <Button
-                    onClick={onStartSwot}
-                    variant="outline"
-                    className="w-full min-h-[84px] text-lg px-4 flex flex-col items-center justify-center leading-tight py-4 border-2 hover:bg-white hover:text-brand-orange text-white border-white/20"
-                  >
-                    <span className="block text-center">{HERO_CONTENT.swotCta}</span>
-                  </Button>
-                  <p className="text-[10px] text-blue-300 font-black uppercase tracking-widest text-center">Foco em Gestão e Estratégia</p>
-                </div>
-              </div>
+              <Button
+                onClick={onStartSwot}
+                variant="outline"
+                className="h-20 px-10 text-xs font-black uppercase tracking-[0.2em] transform hover:scale-105 transition-all border-white/10 bg-white/5 backdrop-blur-sm hover:bg-white hover:text-brand-darkBlue flex flex-col items-center justify-center min-w-[240px]"
+              >
+                <span>{HERO_CONTENT.swotCta.split('(')[0]}</span>
+                <span className="text-[9px] opacity-60 font-bold lowercase tracking-normal">(foco em gestão)</span>
+              </Button>
             </div>
 
             {/* Social Icons & Share Controls */}
-            <div className="mt-12 flex flex-wrap items-center justify-center lg:justify-start gap-6">
-              {(sectionConfig?.show_social_icons !== false) && (
-                <div className="flex items-center gap-4">
-                  <a href={config.instagram_url} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-brand-orange transition-colors"><Instagram size={20} /></a>
-                  <a href={config.facebook_url} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-brand-orange transition-colors"><Facebook size={20} /></a>
-                  <a href={config.youtube_url} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-brand-orange transition-colors"><Youtube size={20} /></a>
-                  {config.linkedin_url && <a href={config.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-brand-orange transition-colors"><Linkedin size={20} /></a>}
-                  {config.telegram_url && <a href={config.telegram_url} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-brand-orange transition-colors"><Send size={20} /></a>}
-                </div>
-              )}
+            <div className="mt-16 flex flex-wrap items-center justify-center lg:justify-start gap-8 opacity-60 hover:opacity-100 transition-opacity">
+              <div className="flex items-center gap-5">
+                <a href={config.instagram_url} target="_blank" rel="noopener noreferrer" className="text-white hover:text-brand-orange transition-colors"><Instagram size={18} /></a>
+                <a href={config.facebook_url} target="_blank" rel="noopener noreferrer" className="text-white hover:text-brand-orange transition-colors"><Facebook size={18} /></a>
+                <a href={config.youtube_url} target="_blank" rel="noopener noreferrer" className="text-white hover:text-brand-orange transition-colors"><Youtube size={18} /></a>
+                {config.linkedin_url && <a href={config.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-white hover:text-brand-orange transition-colors"><Linkedin size={18} /></a>}
+              </div>
 
-              {(sectionConfig?.show_share_menu !== false) && (
-                <div className="flex items-center gap-2 border-l border-white/10 pl-6">
-                  <div className="relative">
-                    <button
-                      onClick={() => setShowShare(!showShare)}
-                      className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white/60 hover:text-white transition-colors"
-                    >
-                      <Share2 size={16} /> Compartilhar
-                    </button>
-                    {showShare && (
-                      <div className="absolute top-full left-0 mt-2 bg-white rounded-xl shadow-2xl p-2 flex flex-col gap-1 min-w-[150px] z-50 animate-fade-in">
-                        <button onClick={() => handleShare('whatsapp')} className="text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2">WhatsApp</button>
-                        <button onClick={() => handleShare('facebook')} className="text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2">Facebook</button>
-                        <button onClick={() => handleShare('linkedin')} className="text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2">LinkedIn</button>
-                      </div>
-                    )}
-                  </div>
+              <div className="w-px h-6 bg-white/10 hidden sm:block"></div>
+
+              <div className="flex items-center gap-6">
+                <div className="relative">
                   <button
-                    onClick={handleCopyLink}
-                    className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white/60 hover:text-white transition-colors"
+                    onClick={() => setShowShare(!showShare)}
+                    className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white hover:text-brand-orange transition-colors"
                   >
-                    {copied ? <Check size={16} className="text-brand-green" /> : <Copy size={16} />}
-                    {copied ? 'Copiado!' : 'Copiar Link'}
+                    <Share2 size={14} /> Compartilhar
                   </button>
+                  {showShare && (
+                    <div className="absolute bottom-full left-0 mb-4 bg-slate-900 border border-white/10 rounded-2xl shadow-2xl p-2 flex flex-col gap-1 min-w-[160px] animate-fade-in z-50">
+                      <button onClick={() => handleShare('whatsapp')} className="text-left px-4 py-2 text-xs font-bold text-slate-300 hover:bg-white/5 rounded-xl transition-colors">WhatsApp</button>
+                      <button onClick={() => handleShare('facebook')} className="text-left px-4 py-2 text-xs font-bold text-slate-300 hover:bg-white/5 rounded-xl transition-colors">Facebook</button>
+                      <button onClick={() => handleShare('linkedin')} className="text-left px-4 py-2 text-xs font-bold text-slate-300 hover:bg-white/5 rounded-xl transition-colors">LinkedIn</button>
+                    </div>
+                  )}
                 </div>
-              )}
+                <button
+                  onClick={handleCopyLink}
+                  className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white hover:text-brand-orange transition-colors"
+                >
+                  {copied ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
+                  {copied ? 'Copiado' : 'Link'}
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Right Column: Image */}
-          <div className="relative z-10 hidden lg:flex justify-center lg:justify-end lg:order-2 flex-1">
-            <div className="relative">
-              <div className="absolute -inset-4 bg-brand-orange/20 rounded-3xl transform rotate-3 blur-sm"></div>
-              <img
-                src={heroImage}
-                alt="Empresários trabalhando em performance digital"
-                className="relative rounded-3xl shadow-2xl object-cover w-full max-w-md lg:max-w-xl h-auto border-8 border-white/10"
-              />
-              <div className="absolute -bottom-8 -left-8 bg-white p-6 rounded-2xl shadow-2xl border-l-8 border-brand-green hidden sm:block animate-fade-in">
-                <p className="font-black text-gray-900 text-lg">Qual seu desafio hoje?</p>
-                <div className="flex gap-4 mt-2">
-                  <div className="flex items-center gap-1 text-xs text-brand-blue font-bold"><BarChart3 size={14} /> Vendas?</div>
-                  <div className="flex items-center gap-1 text-xs text-brand-orange font-bold"><Target size={14} /> Estratégia?</div>
+          {/* Right Column: Image with Luxury Framing */}
+          <div className="relative z-10 hidden lg:flex justify-center lg:justify-end flex-1">
+            <div className="relative group p-4 bg-white/5 rounded-[3rem] border border-white/10 backdrop-blur-sm shadow-2xl">
+              <div className="absolute -inset-1 bg-gradient-to-br from-brand-orange to-brand-blue opacity-20 blur-xl group-hover:opacity-30 transition-opacity rounded-[3rem]"></div>
+
+              <div className="relative rounded-[2.5rem] overflow-hidden aspect-[4/5] w-full max-w-[450px]">
+                <img
+                  src={heroImage}
+                  alt="MD Solution Strategy"
+                  className="w-full h-full object-cover grayscale brightness-110 hover:grayscale-0 transition-all duration-1000 transform hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80"></div>
+              </div>
+
+              {/* Floating Real-time Impact Card */}
+              <div className="absolute -bottom-10 -left-10 bg-slate-900/90 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 animate-float group-hover:scale-105 transition-transform duration-700">
+                <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2">Seu Desafio Hoje</p>
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-brand-blue/20 flex items-center justify-center text-brand-blue"><BarChart3 size={18} /></div>
+                    <span className="text-sm font-bold text-white tracking-tight uppercase">Vender Mais</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-brand-orange/20 flex items-center justify-center text-brand-orange"><Target size={18} /></div>
+                    <span className="text-sm font-bold text-white tracking-tight uppercase">Organizar Gestão</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -183,8 +201,15 @@ const Hero: React.FC<HeroProps> = ({ onStartBriefing, onStartSwot, onNavigate })
 
         </div>
       </div>
+
+      {/* Scroll Down Indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-30 animate-bounce cursor-pointer" onClick={() => document.getElementById('dor')?.scrollIntoView({ behavior: 'smooth' })}>
+        <span className="text-[8px] font-black uppercase tracking-[0.4em]">Scroll</span>
+        <ChevronDown size={20} />
+      </div>
     </section>
   );
 };
 
 export default Hero;
+

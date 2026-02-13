@@ -21,7 +21,11 @@ const swotSteps = [
   { title: 'Final', icon: Rocket },
 ];
 
-const ProgressIndicator: React.FC<{ currentStep: number }> = ({ currentStep }) => {
+const ProgressIndicator: React.FC<{
+  currentStep: number;
+  onStepClick?: (step: number) => void;
+  sectionsCompleted?: boolean[];
+}> = ({ currentStep, onStepClick, sectionsCompleted = [] }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,18 +44,25 @@ const ProgressIndicator: React.FC<{ currentStep: number }> = ({ currentStep }) =
         {swotSteps.map((section, index) => {
           const isCompleted = currentStep > index;
           const isActive = currentStep === index;
+          const isSelectable = onStepClick && (isCompleted || sectionsCompleted[index]);
           const Icon = section.icon;
 
           return (
             <React.Fragment key={index}>
               <div className="flex flex-col items-center min-w-[100px]">
-                <div className={`relative z-10 w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all duration-500 
+                <button
+                  type="button"
+                  disabled={!isSelectable}
+                  onClick={() => isSelectable && onStepClick(index)}
+                  className={`relative z-10 w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all duration-500 
                     ${isCompleted ? 'bg-brand-blue border-brand-blue text-white' :
-                    isActive ? 'bg-white border-brand-orange text-brand-orange scale-110 shadow-lg' :
-                      'bg-white border-gray-100 text-gray-300'}`}>
+                      isActive ? 'bg-white border-brand-orange text-brand-orange scale-110 shadow-lg' :
+                        'bg-white border-gray-100 text-gray-300'}
+                    ${isSelectable ? 'cursor-pointer hover:border-brand-orange hover:scale-110' : 'cursor-default'}`}
+                >
                   {isCompleted ? <CheckCircle2 size={20} /> : <Icon size={20} />}
                   {isActive && <div className="absolute -inset-1 rounded-full border-2 border-brand-orange animate-ping opacity-20"></div>}
-                </div>
+                </button>
                 <p className={`text-[10px] mt-3 font-bold uppercase tracking-tighter whitespace-nowrap 
                   ${isActive ? 'text-brand-orange' : isCompleted ? 'text-brand-blue' : 'text-gray-400'}`}>
                   {section.title}
@@ -73,11 +84,16 @@ const ProgressIndicator: React.FC<{ currentStep: number }> = ({ currentStep }) =
 
 const SwotBriefing: React.FC<{ selectedPlan?: string | null }> = ({ selectedPlan }) => {
   const { user } = useAuth();
+  const allowedEmails = (import.meta as any).env.VITE_ADMIN_EMAILS?.split(',').map((e: string) => e.trim()) || [];
+  const isAdmin = user?.email && allowedEmails.includes(user.email);
+
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [currentStep, setCurrentStep] = useState(user ? 1 : 0);
   const sliderContainerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const formTopRef = useRef<HTMLDivElement>(null);
+  const [sectionsCompleted, setSectionsCompleted] = useState<boolean[]>(new Array(swotSteps.length).fill(false));
 
   const [formData, setFormData] = useState<any>({
     name: '', email: '', phone: '', whatsapp: '',
@@ -100,6 +116,42 @@ const SwotBriefing: React.FC<{ selectedPlan?: string | null }> = ({ selectedPlan
       }));
     }
   }, [user]);
+
+  // Auto-Save progress
+  useEffect(() => {
+    const saveProgress = () => {
+      localStorage.setItem('swot_briefing_progress', JSON.stringify({
+        formData,
+        currentStep,
+        timestamp: new Date().toISOString()
+      }));
+    };
+
+    const timer = setTimeout(saveProgress, 1000);
+    return () => clearTimeout(timer);
+  }, [formData, currentStep]);
+
+  // Restore progress on load
+  useEffect(() => {
+    const saved = localStorage.getItem('swot_briefing_progress');
+    if (saved) {
+      try {
+        const { formData: savedData, currentStep: savedStep, timestamp } = JSON.parse(saved);
+        const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+        if (new Date(timestamp) > dayAgo) {
+          if (window.confirm('Encontramos uma auditoria SWOT em andamento. Deseja continuar de onde parou?')) {
+            setFormData(savedData);
+            setCurrentStep(savedStep);
+          } else {
+            localStorage.removeItem('swot_briefing_progress');
+          }
+        }
+      } catch (e) {
+        console.error("Error parsing saved swot progress", e);
+      }
+    }
+  }, []);
 
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
@@ -176,6 +228,52 @@ const SwotBriefing: React.FC<{ selectedPlan?: string | null }> = ({ selectedPlan
     });
   };
 
+  const scrollToFormTop = () => {
+    if (formTopRef.current) {
+      const yOffset = -120; // Fixed header (100px) + margin
+      const y = formTopRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
+  const handleStepClick = (step: number) => {
+    // Permite voltar livremente
+    if (step < currentStep) {
+      setCurrentStep(step);
+      scrollToFormTop();
+      return;
+    }
+
+    // Permite avançar se o atual for válido
+    const errors: Record<string, string> = {};
+    const stepFields: Record<number, string[]> = {
+      0: ['name', 'email', 'phone'],
+      1: ['companyName', 'segment', 'businessTime', 'teamSize']
+    };
+
+    const fieldsToValidate = stepFields[currentStep] || [];
+    let isValid = true;
+    fieldsToValidate.forEach(f => {
+      const err = validateField(f, formData[f]);
+      if (err) {
+        errors[f] = err;
+        isValid = false;
+      }
+    });
+
+    if (isValid || sectionsCompleted[step]) {
+      setSectionsCompleted(prev => {
+        const next = [...prev];
+        next[currentStep] = true;
+        return next;
+      });
+      setCurrentStep(step);
+      scrollToFormTop();
+    } else {
+      setValidationErrors(errors);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -196,7 +294,10 @@ const SwotBriefing: React.FC<{ selectedPlan?: string | null }> = ({ selectedPlan
 
     setLoading(true);
     const result = await leadService.saveBriefingLead({ ...formData, type: 'SWOT_ANALYSIS' });
-    if (result) setSuccess(true);
+    if (result) {
+      localStorage.removeItem('swot_briefing_progress'); // Clear on success
+      setSuccess(true);
+    }
     setLoading(false);
   };
 
@@ -240,13 +341,44 @@ const SwotBriefing: React.FC<{ selectedPlan?: string | null }> = ({ selectedPlan
             <h1 className="text-3xl font-heading font-bold text-brand-darkBlue leading-tight">Auditoria Estratégica SWOT</h1>
             <p className="text-gray-500 text-sm">Mapeamento completo de Forças, Fraquezas e Riscos.</p>
           </div>
-          <button onClick={handleAutoFill} className="flex items-center gap-2 bg-brand-orange/10 text-brand-orange px-6 py-3 rounded-full font-bold text-sm hover:bg-brand-orange hover:text-white transition-all shadow-sm">
-            <Wand2 size={18} /> Preenchimento Rápido (Demo)
-          </button>
+          {isAdmin && (
+            <button onClick={handleAutoFill} className="flex items-center gap-2 bg-brand-darkBlue/5 text-brand-darkBlue px-4 py-2 rounded-xl font-bold text-[10px] hover:bg-brand-darkBlue/10 transition-all border border-brand-darkBlue/10 uppercase tracking-widest shadow-sm animate-fade-in">
+              <Wand2 size={14} /> Auto-Preencher (Admin)
+            </button>
+          )}
         </div>
 
-        <div className="max-w-4xl mx-auto">
-          <ProgressIndicator currentStep={currentStep} />
+        <div ref={formTopRef} className="max-w-4xl mx-auto">
+          {/* Discrete Top Navigation */}
+          <div className="flex justify-between items-center px-4 mb-4 opacity-30 hover:opacity-100 transition-opacity">
+            <button
+              type="button"
+              onClick={() => {
+                setCurrentStep(prev => Math.max(0, prev - 1));
+                scrollToFormTop();
+              }}
+              disabled={currentStep === 0}
+              className={`text-[9px] font-black uppercase tracking-widest flex items-center gap-1 hover:text-brand-blue transition-colors ${currentStep === 0 ? 'invisible' : ''}`}
+            >
+              <ChevronLeft size={12} /> Anterior
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                handleStepClick(currentStep + 1);
+              }}
+              disabled={currentStep === swotSteps.length - 1}
+              className={`text-[9px] font-black uppercase tracking-widest flex items-center gap-1 hover:text-brand-blue transition-colors ${currentStep === swotSteps.length - 1 ? 'invisible' : ''}`}
+            >
+              Próximo <ChevronRight size={12} />
+            </button>
+          </div>
+          <ProgressIndicator
+            currentStep={currentStep}
+            onStepClick={handleStepClick}
+            sectionsCompleted={sectionsCompleted}
+          />
 
           <form onSubmit={handleSubmit} noValidate className="bg-white rounded-[2.5rem] shadow-xl border border-gray-100 overflow-hidden">
             <div ref={sliderContainerRef} className="relative transition-[height] duration-500 overflow-hidden ease-in-out">
@@ -419,13 +551,13 @@ const SwotBriefing: React.FC<{ selectedPlan?: string | null }> = ({ selectedPlan
             </div>
 
             <div className="px-6 md:px-10 pb-10 flex items-center justify-between border-t border-gray-100 pt-10 bg-gray-50/20">
-              <Button type="button" variant="secondary" onClick={() => { setCurrentStep(prev => prev - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }} disabled={currentStep === 0} className={currentStep === 0 ? 'opacity-0' : 'py-3 px-8 text-sm font-bold'}><ChevronLeft size={18} className="mr-2" /> Voltar</Button>
+              <Button type="button" variant="secondary" onClick={() => { setCurrentStep(prev => prev - 1); scrollToFormTop(); }} disabled={currentStep === 0} className={currentStep === 0 ? 'opacity-0' : 'py-3 px-8 text-sm font-bold'}><ChevronLeft size={18} className="mr-2" /> Voltar</Button>
               <div className="flex flex-col items-center">
                 <div className="text-[10px] font-black text-gray-300 uppercase mb-1 tracking-widest">Passo</div>
                 <div className="text-sm font-bold text-brand-blue">{currentStep + 1} de {swotSteps.length}</div>
               </div>
               {currentStep < swotSteps.length - 1 ? (
-                <Button type="button" onClick={() => { setCurrentStep(prev => prev + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="py-3 px-8 text-sm font-bold">Próximo <ChevronRight size={18} className="ml-2" /></Button>
+                <Button type="button" onClick={() => { setCurrentStep(prev => prev + 1); scrollToFormTop(); }} className="py-3 px-8 text-sm font-bold">Próximo <ChevronRight size={18} className="ml-2" /></Button>
               ) : <div className="w-[120px]"></div>}
             </div>
           </form>

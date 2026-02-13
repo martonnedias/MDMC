@@ -1,0 +1,68 @@
+Para anunciar isso com sucesso, o segredo é não vender "um software", mas sim a solução para o caos comercial do seu cliente. Aqui estão as melhores estratégias:1. Posicionamento: O "Seu" EcossistemaEm vez de dizer "estou revendendo um CRM", use uma narrativa de exclusividade.A abordagem: "Desenvolvemos (ou licenciamos) uma tecnologia exclusiva para nossos parceiros para garantir que nenhum lead se perca no processo."O Nome: Dê um nome próprio à ferramenta (ex: [Nome da Sua Agência] Sales Hub ou Método [X] Digital).2. Destaque os "Pain Points" (Dores)Anuncie focando no que dói no bolso do seu cliente hoje. Use frases como:"Você ainda perde vendas porque esquece de responder no WhatsApp?""Chega de planilhas bagunçadas. Tenha controle total do seu comercial em uma tela.""Sua equipe comercial sabe exatamente o que fazer hoje?"3. Estratégias de Divulgação por CanalCanalAção PráticaClientes AtuaisOfereça um "Upsell". Diga que agora a agência oferece a infraestrutura completa de vendas para potencializar o tráfego que vocês já geram.Instagram/LinkedInFaça vídeos curtos mostrando a interface (com a sua marca) e a facilidade de arrastar um card de venda. O visual do Kanban vende muito bem.Landing PageCrie uma página específica no seu domínio (ex: crm.suaempresa.com.br) listando os benefícios e um botão de demonstração.E-mail MarketingEnvie um anúncio de "Nova Vertical na Empresa": "Agora somos Full Service: geramos o lead e te damos a ferramenta para fechá-lo."4. O Argumento de Ouro: "Tráfego + CRM"Se você faz tráfego pago, o maior medo do cliente é "jogar dinheiro fora". Seu anúncio deve ser:"Nós não apenas entregamos leads; nós entregamos a plataforma para você gerenciar esses leads. Com o nosso CRM próprio, rastreamos cada centavo do seu investimento até a venda final."Dica de Ouro: O "Modelo Freemium"Para quem está começando no White Label, uma estratégia matadora é oferecer o CRM como um bônus nos seus pacotes de gestão de anúncios ou consultoria por 3 meses. Depois que o cliente organizar toda a vida dele dentro da sua plataforma, ele dificilmente sairá.
+
+Excelente escolha de nome. MD Converte soa direto, profissional e focado em resultados (conversão). Para uma Landing Page (LP) de um CRM White Label, o foco não deve ser apenas "características técnicas", mas sim o lucro e a organização que o cliente terá.
+
+Aqui está uma estrutura de alta conversão para a sua LP:
+
+Estrutura da Landing Page: MD Converte
+1. Headline (Destaque Principal)
+A frase que resume o valor.
+
+Sugestão: "Transforme leads em clientes com a gestão comercial da MD Converte."
+
+Subheadline: "O fim da bagunça no WhatsApp e das planilhas perdidas. Organize seu funil de vendas, automatize processos e venda mais com a tecnologia oficial da MD Converte."
+
+2. O Problema (Agitação)
+Mostre que você entende a dor do cliente.
+
+"Sua empresa sofre com leads que esfriam por falta de retorno?"
+
+"Você não sabe quanto dinheiro está deixando na mesa por falta de acompanhamento (follow-up)?"
+
+"Sua equipe comercial está perdida em meio a tantas conversas no WhatsApp?"
+
+3. A Solução: Conheça o MD Converte
+Apresente o software com foco visual (use prints da plataforma com seu logo).
+
+Visualização em Kanban: "Arraste e solte. Veja sua jornada de vendas de ponta a ponta."
+
+Integração WhatsApp: "Centralize suas conversas e nunca mais perca um histórico."
+
+Automação com IA: "Deixe que nossa inteligência ajude a organizar seus contatos para você focar apenas em fechar negócio."
+
+4. Benefícios Exclusivos (O diferencial da sua agência)
+Aqui você conecta o software ao seu serviço:
+
+Controle Total: Dashboards em tempo real para o dono da empresa.
+
+Agilidade: Implementação rápida e interface intuitiva (qualquer um aprende a usar em 15 minutos).
+
+Escalabilidade: Prontos para crescer com você, de 1 a 100 vendedores.
+
+5. Prova Social / Autoridade
+Se já tiver clientes usando: "Empresas que já escalaram com a MD Converte".
+
+Se for novo: Foque na autoridade da sua agência: "A ferramenta desenvolvida por especialistas em performance para garantir que seu investimento em anúncios traga o retorno esperado."
+
+6. Planos e Preços
+Crie tabelas claras. Exemplo:
+
+Plano Starter: (Ideal para autônomos/pequenos negócios).
+
+Plano Business: (Com mais usuários e automações).
+
+Combo MD: (CRM + Sua Gestão de Tráfego - este deve ser o seu destaque).
+
+7. FAQ (Perguntas Frequentes)
+"É difícil de configurar?" (Responda que vocês dão o suporte).
+
+"Funciona no celular?" (Sim, responsivo).
+
+"Posso importar meus contatos antigos?" (Sim).
+
+Dica de Copy (Texto de Venda)
+Use este argumento na LP:
+
+"Muitas agências entregam apenas cliques. A MD Converte entrega o ecossistema completo: nós geramos o interesse e te damos a arma para realizar a venda."
+
+Entendido perfeitamente. Como a MD Converte é a "roupa" (White Label) sobre o "corpo" (tecnologia da Bolten), você tem em mãos uma das ferramentas mais visuais e fáceis de usar do mercado. O cliente não precisa saber que a tecnologia é da Bolten; ele precisa saber que a MD Converte é a solução definitiva.Aqui está o roteiro técnico e comercial para você estruturar a sua oferta, traduzindo as funcionalidades da Bolten para a linguagem de vendas da MD Converte:O "Coração" da MD Converte (Baseado na Tecnologia Bolten)Para vender com autoridade, foque nestes 4 pilares tecnológicos que a plataforma oferece:1. O Funil de Vendas Inteligente (Kanban)A Funcionalidade: Interface visual onde os leads são "cards" que se movem entre etapas.Como Vender: "Dê adeus às listas confusas. Com o MD Converte, você tem uma visão de raio-x do seu comercial. Saiba quantos clientes estão em 'Negociação', 'Aguardando Pagamento' ou 'Fechados' com um simples arrastar de dedos."2. Ecossistema WhatsApp FirstA Funcionalidade: Integração que permite capturar leads diretamente do WhatsApp e organizar o histórico.Como Vender: "A MD Converte transforma seu WhatsApp em uma máquina de vendas. Chega de esquecer de responder leads ou perder o histórico da conversa. Tudo fica registrado automaticamente no perfil do cliente dentro do nosso CRM."3. Automação e Inteligência Artificial (IA)A Funcionalidade: Preenchimento automático de dados e criação de cards via IA.Como Vender: "Produtividade é lucro. Nossa tecnologia utiliza Inteligência Artificial para eliminar o trabalho braçal. O sistema ajuda a preencher dados e organizar as tarefas para que seu vendedor foque no que importa: fechar o contrato."4. Gestão de Performance (Dashboards)A Funcionalidade: Gráficos de conversão, produtividade da equipe e origem dos leads.Como Vender: "Tome decisões baseadas em dados, não em palpites. O MD Converte gera relatórios automáticos que mostram qual vendedor vende mais e onde você está perdendo dinheiro no seu processo."Argumentos de Venda para a sua Landing PagePara que seu cliente sinta que a MD Converte é indispensável, utilize estes benefícios na sua comunicação:Implementação "No-Code": "Você não precisa ser um expert em tecnologia. Nossa plataforma é intuitiva e pronta para usar em minutos."Acompanhamento (Follow-up) Implacável: "80% das vendas precisam de 5 contatos para fechar. Com nossos lembretes automáticos, sua equipe nunca mais vai esquecer de ligar para um cliente quente."Centralização de Ativos: "Seu vendedor saiu da empresa? Com o MD Converte, os contatos e o histórico não vão embora com ele; ficam seguros dentro da sua marca."Comparativo para sua Tabela de Preços/PlanosAo configurar seus planos na MD Converte, você pode espelhar a estrutura de recursos que a Bolten te libera:RecursoPlano Starter (MD)Plano Pro (MD)Funis de Venda1 a 2 funisIlimitadosUsuáriosLimitado (ex: 3)IlimitadoWhatsAppIntegração básicaIntegração Completa + IARelatóriosBásicosAvançados (BI)Dica de Ouro para sua Marca:O grande trunfo do White Label da Bolten é a velocidade. No seu anúncio, foque no fato de que você entrega a "estratégia de tráfego" (seu serviço de agência) + a "ferramenta de conversão" (MD Converte). Isso cria um "lock-in" (fidelização) enorme.

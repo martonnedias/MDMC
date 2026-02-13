@@ -25,7 +25,7 @@ const MDConverteSection: React.FC<MDConverteSectionProps> = ({ onNavigate }) => 
 
     const handleShare = (platform: string) => {
         const url = encodeURIComponent(window.location.href);
-        const text = encodeURIComponent(section?.title || 'MD Converte');
+        const text = encodeURIComponent(section?.title || 'CONVERTE Sim.');
         let shareUrl = '';
 
         if (platform === 'whatsapp') shareUrl = `https://wa.me/?text=${text}%20${url}`;
@@ -55,47 +55,68 @@ const MDConverteSection: React.FC<MDConverteSectionProps> = ({ onNavigate }) => 
 
                         <div className="relative bg-gradient-to-br from-[#0C3452] to-[#1a5a8a] rounded-[3rem] p-4 shadow-2xl overflow-hidden border border-white/10 group">
                             {(section?.image_url) ? (
-                                <img src={section.image_url} alt={section.title} className="w-full h-[400px] object-cover rounded-[2rem]" />
+                                <img src={section.image_url} alt={section.title} className="w-full h-[450px] object-cover rounded-[2rem]" />
                             ) : (
                                 /* Dashboard Mockup Mimic as Fallback */
-                                <div className="bg-white rounded-[2rem] overflow-hidden shadow-inner flex flex-col h-[400px]">
-                                    <div className="h-12 bg-gray-50 border-b border-gray-100 flex items-center px-6 gap-2">
-                                        <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                                        <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                                        <div className="w-3 h-3 rounded-full bg-green-400"></div>
-                                        <div className="ml-4 h-4 bg-gray-100 rounded-full w-32"></div>
-                                    </div>
-                                    <div className="flex flex-1">
-                                        <div className="w-16 bg-gray-50 border-r border-gray-100 flex flex-col items-center py-6 gap-6">
-                                            <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center"><MessageSquare size={18} /></div>
-                                            <div className="w-8 h-8 rounded-lg bg-gray-100 text-gray-400 flex items-center justify-center"><Zap size={18} /></div>
-                                            <div className="w-8 h-8 rounded-lg bg-gray-100 text-gray-400 flex items-center justify-center"><BarChart3 size={18} /></div>
+                                <div className="bg-slate-100 rounded-[2.5rem] p-4 border border-slate-200 shadow-2xl h-[450px] flex flex-col group-hover:scale-[1.02] transition-transform duration-700">
+                                    <div className="bg-white rounded-[1.5rem] shadow-xl flex-1 flex flex-col overflow-hidden border border-slate-200/50">
+                                        {/* Browser Header Unified */}
+                                        <div className="bg-slate-50 border-b border-slate-100 px-6 py-3 flex items-center gap-4 shrink-0">
+                                            <div className="flex gap-1.5">
+                                                <div className="w-2.5 h-2.5 rounded-full bg-red-400"></div>
+                                                <div className="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
+                                                <div className="w-2.5 h-2.5 rounded-full bg-cyan-400"></div>
+                                            </div>
+                                            <div className="flex-1 max-w-[200px]">
+                                                <div className="bg-white border border-slate-200 rounded-lg px-3 py-1 text-center">
+                                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none block truncate">convertesim.online</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="flex-1 p-6">
-                                            <div className="flex items-center justify-between mb-8">
-                                                <div className="h-6 bg-gray-100 rounded-full w-48"></div>
-                                                <div className="h-8 w-24 bg-[#FF7A2F] rounded-lg"></div>
-                                            </div>
-                                            <div className="grid grid-cols-2 gap-4 mb-8">
-                                                <div className="h-24 bg-gray-50 rounded-2xl border border-gray-100 p-4">
-                                                    <div className="h-3 bg-gray-200 rounded-full w-12 mb-2"></div>
-                                                    <div className="h-6 bg-gray-300 rounded-full w-20"></div>
-                                                </div>
-                                                <div className="h-24 bg-gray-50 rounded-2xl border border-gray-100 p-4">
-                                                    <div className="h-3 bg-gray-200 rounded-full w-12 mb-2"></div>
-                                                    <div className="h-6 bg-gray-300 rounded-full w-20"></div>
-                                                </div>
-                                            </div>
-                                            <div className="space-y-4">
-                                                {[1, 2, 3].map(i => (
-                                                    <div key={i} className="flex gap-4 items-center">
-                                                        <div className="w-10 h-10 rounded-full bg-blue-100"></div>
-                                                        <div className="flex-1 space-y-2">
-                                                            <div className="h-2 bg-gray-200 rounded-full w-3/4"></div>
-                                                            <div className="h-2 bg-gray-100 rounded-full w-1/2"></div>
-                                                        </div>
+
+                                        {/* Mockup Content */}
+                                        <div className="p-6 flex-1 flex flex-col overflow-hidden bg-slate-50/50">
+                                            <img src="/convertesim_logo.png" alt="CONVERTE Sim." className="h-6 mb-6 object-contain self-start" />
+
+                                            <div className="grid grid-cols-2 gap-4 mb-4">
+                                                <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <div className="w-2 h-2 rounded-full bg-cyan-500"></div>
+                                                        <span className="text-[8px] font-black text-slate-400 uppercase">Leads Novos</span>
                                                     </div>
-                                                ))}
+                                                    <div className="text-xl font-black text-brand-darkBlue tracking-tight">248</div>
+                                                    <div className="text-[8px] text-emerald-500 font-bold mt-1">+12% vs ontem</div>
+                                                </div>
+                                                <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <div className="w-2 h-2 rounded-full bg-[#FF7A2F]"></div>
+                                                        <span className="text-[8px] font-black text-slate-400 uppercase">Conversão</span>
+                                                    </div>
+                                                    <div className="text-xl font-black text-brand-darkBlue tracking-tight">18.4%</div>
+                                                    <div className="text-[8px] text-emerald-500 font-bold mt-1">+2.4% vs ontem</div>
+                                                </div>
+                                            </div>
+
+                                            <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm flex-1">
+                                                <div className="flex items-center justify-between mb-4 pb-2 border-b border-slate-50">
+                                                    <span className="text-[9px] font-black text-brand-darkBlue uppercase">Últimos Contatos</span>
+                                                    <div className="w-12 h-2 bg-slate-100 rounded-full"></div>
+                                                </div>
+                                                <div className="space-y-3">
+                                                    {[
+                                                        { name: 'Ricardo Oliveira', time: '2m atrás', origin: 'Google' },
+                                                        { name: 'Sofia Mendes', time: '15m atrás', origin: 'Meta' },
+                                                        { name: 'Loja Tech S.A', time: '1h atrás', origin: 'Site' }
+                                                    ].map((item, i) => (
+                                                        <div key={i} className="flex justify-between items-center opacity-80">
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-400">{item.name[0]}</div>
+                                                                <span className="text-[10px] font-bold text-slate-700">{item.name}</span>
+                                                            </div>
+                                                            <span className="text-[8px] text-slate-400 font-medium">{item.time}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -124,10 +145,10 @@ const MDConverteSection: React.FC<MDConverteSectionProps> = ({ onNavigate }) => 
                     {/* Content Section */}
                     <div className="flex-1 space-y-8 order-1 lg:order-2 text-center lg:text-left">
                         <div className="inline-flex items-center gap-2 bg-[#FF7A2F]/10 text-[#FF7A2F] px-4 py-2 rounded-full font-bold text-xs uppercase tracking-[0.2em] border border-[#FF7A2F]/20">
-                            <Zap size={14} className="animate-pulse" /> Ecossistema MD Converte
+                            <Zap size={14} className="animate-pulse" /> Ecossistema CONVERTE Sim.
                         </div>
 
-                        <h2 className={`${titleFontSize} font-heading font-black leading-tight`} style={{ color: section?.title_color || 'var(--color-title)' }}>
+                        <h2 className={`${titleFontSize} font-heading font-black leading-[1.1] tracking-tighter`} style={{ color: section?.title_color || 'var(--color-title)' }}>
                             {section?.title || 'Organize seu atendimento e pare de perder leads.'}
                         </h2>
 
