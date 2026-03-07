@@ -6,6 +6,7 @@ window.addEventListener('unhandledrejection', (e) => {
   console.error('[MD Solution] Promise rejeitada:', e.reason?.message || e.reason);
 });
 import ReactDOM from 'react-dom/client';
+import './index.css';
 import App from './App';
 
 import { HelmetProvider } from 'react-helmet-async';
