@@ -11,8 +11,8 @@ export const DEFAULT_SITE_CONFIG: Partial<SiteConfig> = {
     primary_color: "#0052FF",
     secondary_color: "#D4AF37",
     slogan: "Estrategistas Digitais em Escala",
-    logo_url: "https://miadxjhglynefwufxajd.supabase.co/storage/v1/object/public/assets/logo.png",
-    logo_light_url: "https://miadxjhglynefwufxajd.supabase.co/storage/v1/object/public/assets/logo-light.png",
+    logo_url: "/logo.png",
+    logo_light_url: "/logo-light.png",
     is_blog_active: true,
     is_swot_active: true,
     theme: {

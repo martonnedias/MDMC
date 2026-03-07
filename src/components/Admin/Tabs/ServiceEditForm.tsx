@@ -74,7 +74,7 @@ const ServiceEditForm: React.FC<ServiceEditFormProps> = ({
                             <input
                                 type="text"
                                 value={service.slug || ''}
-                                onChange={(e) => setService({ ...service, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]+/g, '') })}
+                                onChange={(e) => setService({ ...service, slug: e.target.value.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9-]+/g, '') })}
                                 className={inputStyles}
                                 placeholder="Ex: md-ads-premium"
                             />

@@ -279,7 +279,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onNavigate }) => {
             setEditingPost(prev => prev ? ({
                 ...prev,
                 title: generated.title,
-                slug: generated.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''),
+                slug: generated.title.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''),
                 excerpt: generated.excerpt,
                 content: generated.content
             }) : null);

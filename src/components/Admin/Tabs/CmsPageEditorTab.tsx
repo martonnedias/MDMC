@@ -38,7 +38,7 @@ const CmsPageEditorTab: React.FC<CmsPageEditorTabProps> = ({ pageId, onBack }) =
         e.preventDefault();
         setLoading(true);
         // auto format slug if not provided correctly
-        const formattedSlug = (page.slug || page.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+        const formattedSlug = (page.slug || page.title || '').normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
         const payload = { ...page, slug: formattedSlug };
 
         const success = await adminService.saveCmsPage(payload);
