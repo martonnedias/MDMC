@@ -140,6 +140,23 @@ const ProposalView: React.FC = () => {
                     <div dangerouslySetInnerHTML={{ __html: proposal.html }} className="prose prose-slate max-w-none prose-headings:text-brand-darkBlue prose-a:text-brand-blue" />
                 </div>
 
+                {proposal.status === 'approved' && (
+                    <div className="bg-green-50 border border-green-200 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 print:hidden animate-fade-in fade-in">
+                        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg shadow-green-200/50 shrink-0">
+                            <CheckCircle className="text-green-500 w-8 h-8" />
+                        </div>
+                        <div>
+                            <h3 className="text-xl font-black text-green-900 tracking-tight mb-2">Acordo Firmado com Sucesso!</h3>
+                            <p className="text-green-800/80 font-medium leading-relaxed">
+                                Sua assinatura digital criptografada foi registrada nos nossos servidores com sucesso.
+                            </p>
+                            <p className="text-green-800/80 font-bold mt-2">
+                                🤝 Um de nossos Executivos C-Level entrará em contato com você via WhatsApp em breve para alinhar o Onboarding do Projeto e disponibilizar a sua fatura exclusiva de Checkout.
+                            </p>
+                        </div>
+                    </div>
+                )}
+
                 {proposal.status !== 'approved' && (
                     <div className="bg-white shadow-xl shadow-slate-200/50 rounded-2xl p-8 border border-slate-100 print:hidden">
                         <h3 className="text-xl font-bold text-slate-900 mb-6">Assinatura Eletrônica</h3>
