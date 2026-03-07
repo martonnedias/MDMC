@@ -62,6 +62,8 @@ const ClientSupport = lazy(() => import('./components/Client/ClientSupport').the
 const ClientSettings = lazy(() => import('./components/Client/ClientSettings').then(m => ({ default: m.ClientSettings })));
 import { ProtectedRoute } from './components/Auth/ProtectedRoute';
 
+import ScrollToTop from './components/ScrollToTop';
+
 const AppRoutes: React.FC = () => {
   const { config } = useSiteConfig();
 
@@ -74,6 +76,7 @@ const AppRoutes: React.FC = () => {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Suspense fallback={<LoadingFallback />}>
         <Routes>
           {/* ROTAS PÚBLICAS (Dentro do PublicLayout) */}

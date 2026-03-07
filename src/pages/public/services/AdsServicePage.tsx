@@ -71,41 +71,10 @@ const AdsServicePage: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const data = await adminService.getServices();
-        const adsItems = data.filter(s => (s.page === 'ads' || s.category === 'marketing') && s.is_active !== false);
-
-        if (adsItems.length > 0) {
-          const plans = adsItems.filter(i => i.section_id === 'pricing' || !i.section_id);
-          if (plans.length > 0) {
-            const sorted = [...plans].sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
-            setDisplayPlans(sorted.map((s, index) => {
-              const defaultPlan = PLANS[index] || PLANS[0];
-              return {
-                name: s.name || defaultPlan.name,
-                subtitle: s.subtitle || defaultPlan.subtitle,
-                price: s.price || defaultPlan.price,
-                adBudget: s.extra_info || defaultPlan.adBudget,
-                ctaText: s.cta_text || defaultPlan.ctaText || "Solicitar Orçamento",
-                features: (Array.isArray(s.features) && s.features.length > 0 && s.features[0] !== '')
-                  ? s.features
-                  : defaultPlan.features,
-                highlight: s.is_highlighted !== undefined ? s.is_highlighted : defaultPlan.highlight
-              };
-            }));
-          } else {
-            setDisplayPlans(PLANS);
-          }
-        } else {
-          setDisplayPlans(PLANS);
-        }
-      } catch (err) {
-        console.error('Error fetching ads services:', err);
-        setDisplayPlans(PLANS);
-      }
-    };
-    fetchServices();
+    // O projeto original utiliza os planos estáticos em /src/constants/index.ts para Anúncios Pagos.
+    // Qualquer card extra vindo do Supabase "services_data" deve ser ignorado nesta página 
+    // conforme solicitação de remoção dos cards dinâmicos intrusos.
+    setDisplayPlans(PLANS);
   }, []);
 
 
