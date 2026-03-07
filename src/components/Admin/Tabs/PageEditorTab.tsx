@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Save, Plus, Edit2, Trash2, Layout, Type, Image as ImageIcon, Palette, DollarSign, List, MessageCircle, HelpCircle, ChevronDown, ChevronUp, CheckCircle, Target, Zap } from 'lucide-react';
+import { Save, Plus, Edit2, Trash2, Layout, Type, Image as ImageIcon, Palette, DollarSign, List, MessageCircle, HelpCircle, ChevronDown, ChevronUp, CheckCircle, Target, Zap, Sparkles } from 'lucide-react';
 import { SiteConfig, ServiceData } from '../../../services/adminService';
+import { aiService } from '../../../services/aiService';
 import Button from '../../Button';
 
 interface PageEditorTabProps {
@@ -22,6 +23,7 @@ const PageEditorTab: React.FC<PageEditorTabProps> = ({
 }) => {
     const sectionConfig = config.content?.sections?.[pageId] || {};
     const [expandedBlock, setExpandedBlock] = useState<string | null>('hero');
+    const [generatingAI, setGeneratingAI] = useState<string | null>(null);
 
     const updateSectionConfig = (key: string, value: any) => {
         const newSections = {
@@ -32,6 +34,40 @@ const PageEditorTab: React.FC<PageEditorTabProps> = ({
             ...config,
             content: { ...config.content, sections: newSections }
         });
+    };
+
+    const handleGenerateAI = async (prefix: string, contextDescription: string) => {
+        setGeneratingAI(prefix);
+        try {
+            const result = await aiService.generatePageCopy(pageName, contextDescription);
+            if (result) {
+                const updatedSection = { ...sectionConfig };
+                if (prefix === 'hero') {
+                    updatedSection.title = result.title;
+                    updatedSection.subtitle = result.subtitle;
+                } else {
+                    updatedSection[`${prefix}_title`] = result.title;
+                    updatedSection[`${prefix}_subtitle`] = result.subtitle;
+                }
+
+                setConfig({
+                    ...config,
+                    content: {
+                        ...config.content,
+                        sections: {
+                            ...config.content?.sections,
+                            [pageId]: updatedSection
+                        }
+                    }
+                });
+            } else {
+                alert("Não foi possível gerar com IA. Verifique sua chave API Gemini na guia de Configurações do Sistema.");
+            }
+        } catch (error) {
+            console.error("Erro AI:", error);
+        } finally {
+            setGeneratingAI(null);
+        }
     };
 
     const toggleBlock = (block: string) => {
@@ -113,7 +149,16 @@ const PageEditorTab: React.FC<PageEditorTabProps> = ({
     };
 
     const renderSectionHeaderConfig = (prefix: string, defaultTitle: string, defaultSub: string) => (
-        <div className="grid grid-cols-1 gap-6 mb-8 p-6 bg-gray-50/50 rounded-[2rem] border border-gray-100">
+        <div className="grid grid-cols-1 gap-6 mb-8 p-6 bg-gray-50/50 rounded-[2rem] border border-gray-100 relative group">
+            <button
+                onClick={(e) => { e.preventDefault(); handleGenerateAI(prefix, defaultTitle); }}
+                disabled={generatingAI === prefix}
+                className="absolute top-6 right-6 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-200 opacity-80 md:opacity-0 group-hover:opacity-100 transition-all hover:scale-105 disabled:opacity-50 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest z-10"
+                title="Sugerir Copy de Alta Conversão com IA"
+            >
+                <Sparkles size={14} className={generatingAI === prefix ? "animate-pulse text-yellow-300" : "text-yellow-300"} />
+                {generatingAI === prefix ? "Pensando..." : "IA Assistiva"}
+            </button>
             <div>
                 <label className={labelStyles}>Título da Seção</label>
                 <input
@@ -174,7 +219,16 @@ const PageEditorTab: React.FC<PageEditorTabProps> = ({
                 </button>
 
                 {expandedBlock === 'hero' && (
-                    <div className="p-8 pt-0 grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in">
+                    <div className="p-8 pt-0 grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in relative group">
+                        {/* MÁGICA DE IA NO HERO */}
+                        <button
+                            onClick={(e) => { e.preventDefault(); handleGenerateAI('hero', 'A primeira dobra do site. O gatilho primário de conversão.'); }}
+                            disabled={generatingAI === 'hero'}
+                            className="absolute top-0 right-8 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-200 opacity-80 md:opacity-0 group-hover:opacity-100 transition-all hover:scale-105 disabled:opacity-50 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest z-10"
+                        >
+                            <Sparkles size={14} className={generatingAI === 'hero' ? "animate-pulse text-yellow-300" : "text-yellow-300"} />
+                            {generatingAI === 'hero' ? "Criando Pitch..." : "Pitch de Vendas (I.A.)"}
+                        </button>
                         <div className="space-y-6">
                             <div>
                                 <label className={labelStyles}>Título Principal (H1)</label>
