@@ -1,0 +1,429 @@
+import React, { useState } from 'react';
+import SectionTitle from '@/src/components/SectionTitle';
+import { ShieldCheck, Target, TrendingUp, Search, Eye, Users, Heart, Sparkles, CheckCircle2, Instagram, Facebook, Youtube, Linkedin, Send, Share2, Copy, Check, Wand2, ChevronLeft, ChevronRight } from 'lucide-react';
+import Button from '@/src/components/Button';
+import { CONTACT_INFO } from '@/src/constants';
+import { useSiteConfig } from '@/src/lib/SiteContext';
+import { useAuth } from '@/src/components/Auth/AuthProvider';
+import { leadService } from '@/src/services/leadService';
+import { formatPhone } from '@/src/lib/formatters';
+
+interface AboutPageProps {
+  onNavigate?: (view: any) => void;
+}
+
+const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
+  const { config } = useSiteConfig();
+  const { user, isAdmin } = useAuth();
+  const section = config.content?.sections?.about;
+  const [showShare, setShowShare] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  // Form State
+  const [formState, setFormState] = useState('idle');
+  const [formData, setFormData] = useState({
+    name: '',
+    whatsapp: '',
+    email: '',
+    interest: 'Consultoria Estratégica (Geral)'
+  });
+
+  const scrollToContact = () => {
+    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleCopyLink = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleShare = (platform: string) => {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(section?.title || 'MD Solution - Sobre Nós');
+    let shareUrl = '';
+
+    if (platform === 'whatsapp') shareUrl = `https://wa.me/?text=${text}%20${url}`;
+    if (platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    if (platform === 'linkedin') shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+
+    if (shareUrl) window.open(shareUrl, '_blank');
+    setShowShare(false);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormState('loading');
+    try {
+      const success = await leadService.saveContactLead({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.whatsapp,
+        interest: `Sobre Nós - Interesse: ${formData.interest}`,
+        companySize: 'N/A'
+      });
+      if (success) {
+        setFormState('success');
+        setFormData({ name: '', whatsapp: '', email: '', interest: 'Consultoria Estratégica (Geral)' });
+      } else {
+        setFormState('error');
+      }
+    } catch (error) {
+      console.error(error);
+      setFormState('error');
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    let formattedValue = value;
+    if (name === 'whatsapp') {
+      formattedValue = formatPhone(value);
+    }
+    setFormData(prev => ({ ...prev, [name]: formattedValue }));
+  };
+
+  if (section?.is_active === false) return null;
+
+  const titleFontSize = section?.font_size_title || 'text-5xl lg:text-7xl';
+  const subtitleFontSize = section?.font_size_subtitle || 'text-xl lg:text-2xl';
+
+  return (
+    <div className="pt-0 font-sans">
+      {/* Manifesto Hero */}
+      <section className="pt-44 lg:pt-60 pb-12 lg:pb-32 bg-brand-darkBlue text-white relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full bg-[url(&quot;data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E&quot;)] opacity-40"></div>
+        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="max-w-4xl animate-fade-in">
+              <div className="inline-flex items-center gap-2 bg-brand-gold/20 text-brand-gold px-4 py-1.5 rounded-full mb-8 font-black text-[9px] uppercase tracking-[0.2em] border border-brand-gold/30 shadow-lg">
+                Nosso Manifesto
+              </div>
+              <h1 className="text-5xl lg:text-7xl font-heading font-black mb-12 leading-[0.95] pb-2 tracking-tighter max-w-4xl text-white">
+                O marketing digital está quebrado. Nós <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-yellow-400 italic pr-1">viemos consertar.</span>
+              </h1>
+              <p className={`${subtitleFontSize} text-blue-100/80 leading-relaxed mb-10 font-light`}>
+                {section?.subtitle || section?.description || 'Chega de promessas milagrosas e relatórios cheios de métricas de vaidade. A MD Solution nasceu para unir a clareza da estratégia de gestão com a força da performance digital.'}
+              </p>
+
+              <div className="flex flex-col sm:flex-row items-center gap-8">
+                <Button onClick={scrollToContact} variant="primary" className="px-10 py-5 text-lg shadow-2xl shadow-brand-gold/20" withIcon>
+                  {section?.button_text || 'Fazer Parte do Futuro'}
+                </Button>
+
+                {/* Social & Share Controls */}
+                <div className="flex flex-wrap items-center gap-6">
+                  {(section?.show_social_icons !== false) && (
+                    <div className="flex items-center gap-4">
+                      <a href={config.instagram_url} target="_blank" rel="noopener noreferrer" title="Instagram" className="text-white/60 hover:text-brand-gold transition-colors"><Instagram size={20} /></a>
+                      <a href={config.facebook_url} target="_blank" rel="noopener noreferrer" title="Facebook" className="text-white/60 hover:text-brand-gold transition-colors"><Facebook size={20} /></a>
+                      <a href={config.youtube_url} target="_blank" rel="noopener noreferrer" title="YouTube" className="text-white/60 hover:text-brand-gold transition-colors"><Youtube size={20} /></a>
+                      {config.linkedin_url && <a href={config.linkedin_url} target="_blank" rel="noopener noreferrer" title="LinkedIn" className="text-white/60 hover:text-brand-gold transition-colors"><Linkedin size={20} /></a>}
+                    </div>
+                  )}
+
+                  {(section?.show_share_menu !== false) && (
+                    <div className="flex items-center gap-2 border-l border-white/10 pl-6">
+                      <div className="relative">
+                        <button
+                          onClick={() => setShowShare(!showShare)}
+                          className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white/60 hover:text-white transition-colors"
+                        >
+                          <Share2 size={16} /> Compartilhar
+                        </button>
+                        {showShare && (
+                          <div className="absolute top-full left-0 mt-2 bg-white rounded-xl shadow-2xl p-2 flex flex-col gap-1 min-w-[150px] z-50 animate-fade-in">
+                            <button onClick={() => handleShare('whatsapp')} className="text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">WhatsApp</button>
+                            <button onClick={() => handleShare('facebook')} className="text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">Facebook</button>
+                            <button onClick={() => handleShare('linkedin')} className="text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">LinkedIn</button>
+                          </div>
+                        )}
+                      </div>
+                      <button
+                        onClick={handleCopyLink}
+                        className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white/60 hover:text-white transition-colors"
+                      >
+                        {copied ? <Check size={16} className="text-brand-green" /> : <Copy size={16} />}
+                        {copied ? 'Copiado!' : 'Copiar Link'}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="relative group perspective-1000 hidden lg:block">
+              <div className="absolute -inset-4 bg-brand-gold/20 rounded-[3rem] blur-2xl group-hover:bg-brand-gold/30 transition-all duration-700"></div>
+              <div className="relative rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl transform transition-all duration-700 hover:rotate-2 hover:scale-105">
+                <img
+                  src={section?.image_url || "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"}
+                  alt="Time MD Solution em reunião estratégica"
+                  className="w-full h-auto object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-darkBlue/80 via-transparent to-transparent opacity-60"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Visão, Missão e Valores */}
+      <section className="py-24 bg-mid">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="bg-card p-10 rounded-[2.5rem] border border-gray-100 flex flex-col items-start gap-6 hover:shadow-xl transition-all duration-500">
+              <div className="w-14 h-14 bg-brand-blue text-white rounded-2xl flex items-center justify-center shadow-lg"><Target size={28} /></div>
+              <h3 className="text-2xl font-heading font-bold text-title">Nossa Missão</h3>
+              <p className="text-content leading-relaxed">
+                Transformar pequenas e médias empresas brasileiras através de uma presença digital honesta, estratégica e altamente lucrativa. Existimos para que o empresário possa focar no que ama, enquanto nós cuidamos do motor de vendas.
+              </p>
+            </div>
+            <div className="bg-card p-10 rounded-[2.5rem] border border-gray-100 flex flex-col items-start gap-6 hover:shadow-xl transition-all duration-500">
+              <div className="w-14 h-14 bg-brand-gold text-white rounded-2xl flex items-center justify-center shadow-lg"><Eye size={28} /></div>
+              <h3 className="text-2xl font-heading font-bold text-title">Nossa Visão</h3>
+              <p className="text-content leading-relaxed">
+                Ser a consultoria de referência em integridade e resultados reais no Brasil. Queremos elevar o padrão do mercado digital, onde a transparência é o ativo mais valioso de uma parceria.
+              </p>
+            </div>
+            <div className="bg-footer p-10 rounded-[2.5rem] text-white flex flex-col items-start gap-6 shadow-2xl scale-105 z-10">
+              <div className="w-14 h-14 bg-white text-brand-darkBlue rounded-2xl flex items-center justify-center shadow-lg"><Heart size={28} /></div>
+              <h3 className="text-2xl font-heading font-bold">Nossa Entrega</h3>
+              <p className="text-blue-100 leading-relaxed">
+                Não entregamos apenas "posts" ou "anúncios". Entregamos compromisso. Se o resultado não aparece, nós não descansamos. Sua empresa é tratada com o mesmo zelo que tratamos a nossa.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Os 4 Pilares da Transparência Radical */}
+      <section className="py-24 bg-mid">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <SectionTitle
+            title="A Transparência como Fundação"
+            subtitle="Na MD Solution, a honestidade não é um diferencial, é o pré-requisito."
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
+            {[
+              {
+                icon: ShieldCheck,
+                title: "Integridade de Dados",
+                text: "Você tem acesso total aos gerenciadores de anúncios. O dinheiro investido vai direto para a plataforma, sem intermediários.",
+                color: "text-green-500"
+              },
+              {
+                icon: TrendingUp,
+                title: "Crescimento Real",
+                text: "Focamos em faturamento e lucro, não em curtidas ou visualizações que não pagam as contas da sua empresa.",
+                color: "text-brand-blue"
+              },
+              {
+                icon: Search,
+                title: "Diagnóstico Sem Filtro",
+                text: "Se acharmos que seu site ou processo de vendas está ruim, nós falaremos. Só conserta quem admite o erro.",
+                color: "text-brand-gold"
+              },
+              {
+                icon: Sparkles,
+                title: "Inovação Humana",
+                text: "Usamos as melhores IAs do mundo (como você vê aqui), mas o toque final é sempre de um estrategista experiente.",
+                color: "text-purple-500"
+              }
+            ].map((pilar, i) => (
+              <div key={i} className="bg-card p-8 rounded-3xl border border-gray-100 hover:shadow-2xl transition-all group">
+                <div className={`w-12 h-12 rounded-xl bg-gray-50 ${pilar.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                  <pilar.icon size={24} />
+                </div>
+                <h4 className="text-lg font-bold mb-3 text-title leading-tight">{pilar.title}</h4>
+                <p className="text-content text-sm leading-relaxed">{pilar.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Seção Compromisso */}
+      <section className="py-24 bg-top">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <div className="max-w-5xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+            <div className="lg:w-1/2 relative">
+              <div className="absolute -inset-4 bg-brand-blue/5 rounded-[4rem] -rotate-3 blur-2xl"></div>
+              <div className="relative bg-card p-8 rounded-[3rem] shadow-2xl border border-gray-100">
+                <h3 className="text-3xl font-heading font-bold text-title mb-6">Por que somos diferentes?</h3>
+                <div className="space-y-4">
+                  {[
+                    "Foco 100% em PMEs e negócios locais.",
+                    "Sem contratos de fidelidade abusivos: ficamos por resultado.",
+                    "Atendimento direto com quem executa sua estratégia.",
+                    "Linguagem simples: nada de 'internetês' para te confundir."
+                  ].map((t, i) => (
+                    <div key={i} className="flex gap-4">
+                      <CheckCircle2 className="text-brand-green shrink-0" size={24} />
+                      <p className="text-content font-medium">{t}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="lg:w-1/2 text-center lg:text-left">
+              <SectionTitle
+                title={<>Nossa entrega tem o seu <span className="text-brand-gold italic pr-1">nome escrito nela.</span></>}
+                subtitle="Não somos uma agência de massa. Somos uma consultoria boutique. Isso significa que limitamos o número de clientes que atendemos para garantir que o seu projeto receba a atenção, a originalidade e a honestidade que ele merece."
+                alignment="left"
+              />
+              <Button onClick={() => onNavigate?.('landing')} variant="primary" className="px-10 py-5 text-lg" withIcon>
+                Conheça Nossos Planos
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FINAL CTA WITH FORM */}
+      <section id="contact" className="py-24 lg:py-40 bg-brand-darkBlue relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="bg-white rounded-[3rem] p-10 shadow-3xl">
+              {formState === 'success' ? (
+                <div className="text-center py-10">
+                  <CheckCircle2 size={64} className="text-green-500 mx-auto mb-6" />
+                  <h3 className="text-2xl font-black text-brand-darkBlue uppercase tracking-tighter">Solicitação Enviada!</h3>
+                  <p className="text-slate-500 font-medium mt-4 mb-8">Nossa equipe entrará em contato em breve através do seu WhatsApp.</p>
+                  <Button onClick={() => setFormState('idle')} variant="outline-dark" className="mt-6">Voltar</Button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <h3 className="text-3xl font-black text-brand-darkBlue uppercase text-center mb-8">Solicitar Atendimento</h3>
+
+                  {isAdmin && (
+                    <button
+                      type="button"
+                      onClick={() => setFormData({
+                        name: 'Admin Teste',
+                        email: 'admin@teste.com',
+                        whatsapp: '(11) 99999-9999',
+                        interest: 'Consultoria Estratégica'
+                      })}
+                      className="mx-auto block text-[10px] font-black uppercase tracking-widest bg-slate-100 p-2 rounded-lg mb-4 hover:bg-slate-200 transition-colors"
+                    >
+                      <Wand2 size={12} className="inline mr-2" /> Auto-Preencher
+                    </button>
+                  )}
+
+                  <div className="space-y-4">
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Seu Nome"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                      className="w-full h-14 px-6 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-brand-gold focus:bg-white transition-all font-medium"
+                    />
+                    <input
+                      type="tel"
+                      name="whatsapp"
+                      placeholder="WhatsApp com DDD"
+                      value={formData.whatsapp}
+                      onChange={handleChange}
+                      required
+                      className="w-full h-14 px-6 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-brand-gold focus:bg-white transition-all font-medium"
+                    />
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="E-mail Corporativo"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className="w-full h-14 px-6 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-brand-gold focus:bg-white transition-all font-medium"
+                    />
+                    <select
+                      title="Área de Interesse"
+                      name="interest"
+                      value={formData.interest}
+                      onChange={handleChange}
+                      required
+                      className="w-full h-14 px-6 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-brand-gold focus:bg-white transition-all font-medium"
+                    >
+                      <option value="Consultoria Estratégica (Geral)">Consultoria Estratégica (Geral)</option>
+                      <option value="Estratégia de Tráfego Pago">Estratégia de Tráfego Pago</option>
+                      <option value="Desenvolvimento de Sites/LP">Desenvolvimento de Sites/LP</option>
+                      <option value="Gestão de Redes Sociais">Gestão de Redes Sociais</option>
+                    </select>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="w-full h-16 font-black uppercase tracking-widest shadow-xl shadow-brand-gold/20"
+                    disabled={formState === 'loading'}
+                  >
+                    {formState === 'loading' ? 'Enviando...' : 'Falar com um Estrategista'}
+                  </Button>
+                </form>
+              )}
+            </div>
+
+            <div className="text-white lg:pl-12">
+              <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full mb-8 font-black text-[9px] uppercase tracking-[0.2em]">
+                <ShieldCheck size={14} className="text-brand-gold" /> Garantia de Integridade
+              </div>
+              <h2 className="text-4xl lg:text-6xl font-heading font-black mb-8 uppercase leading-[0.9] tracking-tighter">
+                Sua empresa no <span className="text-brand-gold italic">próximo nível</span> com quem joga limpo.
+              </h2>
+              <p className="text-blue-100/70 text-lg mb-12 max-w-xl font-medium leading-relaxed">
+                Preencha o formulário ao lado e agende sua conversa estratégica. Vamos analisar seu negócio sem filtros e com foco total em lucro.
+              </p>
+
+              <div className="flex flex-col gap-6">
+                <div className="flex items-center gap-4 group">
+                  <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center group-hover:bg-brand-gold/20 transition-colors">
+                    <CheckCircle2 className="text-brand-gold" size={24} />
+                  </div>
+                  <div>
+                    <p className="text-white font-bold uppercase tracking-widest text-[10px] mb-1">Passo 01</p>
+                    <p className="text-blue-100/60 text-sm font-medium">Preenchimento rápido de dados básicos.</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 group">
+                  <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center group-hover:bg-brand-gold/20 transition-colors">
+                    <CheckCircle2 className="text-brand-gold" size={24} />
+                  </div>
+                  <div>
+                    <p className="text-white font-bold uppercase tracking-widest text-[10px] mb-1">Passo 02</p>
+                    <p className="text-blue-100/60 text-sm font-medium">Reunião para alinhar expectativas e escopo.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Selo de Integridade Final */}
+      <section className="py-24 bg-mid text-center relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 relative z-10">
+          <div className="max-w-3xl mx-auto">
+            <ShieldCheck size={64} className="text-brand-gold mx-auto mb-8 animate-pulse" />
+            <SectionTitle
+              title="Compromisso MD Solution"
+              subtitle='"Nós nunca recomendaremos uma estratégia que nós mesmos não usaríamos com o nosso próprio dinheiro."'
+              alignment="center"
+            />
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <Button onClick={scrollToContact} variant="primary" className="bg-brand-gold hover:bg-brand-goldHover border-none px-12 py-5 text-lg shadow-xl shadow-brand-gold/20">
+                Agendar Diagnóstico Grátis
+              </Button>
+              <Button onClick={() => window.open(`${config.whatsapp ? `https://wa.me/${config.whatsapp?.replace(/\D/g, '')}` : CONTACT_INFO.whatsappLink}?text=Olá! Gostaria de falar sobre a consultoria MD Solution.`, '_blank')} variant="outline-dark" className="px-12 py-5 text-lg">
+                Falar no WhatsApp
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default AboutPage;

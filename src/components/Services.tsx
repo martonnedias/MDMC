@@ -36,7 +36,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
 
   // Phases for grouping steps
   const phases = [
-    { range: [0, 1], label: "01. Diagnóstico", color: "text-brand-orange" },
+    { range: [0, 1], label: "01. Diagnóstico", color: "text-brand-gold" },
     { range: [2, 3], label: "02. Estrutura", color: "text-brand-blue" },
     { range: [4, 5], label: "03. Tração", color: "text-emerald-500" },
     { range: [6, 7], label: "04. Escala", color: "text-purple-500" }
@@ -66,14 +66,14 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
       {/* Background Decorative Element */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none -z-10">
         <div className="absolute top-0 right-0 w-[40%] h-[40%] bg-blue-100/30 rounded-full blur-[120px] opacity-40"></div>
-        <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-orange-100/30 rounded-full blur-[120px] opacity-40"></div>
+        <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-yellow-100/30 rounded-full blur-[120px] opacity-40"></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-8">
         <div className="mb-24">
           <SectionTitle
             badge="Método MD Scale"
-            title={config.content?.sections?.services?.title || "Sua Jornada de <span class='text-brand-orange'>Escala Digital</span>"}
+            title={config.content?.sections?.services?.title || "Sua Jornada de <span class='text-brand-gold'>Escala Digital</span>"}
             subtitle={config.content?.sections?.services?.subtitle || "Não vendemos tarefas soltas. Seguimos um fluxo estratégico onde cada etapa alimenta a próxima, garantindo que sua empresa cresça de forma sólida e lucrativa."}
             alignment="center"
           />

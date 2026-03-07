@@ -1,5 +1,10 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /cliente/
+Disallow: /p/
+Disallow: /r/
+Disallow: /c/
 
 # Sitemap (atualize o domínio se necessário)
 Sitemap: https://mdsolution.com.br/sitemap.xml

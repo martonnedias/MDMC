@@ -1,0 +1,142 @@
+/* MD Solution - Clean Design System */
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-bounce-in {
+  animation: bounceIn 0.8s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+}
+
+/* Clip path utility */
+.clip-path-journey {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+}
+
+/* Footer nav links */
+.footer-nav-link {
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.2s ease;
+}
+
+.footer-nav-link:hover {
+  color: #FFFFFF;
+}
+
+/* Dynamic Section Styles (legacy support) */
+.dynamic-section {
+  background-color: var(--section-bg);
+  padding-top: var(--section-padding-top);
+  padding-bottom: var(--section-padding-bottom);
+  font-family: var(--section-font, inherit);
+}
+
+.dynamic-title {
+  color: var(--section-title-color, inherit);
+  font-size: var(--section-title-size);
+  font-weight: var(--section-title-weight);
+  text-align: var(--section-text-align);
+}
+
+.dynamic-subtitle {
+  color: var(--section-subtitle-color, inherit);
+  font-size: var(--section-subtitle-size);
+}
+
+/* Glass effect */
+.hero-glass {
+  background: rgba(255, 255, 255, 0.05);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Legacy support removed */
+
+/* Font System - Inter as primary */
+.font-heading {
+  font-family: 'Inter', sans-serif;
+}
+
+.font-sans {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Float animation for KPI badges */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes float-delayed {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-delayed 5s ease-in-out infinite;
+}
+
+/* Dynamic a11y support */
+.dynamic-font {
+  font-family: var(--dynamic-font-family, 'Inter', sans-serif);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.animate-toast-in {
+  animation: toast-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}

@@ -1,0 +1,532 @@
+import { supabase } from '../lib/supabase';
+
+export interface SiteConfig {
+    id: number;
+    site_name: string;
+    phone: string;
+    whatsapp: string;
+    instagram_url: string;
+    facebook_url: string;
+    youtube_url: string;
+    tiktok_url?: string;
+    telegram_url?: string;
+    linkedin_url?: string;
+    email?: string;
+    primary_color: string;
+    secondary_color: string;
+    slogan?: string;
+    is_blog_active: boolean;
+    is_swot_active: boolean;
+    logo_url?: string;
+    logo_footer_url?: string;
+    logo_light_url?: string;
+    logo_height_header?: string;
+    logo_height_footer?: string;
+    theme?: {
+        colors?: {
+            background: string;
+            card_background: string;
+            header_background: string;
+            footer_background: string;
+            top_background?: string;
+            mid_background?: string;
+            text_primary: string;
+            text_secondary: string;
+            title_color?: string;
+            subtitle_color?: string;
+            content_color?: string;
+            accent_color?: string;
+            brand_blue?: string;
+            brand_gold?: string;
+        };
+        typography?: {
+            font_family: string;
+            heading_font: string;
+            base_font_size?: string;
+            heading_font_size?: string;
+            subtitle_font_size?: string;
+        };
+        border_radius?: string;
+    };
+    content?: {
+        hero_title?: string;
+        hero_subtitle?: string;
+        hero_cta?: string;
+        hero_image?: string;
+        hero_background_color?: string;
+        hero_title_color?: string;
+        footer_text?: string;
+        header?: {
+            show_login?: boolean;
+            show_cta_header?: boolean;
+            cta_text?: string;
+            cta_link?: string;
+        };
+        footer?: {
+            is_active?: boolean;
+            title?: string;
+            subtitle?: string;
+            description?: string;
+            background_color?: string;
+            text_color?: string;
+            title_color?: string;
+            show_social_icons?: boolean;
+            show_share_menu?: boolean;
+            font_family?: string;
+            font_size_title?: string;
+        };
+        sections?: {
+            [key: string]: {
+                title?: string;
+                subtitle?: string;
+                description?: string;
+                background_color?: string;
+                text_color?: string;
+                title_color?: string;
+                subtitle_color?: string;
+                button_text?: string;
+                button_link?: string;
+                image_url?: string;
+                is_active?: boolean;
+                price?: string;
+                package_info?: string;
+                font_family?: string;
+                font_size_title?: string;
+                font_size_subtitle?: string;
+                button_redirect?: string;
+                show_social_icons?: boolean;
+                show_share_menu?: boolean;
+                badge_text?: string;
+                highlight_color?: string;
+            }
+        }
+    };
+}
+
+export interface BlogPost {
+    id?: string;
+    title: string;
+    slug: string;
+    content: string;
+    excerpt: string;
+    featured_image: string;
+    category: string;
+    status: 'published' | 'draft';
+    created_at?: string;
+    likes?: number;
+    dislikes?: number;
+    views?: number;
+}
+
+export interface ContactLeadData {
+    name?: string;
+    email?: string;
+    phone?: string;
+    whatsapp?: string;
+    interest?: string;
+    message?: string;
+    company_name?: string;
+    companyName?: string;
+    [key: string]: unknown; // Allow extensions without breaking
+}
+
+export interface LeadData {
+    id: string;
+    type: string;
+    data: ContactLeadData | null;
+    created_at: string;
+}
+
+export interface BriefingPayload {
+    name?: string;
+    email?: string;
+    phone?: string;
+    whatsapp?: string;
+    companyName?: string;
+    company_name?: string;
+    responsibleName?: string;
+    [key: string]: unknown;
+}
+
+export interface SwotBriefingData {
+    id: string;
+    user_id: string | null;
+    type: string;
+    data: BriefingPayload | null;
+    plan: string | null;
+    created_at: string;
+}
+
+export interface DashboardStats {
+    totalLeads: number;
+    totalBriefings: number;
+    totalPosts: number;
+    activeServices: number;
+}
+
+export interface BlogComment {
+    id?: string;
+    post_id: string;
+    parent_id?: string | null;
+    author_name: string;
+    content: string;
+    created_at?: string;
+}
+
+export interface ServiceData {
+    id?: string;
+    name: string;
+    description: string;
+    price: string;
+    features: string[];
+    category: string;
+    is_active: boolean;
+    display_order: number;
+    subtitle?: string;
+    cta_text?: string;
+    badge_text?: string;
+    extra_info?: string;
+    is_highlighted?: boolean;
+    page?: string;
+    section_id?: string;
+    slug?: string;
+}
+
+export interface CmsPage {
+    id?: string;
+    slug: string;
+    title: string;
+    page_type: 'generic' | 'service';
+    service_page_key?: string;
+    content_html: string;
+    status: 'draft' | 'published';
+    is_active: boolean;
+    meta_title?: string;
+    meta_description?: string;
+    og_image_url?: string;
+    created_at?: string;
+    updated_at?: string;
+}
+
+class AdminService {
+    async getSiteConfig(): Promise<SiteConfig | null> {
+        const { data, error } = await supabase
+            .from('site_config')
+            .select('*')
+            .single();
+
+        if (error) {
+            console.error('Erro ao buscar config:', error);
+            return null;
+        }
+        return data;
+    }
+
+    async updateSiteConfig(config: Partial<SiteConfig>): Promise<boolean> {
+        const { error } = await supabase
+            .from('site_config')
+            .upsert({ ...config, id: 1 });
+
+        return !error;
+    }
+
+    async getBlogPosts(includeDrafts: boolean = true): Promise<BlogPost[]> {
+        let query = supabase
+            .from('blog_posts')
+            .select('*');
+
+        if (!includeDrafts) {
+            query = query.eq('status', 'published');
+        }
+
+        const { data, error } = await query.order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Erro ao buscar posts:', error);
+            return [];
+        }
+        return data || [];
+    }
+
+    async getLeads(): Promise<LeadData[]> {
+        const { data, error } = await supabase
+            .from('leads')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Erro ao buscar leads:', error);
+            return [];
+        }
+        return data || [];
+    }
+
+    async getBriefings(): Promise<SwotBriefingData[]> {
+        const { data, error } = await supabase
+            .from('swot_briefings')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Erro ao buscar briefings:', error);
+            return [];
+        }
+        return data || [];
+    }
+
+    async getDashboardStats(): Promise<DashboardStats> {
+        try {
+            const [leads, briefings, posts, services] = await Promise.all([
+                supabase.from('leads').select('id', { count: 'exact', head: true }),
+                supabase.from('swot_briefings').select('id', { count: 'exact', head: true }),
+                supabase.from('blog_posts').select('id', { count: 'exact', head: true }),
+                supabase.from('services_data').select('id', { count: 'exact', head: true })
+            ]);
+
+            return {
+                totalLeads: leads.count || 0,
+                totalBriefings: briefings.count || 0,
+                totalPosts: posts.count || 0,
+                activeServices: services.count || 0
+            };
+        } catch (error) {
+            console.error('Erro ao buscar estatísticas do dashboard:', error);
+            return { totalLeads: 0, totalBriefings: 0, totalPosts: 0, activeServices: 0 };
+        }
+    }
+
+    async saveBlogPost(post: BlogPost): Promise<boolean> {
+        const { error } = await supabase
+            .from('blog_posts')
+            .upsert(post);
+
+        return !error;
+    }
+
+    async deleteBlogPost(id: string): Promise<boolean> {
+        const { error } = await supabase
+            .from('blog_posts')
+            .delete()
+            .eq('id', id);
+
+        return !error;
+    }
+
+    async getServices(): Promise<ServiceData[]> {
+        const { data, error } = await supabase
+            .from('services_data')
+            .select('*')
+            .order('display_order', { ascending: true });
+
+        return data || [];
+    }
+
+    async saveService(service: ServiceData): Promise<boolean> {
+        const { error } = await supabase
+            .from('services_data')
+            .upsert(service);
+
+        return !error;
+    }
+
+    async syncDefaultServices(defaults: ServiceData[]): Promise<boolean> {
+        try {
+            for (const service of defaults) {
+                const { data: existing } = await supabase
+                    .from('services_data')
+                    .select('id')
+                    .eq('name', service.name)
+                    .eq('category', service.category)
+                    .maybeSingle();
+
+                if (!existing) {
+                    await this.saveService(service);
+                }
+            }
+            return true;
+        } catch (error) {
+            console.error('Erro na sincronização:', error);
+            return false;
+        }
+    }
+
+    async deleteService(id: string): Promise<boolean> {
+        const { error } = await supabase
+            .from('services_data')
+            .delete()
+            .eq('id', id);
+        return !error;
+    }
+
+    async uploadImage(file: File): Promise<string | null> {
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+            const filePath = `blog/${fileName}`;
+
+            // Bucket 'assets' deve existir no Supabase Storage
+            const { error: uploadError } = await supabase.storage
+                .from('assets')
+                .upload(filePath, file);
+
+            if (uploadError) {
+                console.warn('Erro no upload Storage, usando Base64 fallback:', uploadError);
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result as string);
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            const { data } = supabase.storage
+                .from('assets')
+                .getPublicUrl(filePath);
+
+            return data.publicUrl;
+        } catch (err) {
+            console.error('Erro fatal no uploadImage:', err);
+            return null;
+        }
+    }
+
+    async getComments(postId: string): Promise<BlogComment[]> {
+        const { data, error } = await supabase
+            .from('blog_comments')
+            .select('*')
+            .eq('post_id', postId)
+            .order('created_at', { ascending: true });
+
+        if (error) {
+            console.error('Erro ao buscar comentários:', error);
+            return [];
+        }
+        return data || [];
+    }
+
+    async addComment(comment: BlogComment): Promise<BlogComment | null> {
+        const { data, error } = await supabase
+            .from('blog_comments')
+            .insert(comment)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Erro ao adicionar comentário:', error);
+            return null;
+        }
+        return data;
+    }
+
+    async reactToPost(postId: string, type: 'like' | 'dislike'): Promise<boolean> {
+        const { data: post } = await supabase
+            .from('blog_posts')
+            .select('likes, dislikes')
+            .eq('id', postId)
+            .single();
+
+        if (!post) return false;
+
+        const updateData: any = {};
+        if (type === 'like') {
+            updateData.likes = (post.likes || 0) + 1;
+        } else {
+            updateData.dislikes = (post.dislikes || 0) + 1;
+        }
+
+        const { error } = await supabase
+            .from('blog_posts')
+            .update(updateData)
+            .eq('id', postId);
+
+        return !error;
+    }
+
+    async incrementViewCount(postId: string): Promise<void> {
+        try {
+            const { data } = await supabase
+                .from('blog_posts')
+                .select('views')
+                .eq('id', postId)
+                .single();
+
+            await supabase
+                .from('blog_posts')
+                .update({ views: (data?.views || 0) + 1 })
+                .eq('id', postId);
+        } catch (error) {
+            console.error('Erro ao incrementar views:', error);
+        }
+    }
+
+    async getPopularPosts(limit: number = 5): Promise<BlogPost[]> {
+        const { data, error } = await supabase
+            .from('blog_posts')
+            .select('*')
+            .eq('status', 'published')
+            .order('likes', { ascending: false }) // Use likes as popularity for now
+            .limit(limit);
+
+        return data || [];
+    }
+
+    // ==========================================
+    // CMS Pages API (Sprint 1)
+    // ==========================================
+    async getCmsPages(): Promise<CmsPage[]> {
+        const { data, error } = await supabase
+            .from('cms_pages')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Erro ao buscar cms pages:', error);
+            return [];
+        }
+        return data || [];
+    }
+
+    async saveCmsPage(page: Partial<CmsPage>): Promise<boolean> {
+        let payload = { ...page };
+
+        // Remove id se for vazio para deixar o Postgres criar
+        if (!payload.id) {
+            delete payload.id;
+        }
+
+        const { error } = await supabase
+            .from('cms_pages')
+            .upsert(payload);
+
+        if (error) {
+            console.error('Erro saving cms_page:', error);
+            return false;
+        }
+        return true;
+    }
+
+    async deleteCmsPage(id: string): Promise<boolean> {
+        const { error } = await supabase
+            .from('cms_pages')
+            .delete()
+            .eq('id', id);
+
+        return !error;
+    }
+
+    async triggerRebuild(): Promise<boolean> {
+        try {
+            const { data, error } = await supabase.functions.invoke('trigger-rebuild');
+            if (error) {
+                console.error('Rebuild trigger failed:', error);
+                return false;
+            }
+            console.log('Rebuild triggered:', data);
+            return true;
+        } catch (err) {
+            console.error('Rebuild trigger error:', err);
+            return false;
+        }
+    }
+}
+
+export const adminService = new AdminService();
