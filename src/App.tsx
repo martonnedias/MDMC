@@ -24,6 +24,7 @@ import BlogPostDetail from './pages/public/BlogPostDetail';
 import NotFoundPage from './pages/public/NotFoundPage';
 import ContactPage from './pages/public/ContactPage';
 import { AuthPage } from './pages/public/AuthPage';
+import UnderConstruction from './pages/public/UnderConstruction';
 
 // Páginas de Serviços
 import GoogleBusinessProfile from './pages/public/services/GoogleBusinessProfile';
@@ -77,7 +78,8 @@ const AppRoutes: React.FC = () => {
         <Routes>
           {/* ROTAS PÚBLICAS (Dentro do PublicLayout) */}
           <Route element={<PublicLayout />}>
-            <Route path="/" element={<HomePage config={config} />} />
+            <Route path="/" element={<UnderConstruction />} />
+            <Route path="/home-preview" element={<HomePage config={config} />} />
             <Route path="/sobre" element={<AboutPage />} />
             <Route path="/contato" element={<ContactPage />} />
 
