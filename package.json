@@ -8,7 +8,7 @@
     "dev": "vite",
     "prebuild": "node generate-sitemap.js",
     "build": "vite build",
-    "postbuild": "node snap.js",
+    "postbuild": "node snap.cjs",
     "preview": "vite preview"
   },
   "dependencies": {
