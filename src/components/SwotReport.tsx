@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { aiService } from '../services/aiService';
 import Button from './Button';
 import {
   FileText, Download, Share2, ArrowLeft, Loader2, Sparkles,
@@ -29,44 +29,11 @@ const SwotReport: React.FC<SwotReportProps> = ({ formData, onBack }) => {
       setLoading(true);
       setError(null);
 
-      const apiKey = process.env.API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
-      if (!apiKey || apiKey === 'PLACEHOLDER_API_KEY') {
-        setError("Chave de API não configurada. Verifique o arquivo .env.local");
-        setLoading(false);
-        return;
-      }
-
       try {
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({
-          model: "gemini-1.5-flash",
-          systemInstruction: "Você é um(a) consultor(a) de negócios especialista em Análise SWOT e planejamento estratégico para pequenas e médias empresas. Seu papel é pegar as respostas de um questionário SWOT completo e transformar isso em um relatório estratégico personalizado, claro, humano, prático, sem termos técnicos desnecessários e sem mencionar em nenhum momento que este conteúdo foi gerado por inteligência artificial. REGRAS DE ESTILO: - Nunca use 'IA', 'algoritmo', 'modelo'. Use 'Com base nas suas respostas', 'Nesta análise'. - Português do Brasil, claro, simples e acolhedor. - Fale na segunda pessoa ('você', 'sua empresa'). - Estrutura obrigatória: 1. Capa/Intro, 2. Resumo Executivo, 3. Forças, 4. Fraquezas, 5. Oportunidades, 6. Ameaças, 7. Plano de Ação Priorizado (30 dias, 3-6 meses, 6-12 meses), 8. Considerações Finais."
-        });
-
-        const prompt = `Gere um relatório SWOT estratégico completo para a empresa "${formData.companyName}" do segmento "${formData.segment}". 
-        
-        Contexto coletado:
-        - Diferencial: ${formData.differential}
-        - Ponto Forte: ${formData.mainStrength}
-        - Ponto Fraco: ${formData.mainWeakness}
-        - Oportunidade: ${formData.biggestOpportunity}
-        - Ameaça: ${formData.mainThreat}
-        - Meta 12 meses: ${formData.mainGoal12m}
-        - Desafio: ${formData.dailyChallenge}
-        
-        Use as informações detalhadas do briefing para criar recomendações práticas de gestão e marketing.`;
-
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
-
-        if (text) {
-          setReportText(text);
-        } else {
-          throw new Error("Resposta vazia da API");
-        }
+        const text = await aiService.generateReportText('swot_report', formData as unknown as Record<string, unknown>);
+        setReportText(text);
       } catch (err) {
-        console.error("Erro na Gemini API:", err);
+        console.error("Erro na geração do relatório SWOT:", err);
         setError("Ocorreu um erro ao processar sua análise estratégica. Verifique sua conexão ou tente novamente.");
       } finally {
         setLoading(false);

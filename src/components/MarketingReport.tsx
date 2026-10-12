@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { aiService, AiServiceError } from '../services/aiService';
 import Button from './Button';
 import {
   FileText, Download, Share2, ArrowLeft, Loader2, Sparkles,
@@ -38,65 +38,21 @@ const MarketingReport: React.FC<MarketingReportProps> = ({ formData, onBack }) =
         window.scrollTo({ top: y, behavior: 'smooth' });
       }
 
-      const apiKey = process.env.API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
-      if (!apiKey || apiKey === 'PLACEHOLDER_API_KEY') {
-        setError("Chave de API não configurada. Por favor, verique suas variáveis de ambiente ou o arquivo .env.local.");
-        setLoading(false);
-        return;
-      }
-
       try {
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({
-          model: "gemini-2.0-flash", // Use 2.0 stabilized
-          systemInstruction: `Você é um Consultor Sênior de Marketing Digital e Estratégia Comercial, especializado em análise imparcial de negócios.
-
-**SUA MISSÃO:** Fornecer uma auditoria honesta, baseada em dados, que ajude o empresário a tomar decisões informadas.
-
-**DICA DE FORMATAÇÃO DE TABELAS:**
-Ao criar tabelas de benchmark, utilize exatamente este formato Markdown para que o sistema renderize corretamente:
-| Característica | Sua Empresa | Concorrente A | Concorrente B |
-| :--- | :--- | :--- | :--- |
-| Preço | Valor X | Valor Y | Valor Z |
-
-**ESTRUTURA OBRIGATÓRIA:**
-1. RESUMO EXECUTIVO
-2. DIAGNÓSTICO SITUACIONAL
-3. ANÁLISE COMPETITIVA (Use a tabela de Benchmarks aqui)
-4. PONTOS FORTES
-5. GARGALOS CRÍTICOS
-6. OPORTUNIDADES
-7. RECOMENDAÇÃO ESTRATÉGICA
-8. PRÓXIMOS PASSOS`
-        });
-
-        const prompt = `Gere o relatório completo para a empresa "${formData.companyName}".
-        DADOS DE ENTRADA:
-        ${JSON.stringify(formData, null, 2)}
-        
-        Compare os dados de preço (${formData.priceRange}), parcelamento (${formData.maxInstallments}) e entrega (${formData.deliveryTime}) com os benchmarks típicos do segmento "${formData.segment}".`;
-
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
-
-        if (text) {
-          setReportText(text);
-          // Scroll to top of report when ready
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
-          throw new Error("EMPTY_RESPONSE");
-        }
+        const text = await aiService.generateReportText('marketing_report', formData as unknown as Record<string, unknown>);
+        setReportText(text);
+        // Scroll to top of report when ready
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } catch (err: any) {
-        console.error("Erro Gemini:", err);
+        console.error("Erro na geração do relatório:", err);
 
         let userMsg = "O serviço de Inteligência Artificial está temporariamente indisponível. Por favor, tente novamente mais tarde.";
 
-        if (err.message?.includes('429')) {
+        if (err instanceof AiServiceError && err.code === 'QUOTA') {
           userMsg = "Muitas solicitações simultâneas. Aguarde 60 segundos e tente gerar novamente.";
-        } else if (err.message?.includes('SAFETY')) {
+        } else if (err instanceof AiServiceError && err.code === 'SAFETY') {
           userMsg = "Os dados fornecidos acionaram um filtro de segurança. Por favor, revise as informações da empresa.";
-        } else if (err.message === 'EMPTY_RESPONSE') {
+        } else if (err instanceof AiServiceError && err.code === 'EMPTY') {
           userMsg = "A IA não conseguiu processar sua resposta. Tente simplificar os dados do formulário.";
         }
 
