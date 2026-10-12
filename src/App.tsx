@@ -81,8 +81,8 @@ const AppRoutes: React.FC = () => {
         <Routes>
           {/* ROTAS PÚBLICAS (Dentro do PublicLayout) */}
           <Route element={<PublicLayout />}>
-            <Route path="/" element={<UnderConstruction />} />
-            <Route path="/home-preview" element={<HomePage config={config} />} />
+            <Route path="/" element={<HomePage config={config} />} />
+            <Route path="/home-preview" element={<Navigate to="/" replace />} />
             <Route path="/sobre" element={<AboutPage />} />
             <Route path="/contato" element={<ContactPage />} />
 
